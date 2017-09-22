@@ -29,6 +29,7 @@ public class CourseResource {
     @Inject private AppConfigManager appConfigManager;
     @Inject private InfoHandler infoHandler;
 
+
     @Path("/am")
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
