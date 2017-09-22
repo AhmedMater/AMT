@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" build-on-make="true" name="AMT-Services">
+    <output-path>$PROJECT_DIR$/target</output-path>
+    <root id="archive" name="AMT-Services.war">
+      <element id="artifact" artifact-name="AMT-Services exploded" />
+    </root>
+  </artifact>
+</component>
