@@ -4,9 +4,9 @@ package am.infrastructure.data.enums;
  * Created by mohamed.elewa on 5/18/2016.
  */
 public enum Roles {
-    Administrator("A", "Administrator"),
-    Operator("P", "Operator"),
-    RequestManager("PC", "Request Manager");
+    ADMIN("A", "Administrator"),
+    STUDENT("S", "Student"),
+    TUTOR("T", "Tutor"),;
 
     private String role;
     private String description;

@@ -43,7 +43,7 @@
            maxEntriesLocalHeap="20000"
     />
 
-    <cache name="ReadWriteRegion"
+    <cache name="AMTReadWriteRegion"
            maxElementsInMemory="2000"
            eternal="true"
            timeToIdleSeconds="0"
