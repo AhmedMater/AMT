@@ -49,7 +49,6 @@ public class AuthenticationFilter implements ContainerRequestFilter {
         } catch (Exception e) {
             logger.error(session, e);
 
-
             if(e instanceof BusinessException)
                 requestContext.abortWith(
                     Response.status(Response.Status.UNAUTHORIZED).entity(e.getMessage()).build()

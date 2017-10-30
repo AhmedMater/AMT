@@ -5,6 +5,9 @@ import am.api.components.ErrorHandler;
 import am.api.components.InfoHandler;
 import am.api.enums.EC;
 import am.application.UserService;
+import am.infrastructure.data.dto.LoginData;
+import am.infrastructure.data.dto.UserRegisterData;
+import am.infrastructure.data.hibernate.view.AuthenticatedUser;
 import am.infrastructure.generic.ConfigUtils;
 import am.session.AppSession;
 import am.session.Interface;
@@ -12,7 +15,10 @@ import am.session.Phase;
 import am.session.Source;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -29,25 +35,38 @@ public class UserResource {
     @Inject private AppLogger logger;
     @Inject private UserService userService;
 
+    @Inject private HttpSession httpSession;
+
     @Path("/register")
-    @GET
+    @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response register(
-            @QueryParam("firstName") String firstName,
-            @QueryParam("lastName") String lastName,
-            @QueryParam("username") String username,
-            @QueryParam("password") String password,
-            @QueryParam("email") String email) throws Exception {
+    public Response register(UserRegisterData userRegisterData) throws Exception {
         String FN_NAME = "register";
         AppSession session = new AppSession(Source.APP_SERVICES, Interface.REST, Phase.REGISTRATION, CLASS, FN_NAME, errorHandler, infoHandler);
         try{
-            logger.startDebug(session, firstName, lastName, username, (password == null) ? "Null" : "Password", email);
-            userService.register(session, firstName, lastName, username, password, email);
-            logger.endDebug(session);
+            userService.register(session, userRegisterData);
             return Response.ok().build();
         }catch (Exception ex){
-            Exception exc = ConfigUtils.businessException(logger, session, ex, EC.AMT_0013, firstName + " " + lastName);
+            Exception exc = ConfigUtils.businessException(logger, session, ex, EC.AMT_0013, userRegisterData.fullName());
+            throw exc;
+        }
+    }
+
+
+    @Path("/login")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response login(LoginData loginData, @Context HttpServletRequest requestContext) throws Exception {
+        String FN_NAME = "login";
+        AppSession session = new AppSession(Source.APP_SERVICES, Interface.REST, Phase.REGISTRATION, CLASS, FN_NAME, errorHandler, infoHandler);
+        try{
+            String loginUserIP = requestContext.getRemoteAddr();
+            AuthenticatedUser user = userService.login(session, loginData, loginUserIP);
+            return Response.ok().entity(user).build();
+        }catch (Exception ex){
+            Exception exc = ConfigUtils.businessException(logger, session, ex, EC.AMT_0017, loginData.getUsername());
             throw exc;
         }
     }

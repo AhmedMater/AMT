@@ -17,6 +17,7 @@ public class Users {
     public static final String USER_ID = "userID";
     public static final String USER_NAME = "username";
     public static final String EMAIL = "email";
+    public static final String PASSWORD = "password";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -46,10 +47,6 @@ public class Users {
     @Basic
     @Column(name = "last_name")
     private String lastName;
-
-    @Basic
-    @Column(name = "is_active")
-    private Boolean active;
 
     @Basic
     @Column(name = "creation_date")
@@ -119,13 +116,6 @@ public class Users {
         return firstName + " " + lastName;
     }
 
-    public Boolean getActive() {
-        return active;
-    }
-    public void setActive(Boolean active) {
-        this.active = active;
-    }
-
     public Date getCreationDate() {
         return creationDate;
     }
@@ -157,7 +147,6 @@ public class Users {
                 ", username = " + username +
                 ", email = " + email +
                 ", role = " + role +
-                ", active = " + active +
                 ", creationDate = " + creationDate +
                 "}\n";
     }

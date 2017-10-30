@@ -104,6 +104,7 @@
             <artifactId>hk2</artifactId>
             <version>2.5.0-b52</version>
         </dependency>
+
         <dependency>
             <groupId>com.amt.www</groupId>
             <artifactId>AM-Resources</artifactId>

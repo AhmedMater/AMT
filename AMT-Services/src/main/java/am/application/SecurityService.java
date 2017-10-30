@@ -36,32 +36,25 @@ public class SecurityService {
     public void checkAuthorization(AppSession appSession, ResourceInfo resourceInfo, ContainerRequestContext requestContext) throws Exception{
         final String FN_NAME = "checkAuthorization";
         AppSession session = appSession.updateSession(CLASS, FN_NAME);
-        try {
-            logger.startDebug(session, requestContext);
+        logger.startDebug(session, requestContext);
 
-            Class<?> resourceClass = resourceInfo.getResourceClass();
-            List<Roles> classRoles = extractRoles(session, resourceClass);
+        Class<?> resourceClass = resourceInfo.getResourceClass();
+        List<Roles> classRoles = extractRoles(session, resourceClass);
 
-            // Get the resource method which matches with the requested URL
-            // Extract the roles declared by it
-            Method resourceMethod = resourceInfo.getResourceMethod();
-            List<Roles> methodRoles = extractRoles(session, resourceMethod);
+        // Get the resource method which matches with the requested URL
+        // Extract the roles declared by it
+        Method resourceMethod = resourceInfo.getResourceMethod();
+        List<Roles> methodRoles = extractRoles(session, resourceMethod);
 
-            // Check if the user is allowed to execute the method
-            // The method annotations override the class annotations
-            if (methodRoles.isEmpty()) {
-                if(!classRoles.isEmpty())
-                    checkPermissions(session, classRoles, requestContext);
-            } else
-                checkPermissions(session, methodRoles,requestContext);
+        // Check if the user is allowed to execute the method
+        // The method annotations override the class annotations
+        if (methodRoles.isEmpty()) {
+            if(!classRoles.isEmpty())
+                checkPermissions(session, classRoles, requestContext);
+        } else
+            checkPermissions(session, methodRoles,requestContext);
 
-            logger.endDebug(session);
-        } catch (Exception ex) {
-            if(ex instanceof BusinessException)
-                throw (BusinessException)ex;
-
-            throw new BusinessException(session, ex, EC.AMT_0004);
-        }
+        logger.endDebug(session);
     }
 
     // Extract the roles from the annotated element
@@ -117,28 +110,20 @@ public class SecurityService {
     public Users checkAuthentication(AppSession appSession, ContainerRequestContext requestContext){
         final String FN_NAME = "checkAuthentication";
         AppSession session = appSession.updateSession(CLASS, FN_NAME);
-        try {
-            logger.startDebug(session, requestContext);
+        logger.startDebug(session, requestContext);
 
-            String authorizationHeader = requestContext.getHeaderString(HttpHeaders.AUTHORIZATION);
-            if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer "))
-                throw new NotAuthorizedException(session, EC.AMT_0006, requestContext.getUriInfo().getAbsolutePath().toString());
+        String authorizationHeader = requestContext.getHeaderString(HttpHeaders.AUTHORIZATION);
+        if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer "))
+            throw new NotAuthorizedException(session, EC.AMT_0006, requestContext.getUriInfo().getAbsolutePath().toString());
 
-            // Extract the token from the HTTP Authorization header
-            String token = authorizationHeader.substring("Bearer".length()).trim();
+        // Extract the token from the HTTP Authorization header
+        String token = authorizationHeader.substring("Bearer".length()).trim();
 
-            //Validate the token
-            Users result = validateToken(session, token, requestContext);
+        //Validate the token
+        Users result = validateToken(session, token, requestContext);
 
-            logger.endDebug(session, result);
-            return result;
-        } catch (Exception ex) {
-            if(ex instanceof BusinessException)
-                throw (BusinessException)ex;
-
-            throw new BusinessException(session, ex, EC.AMT_0004);
-//            throw new BusinessException(AMTErrorHandler.getMsg(session, AMTErrorCode.AMT_SEQ_0008), ex);
-        }
+        logger.endDebug(session, result);
+        return result;
     }
 
     private Users validateToken(AppSession appSession, String token, ContainerRequestContext requestContext) {
@@ -163,26 +148,19 @@ public class SecurityService {
                 else {
                     Users userOfToken = userRepository.getUserByUserName(session, username);
                     if(userOfToken==null)
-                        throw new BusinessException(session, Response.Status.UNAUTHORIZED, EC.AMT_0008, username);
-//                        throw new BusinessException(Response.Status.UNAUTHORIZED, AMTErrorHandler.getMsg(session, AMTErrorCode.AMT_SEQ_0005, username));
-
-                    if(!userOfToken.getActive())
-                        throw new BusinessException(session, Response.Status.UNAUTHORIZED, EC.AMT_0009, username);
-//                        throw new BusinessException(Response.Status.UNAUTHORIZED, AMTErrorHandler.getMsg(session, AMTErrorCode.AMT_SEQ_0006, username));
+                        throw new BusinessException(session, Response.Status.UNAUTHORIZED, EC.AMT_0008, userOfToken.getFullName());
 
                     String password = userOfToken.getPassword();
                     String ComputedHash = securityManager.generateToken(session, username, password, ticks);
 
                     if(!token.equals(ComputedHash))
                         throw new BusinessException(session, Response.Status.UNAUTHORIZED, EC.AMT_0010);
-//                        throw new BusinessException(Response.Status.UNAUTHORIZED, AMTErrorHandler.getMsg(session, AMTErrorCode.AMT_SEQ_0007));
 
                     logger.endDebug(session, userOfToken);
                     return userOfToken;
                 }
             } else
                 throw new BusinessException(session, Response.Status.UNAUTHORIZED, EC.AMT_0010);
-//                throw new BusinessException(Response.Status.UNAUTHORIZED, AMTErrorHandler.getMsg(session, AMTErrorCode.AMT_SEQ_0007));
         }catch (Exception ex){
             if(ex instanceof BusinessException)
                 throw (BusinessException)ex;

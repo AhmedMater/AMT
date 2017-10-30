@@ -14,9 +14,9 @@ public class ConfigUtils {
 
     public static BusinessException businessException(AppLogger logger, AppSession session, Exception ex, EC ec, Object ... args){
         if(ex instanceof BusinessException) {
-            logger.error(session, ex, ec, args);
+            logger.error(session, ec, args);
             return (BusinessException) ex;
-        }else {
+        } else {
             logger.error(session, ex, ec, args);
             return new BusinessException(session, ex, EC.AMT_0000);
         }

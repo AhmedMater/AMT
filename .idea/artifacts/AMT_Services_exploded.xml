@@ -6,6 +6,7 @@
           <element id="module-output" name="AMT-Services" />
           <element id="jpa-descriptors" facet="AMT-Services/jpa/JPA" />
           <element id="module-output" name="AM-Resources" />
+          <element id="module-output" name="Shared-Resources" />
         </element>
         <element id="directory" name="lib">
           <element id="library" level="project" name="Maven: javax.activation:activation:1.1" />
