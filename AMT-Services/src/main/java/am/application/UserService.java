@@ -12,6 +12,7 @@ import am.exception.BusinessException;
 import am.infrastructure.data.dto.LoginData;
 import am.infrastructure.data.dto.UserRegisterData;
 import am.infrastructure.data.enums.Roles;
+import am.infrastructure.data.hibernate.model.lookup.Role;
 import am.infrastructure.data.hibernate.model.user.*;
 import am.infrastructure.data.hibernate.view.AuthenticatedUser;
 import am.repository.UserRepository;
@@ -28,7 +29,6 @@ import java.util.List;
 public class UserService {
     private static final String CLASS = "UserService";
 
-    @Inject private am.api.components.db.DBManager DBManager;
     @Inject private AppLogger logger;
     @Inject private UserRepository userRepository;
     @Inject private Validator validator;
@@ -68,7 +68,7 @@ public class UserService {
         user.setRole(new Role(Roles.STUDENT));
         user.setCreationDate(new Date());
 
-        DBManager.persist(session, user, true);
+        dbManager.persist(session, user, true);
         logger.info(session, IC.AMT_0007, user.getFullName());
 
         logger.endDebug(session);

@@ -30,6 +30,7 @@ export class RESTClient{
             else
                 this.observer = this.http.get(url);
         }
+        return this.observer;
     }
 
     post(path:string, object:any, authenticated:boolean){

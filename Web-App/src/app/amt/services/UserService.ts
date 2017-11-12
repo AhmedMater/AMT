@@ -8,9 +8,10 @@ import {UserRegisterData} from "../util/dto/UserRegisterData";
 
 @Injectable()
 export class UserService{
+    private USER_BASE_URL: string = "/user";
 
-    private LOGIN_PATH: string = "/user/login";
-    private REGISTER_PATH: string = "/user/register";
+    private LOGIN_PATH: string = this.USER_BASE_URL + "/login";
+    private REGISTER_PATH: string = this.USER_BASE_URL + "/register";
 
     constructor(private rest:RESTClient){}
 

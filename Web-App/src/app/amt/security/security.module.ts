@@ -10,7 +10,6 @@ import {HttpModule, Http} from "@angular/http";
 import {BsDropdownModule} from "ngx-bootstrap";
 import {ChartsModule} from "ng2-charts";
 import {DashboardRoutingModule} from "../../views/dashboard/dashboard-routing.module";
-import {SecurityComponent} from "./security.component";
 import {RESTClient} from "../services/RESTClient";
 import {UserService} from "../services/UserService";
 import {ToastModule} from "ng2-toastr";
@@ -20,6 +19,6 @@ import {ToastModule} from "ng2-toastr";
         ChartsModule, ToastModule.forRoot(),
         BsDropdownModule,  ReactiveFormsModule, HttpModule
     ],
-  declarations: [SecurityComponent, LoginComponent, RegisterComponent]
+  declarations: [LoginComponent, RegisterComponent]
 })
 export class SecurityModule { }

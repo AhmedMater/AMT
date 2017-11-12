@@ -1,5 +1,7 @@
 package am.infrastructure.data.hibernate.model.user;
 
+import am.infrastructure.data.hibernate.model.lookup.Role;
+import am.infrastructure.generic.ConfigParam;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -11,7 +13,7 @@ import java.util.Date;
  */
 @Entity
 @Cacheable(true)
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE, region = "AMTReadWriteRegion")
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE, region = ConfigParam.EH_CACHE_READ_WRITE_REGION)
 @Table(name = "users")
 public class Users {
     public static final String USER_ID = "userID";

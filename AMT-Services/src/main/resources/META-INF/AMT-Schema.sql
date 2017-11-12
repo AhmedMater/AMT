@@ -1,0 +1,3 @@
+DROP SCHEMA amt;
+CREATE SCHEMA amt;
+USE amt;

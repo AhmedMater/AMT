@@ -17,7 +17,7 @@ import java.util.Map;
  */
 public class UserRepository {
     private static final String CLASS = "UserRepository";
-    @Inject private DBManager DBManager;
+    @Inject private DBManager dbManager;
     @Inject private AppLogger logger;
 
     public Boolean checkUsernameInDatabase(AppSession appSession, String username) throws Exception{
@@ -25,7 +25,7 @@ public class UserRepository {
         AppSession session = appSession.updateSession(CLASS, FN_NAME);
         logger.startDebug(session, username);
 
-        Boolean result = DBManager.checkIsFound(session, true, Users.USER_ID,
+        Boolean result = dbManager.checkIsFound(session, true, Users.USER_ID,
                 Users.class, Users.USER_NAME, username);
 
         logger.endDebug(session, result);
@@ -37,7 +37,7 @@ public class UserRepository {
         AppSession session = appSession.updateSession(CLASS, FN_NAME);
         logger.startDebug(session, email);
 
-        Boolean result = DBManager.checkIsFound(session, true, Users.USER_ID,
+        Boolean result = dbManager.checkIsFound(session, true, Users.USER_ID,
                 Users.class, Users.EMAIL, email);
 
         logger.endDebug(session, result);
@@ -84,7 +84,7 @@ public class UserRepository {
 
         UserIPDeActive user = null;
         try {
-            user = DBManager.getSingleResult(session, true, UserIPDeActive.class, parameters);
+            user = dbManager.getSingleResult(session, true, UserIPDeActive.class, parameters);
         }catch (DBException ex){
             if(ex.getAME_CODE().equals(AME.DB_016)) {
                 logger.error(session, ex);
@@ -102,7 +102,7 @@ public class UserRepository {
 
         Users user = null;
         try {
-            user = DBManager.getSingleResult(session, true, Users.class, parameters);
+            user = dbManager.getSingleResult(session, true, Users.class, parameters);
 //            user.setPassword(null);
         }catch (DBException ex){
             if(ex.getAME_CODE().equals(AME.DB_016)) {

@@ -6,7 +6,7 @@ import am.api.components.AppLogger;
 import am.api.enums.EC;
 import am.exception.BusinessException;
 import am.infrastructure.data.enums.Roles;
-import am.infrastructure.data.hibernate.model.user.Role;
+import am.infrastructure.data.hibernate.model.lookup.Role;
 import am.infrastructure.data.hibernate.model.user.Users;
 import am.repository.UserRepository;
 import am.rest.Annotations;

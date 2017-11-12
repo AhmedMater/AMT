@@ -34,7 +34,7 @@
         <persistence strategy="localTempSwap" />
     </cache>
 
-    <cache name="LookupRegion"
+    <cache name="AMTLookupRegion"
            maxElementsInMemory="5000"
            eternal="true"
            timeToIdleSeconds="0"

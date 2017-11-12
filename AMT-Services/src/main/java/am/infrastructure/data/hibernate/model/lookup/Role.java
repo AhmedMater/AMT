@@ -1,6 +1,7 @@
-package am.infrastructure.data.hibernate.model.user;
+package am.infrastructure.data.hibernate.model.lookup;
 
 import am.infrastructure.data.enums.Roles;
+import am.infrastructure.generic.ConfigParam;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -12,7 +13,7 @@ import java.io.Serializable;
  */
 @Entity
 @Cacheable(true)
-@Cache(usage = CacheConcurrencyStrategy.READ_ONLY, region = "LookupRegion")
+@Cache(usage = CacheConcurrencyStrategy.READ_ONLY, region = ConfigParam.EH_CACHE_LOOKUP_REGION)
 @Table(name = "role")
 public class Role implements Serializable{
     @Id
