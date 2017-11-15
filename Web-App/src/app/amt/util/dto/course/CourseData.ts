@@ -8,8 +8,14 @@ export class CourseData{
     courseName: string;
     courseLevel: string;
     courseType: string;
-    estimatedDuration: number;
     description: string;
+
+    estimatedDuration: number;
+    actualDuration: number;
+
+    createdOn: Date;
+    createdBy: string;
+    isCompleted:boolean;
 
     preRequisites: CoursePRData[];
     references: CourseRefData[];

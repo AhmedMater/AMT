@@ -5,10 +5,11 @@
 import {Component, ViewContainerRef, OnInit} from "@angular/core";
 import {FormBuilder} from "@angular/forms";
 import {ToastsManager} from "ng2-toastr";
-import {Router} from "@angular/router";
+import {Router, ActivatedRoute, Params} from "@angular/router";
 
 import {RESTClient} from "../../services/RESTClient";
 import {CourseService} from "../../services/CourseService";
+import {CourseData} from "../../util/dto/course/CourseData";
 
 @Component({
     selector: 'course-detail',
@@ -16,6 +17,9 @@ import {CourseService} from "../../services/CourseService";
     providers: [RESTClient, CourseService, FormBuilder],
 })
 export class CourseDetailComponent implements OnInit{
+
+    courseID: string;
+    courseData: CourseData;
 
     // loginForm:FormGroup;
     // loginData:LoginData;
@@ -28,13 +32,26 @@ export class CourseDetailComponent implements OnInit{
         private formBuilder:FormBuilder,
         public toastr: ToastsManager,
         private vcr: ViewContainerRef,
-        private router:Router
+        private router:Router,
+        private activatedRoute: ActivatedRoute
     ) {
         this.toastr.setRootViewContainerRef(vcr);
     }
 
 
     ngOnInit(): void {
+        this.activatedRoute.params.subscribe((params: Params) => {
+            console.log(params);
+            this.courseID = params['courseID'];
+            console.log(this.courseID);
 
+            this.courseService.getCourseByID(this.courseID).subscribe(
+                response => {
+                    this.courseData = JSON.parse(response['_body']);
+                    console.log(this.courseData);
+                },
+                error => this.toastr.error("Failed while loading Course Data Due to: " + error['_body'], "Error")
+            );
+        });
     }
 }

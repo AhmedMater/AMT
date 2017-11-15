@@ -14,11 +14,13 @@ import {NewCourseComponent} from "./new/new-course.component";
 import {CourseListComponent} from "./list/course-list.component";
 import {CourseDetailComponent} from "./details/course-details.component";
 import {CommonModule} from "@angular/common";
+import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 
 @NgModule({
-    imports: [CourseRoutingModule, CommonModule,
+    imports: [CourseRoutingModule, CommonModule, //HttpClientModule,
         ToastModule.forRoot(), ReactiveFormsModule, HttpModule
     ],
     declarations: [NewCourseComponent, CourseListComponent, CourseDetailComponent]
+    // providers: [{provide: HTTP_INTERCEPTORS, useClass: RESTInterceptor, multi: true}]
 })
 export class CourseModule { }

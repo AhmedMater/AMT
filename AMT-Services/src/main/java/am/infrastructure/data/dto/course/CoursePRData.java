@@ -1,14 +1,40 @@
 package am.infrastructure.data.dto.course;
 
+import am.common.validation.RegExp;
+import am.infrastructure.data.hibernate.model.course.CoursePreRequisite;
+import org.hibernate.validator.constraints.Length;
+
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import java.io.Serializable;
+
+import static am.common.ValidationErrorMsg.COURSE_PRE_REQUISITE;
 
 /**
  * Created by ahmed.motair on 11/6/2017.
  */
 public class CoursePRData implements Serializable{
+    @NotNull(message = COURSE_PRE_REQUISITE.ORDER.REQUIRED)
+    @Min(value = 1, message = COURSE_PRE_REQUISITE.ORDER.INVALID)
     private Integer num;
+
+    @NotNull(message = COURSE_PRE_REQUISITE.NAME.REQUIRED)
+    @NotEmpty(message = COURSE_PRE_REQUISITE.NAME.EMPTY_STR)
+    @Length(min = 5, max = 100, message = COURSE_PRE_REQUISITE.NAME.LENGTH)
+    @Pattern(regexp = RegExp.CONTENT_NAME, message = COURSE_PRE_REQUISITE.NAME.INVALID)
     private String name;
+
+    @NotNull(message = COURSE_PRE_REQUISITE.TYPE.REQUIRED)
+    @NotEmpty(message = COURSE_PRE_REQUISITE.TYPE.EMPTY_STR)
+    @Length(min = 2, max = 2, message = COURSE_PRE_REQUISITE.TYPE.LENGTH)
     private String type;
+
+    @NotNull(message = COURSE_PRE_REQUISITE.URL.REQUIRED)
+    @NotEmpty(message = COURSE_PRE_REQUISITE.URL.EMPTY_STR)
+    @Length(min = 5, max = 200, message = COURSE_PRE_REQUISITE.URL.LENGTH)
+    @Pattern(regexp = RegExp.URL, message = COURSE_PRE_REQUISITE.URL.INVALID)
     private String url;
 
     public CoursePRData() {
@@ -18,6 +44,11 @@ public class CoursePRData implements Serializable{
         this.name = name;
         this.type = type;
         this.url = url;
+    }
+    public CoursePRData(CoursePreRequisite preReq) {
+        this.name = preReq.getName();
+        this.type = preReq.getType().getDescription();
+        this.url = preReq.getUrl();
     }
 
     public Integer getNum() {

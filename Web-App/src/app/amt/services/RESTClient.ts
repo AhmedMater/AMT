@@ -6,7 +6,10 @@ import {Injectable} from "@angular/core";
 import {Http, Response} from "@angular/http";
 import {ConfigParam} from "../util/constants/ConfigParam";
 import {Observable} from "rxjs";
-import {HttpHeaders, HttpParams} from "@angular/common/http";
+import {
+    HttpHeaders, HttpParams, HttpInterceptor, HttpRequest, HttpHandler, HttpEvent,
+    HttpClient
+} from "@angular/common/http";
 
 @Injectable()
 export class RESTClient{
@@ -14,40 +17,31 @@ export class RESTClient{
 
     observer:Observable<Response>;
 
-    constructor(private http:Http){}
+    constructor(private http: HttpClient ){}
 
-    get(path:string, params, authenticated:boolean){
+    get(path:string, params, authenticated:boolean): Observable<Response>{
         const url = this.BASE_URL + path;
 
         if(authenticated) {
             if(params != null)
-                this.observer = this.http.get(url, { params: params });
+                this.observer = this.http.get<Response>(url, { params: params });
             else
-                this.observer = this.http.get(url);
+                this.observer = this.http.get<Response>(url);
         }else{
             if(params != null)
-                this.observer = this.http.get(url, { params: params });
+                this.observer = this.http.get<Response>(url, { params: params });
             else
-                this.observer = this.http.get(url);
+                this.observer = this.http.get<Response>(url);
         }
         return this.observer;
     }
 
-    post(path:string, object:any, authenticated:boolean){
+    post(path:string, object:any, authenticated:boolean): Observable<Response>{
         const url = this.BASE_URL + path;
 
         if(authenticated)
-            return this.http.post(url, object);
+            return this.http.post<Response>(url, object).map(res => res.json());
         else
-            return this.http.post(url, object);
-
-        // return this.checkResponse(this.observer);
-    }
-
-
-    // This function is to check if the Response is 404 or 500
-    // Check if the Response is 401 not Authorized
-    checkResponse(observer): Observable<Response>{
-        return this.observer;
+            return this.http.post<Response>(url, object).map(res => res.json());
     }
 }

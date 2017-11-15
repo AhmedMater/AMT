@@ -6,11 +6,13 @@ import {FormBuilder, FormGroup} from "@angular/forms";
 import {ToastsManager} from "ng2-toastr";
 import {FullRoutes} from "../../util/constants/FullRoutes";
 import {Router} from "@angular/router";
+import {ConfigParam} from "../../util/constants/ConfigParam";
+import {AuthenticationService} from "../../services/AuthenticationService";
 
 @Component({
     selector: 'app-login',
   templateUrl: 'login.component.html',
-    providers: [RESTClient, UserService, FormBuilder],
+    providers: [RESTClient, UserService, FormBuilder, AuthenticationService],
 })
 export class LoginComponent {
 
@@ -21,11 +23,12 @@ export class LoginComponent {
     REGISTER_URL: string = FullRoutes.REGISTER_URL;
 
     constructor(
-        private userService:UserService,
-        private formBuilder:FormBuilder,
+        private userService: UserService,
+        private formBuilder: FormBuilder,
         public toastr: ToastsManager,
         private vcr: ViewContainerRef,
-        private router:Router
+        private router: Router,
+        private authService: AuthenticationService
     ) {
         this.toastr.setRootViewContainerRef(vcr);
     }
@@ -45,6 +48,8 @@ export class LoginComponent {
 
         this.userService.login(this.loginData).subscribe(
             res => {
+                // console.log(res);
+                this.authService.setAuthenticationData(res);
                 this.toastr.success("User Login successfully");
                 this.router.navigate([this.HOME_URL]);
             },

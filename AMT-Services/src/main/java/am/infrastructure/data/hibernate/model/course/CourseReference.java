@@ -1,6 +1,9 @@
 package am.infrastructure.data.hibernate.model.course;
 
 
+import am.infrastructure.data.dto.course.CourseRefData;
+import am.infrastructure.data.hibernate.model.lookup.MaterialType;
+
 import javax.persistence.*;
 import java.io.Serializable;
 
@@ -24,9 +27,9 @@ public class CourseReference implements Serializable {
     @Column(name = "reference_name")
     private String name;
 
-    @Basic
-    @Column(name = "reference_type")
-    private String type;
+    @ManyToOne
+    @JoinColumn(name = "reference_type", referencedColumnName = "type")
+    private MaterialType type;
 
     @Basic
     @Column(name = "reference_url")
@@ -34,11 +37,16 @@ public class CourseReference implements Serializable {
 
     public CourseReference() {
     }
-    public CourseReference(String courseID, String name, String type, String url) {
+    public CourseReference(String courseID, String name, MaterialType type, String url) {
         this.courseID = courseID;
         this.name = name;
         this.type = type;
         this.url = url;
+    }
+    public CourseReference(CourseRefData ref) {
+        this.name = ref.getName();
+        this.type = new MaterialType(ref.getType());
+        this.url = ref.getUrl();
     }
 
     public Integer getReferenceID() {
@@ -62,10 +70,10 @@ public class CourseReference implements Serializable {
         this.name = name;
     }
 
-    public String getType() {
+    public MaterialType getType() {
         return type;
     }
-    public void setType(String type) {
+    public void setType(MaterialType type) {
         this.type = type;
     }
 

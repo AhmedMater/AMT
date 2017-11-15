@@ -1,5 +1,8 @@
 package am.infrastructure.data.hibernate.model.course;
 
+import am.infrastructure.data.dto.course.CourseData;
+import am.infrastructure.data.dto.course.CoursePRData;
+import am.infrastructure.data.dto.course.CourseRefData;
 import am.infrastructure.data.hibernate.model.lookup.CourseLevel;
 import am.infrastructure.data.hibernate.model.lookup.CourseType;
 import am.infrastructure.data.hibernate.model.user.Users;
@@ -7,6 +10,7 @@ import am.infrastructure.data.hibernate.model.user.Users;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -92,6 +96,22 @@ public class Course implements Serializable{
         this.creationDate = creationDate;
         this.lastUpdateDate = lastUpdateDate;
         this.completed = completed;
+    }
+
+    public Course(CourseData courseData) {
+        this.courseName = courseData.getCourseName();
+        this.courseType = new CourseType(courseData.getCourseType());
+        this.courseLevel = new CourseLevel(courseData.getCourseLevel());
+        this.description = courseData.getDescription();
+        this.estimatedDuration = courseData.getEstimatedDuration();
+
+        this.references = new HashSet<>();
+        for (CourseRefData ref : courseData.getReferences())
+            this.references.add(new CourseReference(ref));
+
+        this.preRequisites = new HashSet<>();
+        for (CoursePRData preReq : courseData.getPreRequisites())
+            this.preRequisites.add(new CoursePreRequisite(preReq));
     }
 
     @PrePersist

@@ -9,7 +9,7 @@ import am.infrastructure.data.enums.Roles;
 import am.infrastructure.data.hibernate.model.lookup.Role;
 import am.infrastructure.data.hibernate.model.user.Users;
 import am.repository.UserRepository;
-import am.rest.Annotations;
+import am.rest.annotations.Secured;
 import am.session.AppSession;
 
 import javax.inject.Inject;
@@ -68,7 +68,7 @@ public class SecurityService {
         if (annotatedElement == null)
             result = new ArrayList<Roles>();
         else {
-            Annotations.Secured secured = annotatedElement.getAnnotation(Annotations.Secured.class);
+            Secured secured = annotatedElement.getAnnotation(Secured.class);
             if (secured == null)
                 result = new ArrayList<Roles>();
             else {
@@ -107,7 +107,7 @@ public class SecurityService {
         logger.endDebug(session);
     }
 
-    public Users checkAuthentication(AppSession appSession, ContainerRequestContext requestContext){
+    public void checkAuthentication(AppSession appSession, ContainerRequestContext requestContext){
         final String FN_NAME = "checkAuthentication";
         AppSession session = appSession.updateSession(CLASS, FN_NAME);
         logger.startDebug(session, requestContext);
@@ -120,10 +120,12 @@ public class SecurityService {
         String token = authorizationHeader.substring("Bearer".length()).trim();
 
         //Validate the token
-        Users result = validateToken(session, token, requestContext);
+        Users userOfToken = validateToken(session, token, requestContext);
 
-        logger.endDebug(session, result);
-        return result;
+        // Set the User in the Request
+        requestContext.setProperty("Authenticated-User", userOfToken);
+
+        logger.endDebug(session);
     }
 
     private Users validateToken(AppSession appSession, String token, ContainerRequestContext requestContext) {

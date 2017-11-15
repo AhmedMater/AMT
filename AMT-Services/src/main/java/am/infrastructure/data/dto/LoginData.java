@@ -1,17 +1,33 @@
 package am.infrastructure.data.dto;
 
+import am.common.validation.RegExp;
+import org.hibernate.validator.constraints.Length;
+
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import java.io.Serializable;
+
+import static am.common.ValidationErrorMsg.*;
 
 /**
  * Created by ahmed.motair on 10/26/2017.
  */
 public class LoginData implements Serializable{
+    @NotNull(message = USERNAME.REQUIRED)
+    @NotEmpty(message = USERNAME.EMPTY_STR)
+    @Length(min = 5, max = 50, message = USERNAME.LENGTH)
+    @Pattern(regexp = RegExp.USERNAME, message = USERNAME.INVALID)
     private String username;
+
+    @NotNull(message = PASSWORD.REQUIRED)
+    @NotEmpty(message = PASSWORD.EMPTY_STR)
+    @Length(min = 5, max = 30, message = PASSWORD.LENGTH)
+    @Pattern(regexp = RegExp.PASSWORD, message = PASSWORD.INVALID)
     private String password;
 
     public LoginData() {
     }
-
     public LoginData(String username, String password) {
         this.username = username;
         this.password = password;

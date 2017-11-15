@@ -29,6 +29,9 @@ public class MaterialType implements Serializable {
         this.type = type;
         this.description = description;
     }
+    public MaterialType(String type) {
+        this.type = type;
+    }
 
     public String getType() {
         return type;

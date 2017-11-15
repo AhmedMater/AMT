@@ -1,1 +1,98 @@
-Course Details
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          <strong>{{courseData.courseName}}</strong>
+        </div>
+
+        <div class="card-body">
+          <div class="row">
+
+            <div class="col-2">
+              <div class="card">
+                <img class="card-img-top" src="../../../../assets/img/java1.png"
+                     alt="Card image cap">
+                <div class="card-body">
+                  <p class="card-text" style="text-align: center;">Java SE</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-10">
+              <dl class="row">
+                <dt class="col-2">Course Name:</dt>
+                <dd class="col-4">{{courseData.courseName}}</dd>
+                <!--</dl>-->
+                <!--<dl class="row">-->
+                <dt class="col-2">Est. Duration:</dt>
+                <dd class="col-4">{{courseData.estimatedDuration}} Hr</dd>
+              </dl>
+
+              <dl class="row">
+                <dt class="col-2">Created By:</dt>
+                <dd class="col-4">{{courseData.createdBy}}</dd>
+                <!--</dl>-->
+                <!--<dl class="row">-->
+                <dt class="col-2">Actual Duration:</dt>
+                <dd class="col-4">{{courseData.actualDuration == null ? "0" : courseData.actualDuration}} Hr</dd>
+              </dl>
+
+              <dl class="row">
+                <dt class="col-2">Course Level</dt>
+                <dd class="col-4">{{courseData.courseLevel}}</dd>
+
+                <dt class="col-2">Created On:</dt>
+                <dd class="col-4">{{courseData.createdOn}}</dd>
+              </dl>
+
+              <dl class="row">
+                <dt class="col-2">Course Type:</dt>
+                <dd class="col-4">{{courseData.courseType}}</dd>
+
+                <dt class="col-2">Completed:</dt>
+                <dd class="col-4">{{courseData.isCompleted ? "Yes" : "No"}}</dd>
+              </dl>
+
+              <dl class="row">
+                <dt class="col-3">Course Description:</dt>
+                <dd class="col-9">{{courseData.description}}</dd>
+              </dl>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-6">
+      <div class="card">
+        <div class="card-header">
+          <strong>Course References</strong>
+        </div>
+
+        <div class="card-body">
+          <dl class="row" *ngFor="let ref of courseData.references; let i = index;">
+            <dt class="col-12">{{i+1}}. {{ref.type}}:
+              <a [href]="ref.url">{{ref.name}}</a></dt>
+          </dl>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-6">
+      <div class="card">
+        <div class="card-header">
+          <strong>Course Pre-Requisites</strong>
+        </div>
+
+        <div class="card-body">
+          <dl class="row" *ngFor="let preReq of courseData.preRequisites; let i = index;">
+            <dt class="col-12">{{i+1}}. {{preReq.type}}:
+              <a [href]="preReq.url">{{preReq.name}}</a></dt>
+          </dl>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

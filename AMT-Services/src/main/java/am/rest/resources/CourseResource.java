@@ -5,7 +5,9 @@ import am.api.components.ErrorHandler;
 import am.api.components.InfoHandler;
 import am.application.CourseService;
 import am.infrastructure.data.dto.course.CourseData;
-import am.infrastructure.data.hibernate.view.NewCourseLookup;
+import am.infrastructure.data.enums.Roles;
+import am.infrastructure.data.view.NewCourseLookup;
+import am.rest.annotations.Secured;
 import am.session.AppSession;
 import am.session.Interface;
 import am.session.Phase;
@@ -34,6 +36,7 @@ public class CourseResource {
 
     @Path("/new")
     @POST
+    @Secured({Roles.TUTOR})
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response addNewCourse(
@@ -52,12 +55,28 @@ public class CourseResource {
 
     @Path("/new/lookups")
     @GET
+    @Secured({Roles.TUTOR})
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response getNewCourseLookups(@Context HttpServletRequest requestContext)  throws Exception{
         String FN_NAME = "getNewCourseLookups";
         AppSession session = new AppSession(Source.APP_SERVICES, Interface.REST, Phase.REGISTRATION, CLASS, FN_NAME, errorHandler, infoHandler);
         NewCourseLookup result = courseService.getNewCourseLookup(session);
+        return Response.ok().entity(result).build();
+    }
+
+
+
+    @Path("/{courseID}")
+    @GET
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getCourseByID(
+            @PathParam("courseID") String courseID,
+            @Context HttpServletRequest requestContext)  throws Exception{
+        String FN_NAME = "getCourseByID";
+        AppSession session = new AppSession(Source.APP_SERVICES, Interface.REST, Phase.REGISTRATION, CLASS, FN_NAME, errorHandler, infoHandler);
+        CourseData result = courseService.getCourseByID(session, courseID);
         return Response.ok().entity(result).build();
     }
 

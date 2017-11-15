@@ -7,7 +7,7 @@ import am.api.components.InfoHandler;
 import am.api.enums.EC;
 import am.application.SecurityService;
 import am.exception.BusinessException;
-import am.rest.Annotations;
+import am.rest.annotations.Secured;
 import am.session.AppSession;
 import am.session.Interface;
 import am.session.Phase;
@@ -30,7 +30,7 @@ import java.io.IOException;
  */
 
 
-@Annotations.Secured
+@Secured
 @Provider
 @Priority(Priorities.AUTHORIZATION)
 public class AuthorizationFilter implements ContainerRequestFilter {

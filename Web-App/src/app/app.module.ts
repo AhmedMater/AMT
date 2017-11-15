@@ -18,17 +18,22 @@ import {CourseListComponent} from "./amt/course/list/course-list.component";
 import {HttpModule} from "@angular/http";
 import {ReactiveFormsModule} from "@angular/forms";
 import {ToastModule} from "ng2-toastr";
+import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
+import {RESTInterceptor} from "./amt/services/RESTInterceptor";
 
 const APP_COMPONENTS = [AppAside, AppBreadcrumbs, AppFooter, AppHeader, AppSidebar];
-const APP_CONTAINERS = [FullLayout, SimpleLayout];//, NewCourseComponent, CourseDetailComponent, CourseListComponent];
+const APP_CONTAINERS = [FullLayout, SimpleLayout];
 const APP_DIRECTIVES = [AsideToggleDirective, NAV_DROPDOWN_DIRECTIVES, SIDEBAR_TOGGLE_DIRECTIVES];
 
 
 @NgModule({
-    imports: [BrowserModule, BrowserAnimationsModule, AppRoutingModule, BsDropdownModule.forRoot(),
+    imports: [ HttpClientModule, BrowserModule, BrowserAnimationsModule, AppRoutingModule, BsDropdownModule.forRoot(),
         TabsModule.forRoot(), ChartsModule, ToastModule.forRoot(), ReactiveFormsModule, HttpModule],
     declarations: [AppComponent, APP_CONTAINERS, APP_COMPONENTS, APP_DIRECTIVES],
-    providers: [{provide: LocationStrategy, useClass: HashLocationStrategy}],
+    providers: [
+        {provide: LocationStrategy, useClass: HashLocationStrategy},
+        {provide: HTTP_INTERCEPTORS, useClass: RESTInterceptor, multi: true}
+    ],
     bootstrap: [AppComponent]
 })
 export class AppModule {

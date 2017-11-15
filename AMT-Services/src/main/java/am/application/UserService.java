@@ -14,12 +14,13 @@ import am.infrastructure.data.dto.UserRegisterData;
 import am.infrastructure.data.enums.Roles;
 import am.infrastructure.data.hibernate.model.lookup.Role;
 import am.infrastructure.data.hibernate.model.user.*;
-import am.infrastructure.data.hibernate.view.AuthenticatedUser;
+import am.infrastructure.data.view.AuthenticatedUser;
 import am.repository.UserRepository;
 import am.session.AppSession;
 
 import javax.inject.Inject;
 import javax.transaction.Transactional;
+import javax.validation.Valid;
 import java.util.Date;
 import java.util.List;
 
@@ -75,7 +76,7 @@ public class UserService {
     }
 
     @Transactional
-    public AuthenticatedUser login(AppSession appSession, LoginData loginData, String loginUserIP) throws Exception{
+    public AuthenticatedUser login(AppSession appSession, @Valid LoginData loginData, String loginUserIP) throws Exception{
         String FN_NAME = "login";
         AppSession session = appSession.updateSession(CLASS, FN_NAME);
         logger.startDebug(session, loginData);

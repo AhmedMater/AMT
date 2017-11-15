@@ -13,12 +13,14 @@ import {DashboardRoutingModule} from "../../views/dashboard/dashboard-routing.mo
 import {RESTClient} from "../services/RESTClient";
 import {UserService} from "../services/UserService";
 import {ToastModule} from "ng2-toastr";
+import {HttpClientModule, HTTP_INTERCEPTORS} from "@angular/common/http";
 
 @NgModule({
     imports: [SecurityRoutingModule,
-        ChartsModule, ToastModule.forRoot(),
+        ChartsModule, ToastModule.forRoot(), //HttpClientModule,
         BsDropdownModule,  ReactiveFormsModule, HttpModule
     ],
   declarations: [LoginComponent, RegisterComponent]
+    // providers: [{provide: HTTP_INTERCEPTORS, useClass: RESTInterceptor, multi: true}]
 })
 export class SecurityModule { }

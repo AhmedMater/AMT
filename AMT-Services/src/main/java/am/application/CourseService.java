@@ -11,11 +11,9 @@ import am.infrastructure.data.hibernate.model.lookup.CourseLevel;
 import am.infrastructure.data.hibernate.model.lookup.CourseType;
 import am.infrastructure.data.hibernate.model.lookup.MaterialType;
 import am.infrastructure.data.hibernate.model.user.Users;
-import am.infrastructure.data.hibernate.view.NewCourseLookup;
+import am.infrastructure.data.view.NewCourseLookup;
 import am.repository.CourseRepository;
 import am.session.AppSession;
-import org.modelmapper.ModelMapper;
-import org.modelmapper.convention.MatchingStrategies;
 
 import javax.inject.Inject;
 import javax.transaction.Transactional;
@@ -41,15 +39,12 @@ public class CourseService {
         AppSession session = appSession.updateSession(CLASS, FN_NAME);
         logger.startDebug(session, courseData);
 
-        ModelMapper mapper = new ModelMapper();
-        mapper.createTypeMap(CourseData.class, Course.class);
-//        mapper.createTypeMap(CoursePRData.class, Course.class);
-//        mapper.createTypeMap(CourseRefData.class, Course.class);
-//        mapper.createTypeMap(CoursePRData.class, CoursePreRequisite.class);
-//        mapper.createTypeMap(CourseRefData.class, CourseReference.class);
-        mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-
-        Course course = mapper.map(courseData, Course.class);
+//        ModelMapper mapper = new ModelMapper();
+//        mapper.createTypeMap(CourseData.class, Course.class);
+//        mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+//
+//        Course course = mapper.map(courseData, Course.class);
+        Course course = new Course(courseData);
         course.setCreationDate(new Date());
         course.setCreatedBy(new Users(1));
         course.setCompleted(false);
@@ -80,5 +75,17 @@ public class CourseService {
 
         logger.endDebug(session, result);
         return result;
+    }
+
+    public CourseData getCourseByID(AppSession appSession, String courseID) throws Exception{
+        String FN_NAME = "getCourseByID";
+        AppSession session = appSession.updateSession(CLASS, FN_NAME);
+        logger.startDebug(session, courseID);
+
+        Course course = dbManager.find(session, Course.class, courseID, false);
+        CourseData courseData = new CourseData(course);
+
+        logger.endDebug(session, courseData);
+        return courseData;
     }
 }
