@@ -1,15 +1,15 @@
 package am.rest.filters;
 
 
-import am.api.components.AppLogger;
-import am.api.components.ErrorHandler;
-import am.api.components.InfoHandler;
-import am.api.enums.IC;
+import am.main.api.components.AppLogger;
+import am.main.api.components.ErrorHandler;
+import am.main.api.components.InfoHandler;
+import am.shared.enums.IC;
 import am.infrastructure.data.hibernate.model.user.Users;
-import am.session.AppSession;
-import am.session.Interface;
-import am.session.Phase;
-import am.session.Source;
+import am.main.session.AppSession;
+import am.main.session.Interface;
+import am.shared.session.Phase;
+import am.main.session.Source;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpSession;

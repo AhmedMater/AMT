@@ -1,6 +1,6 @@
 package am.infrastructure.data.dto.course;
 
-import am.common.validation.RegExp;
+import am.main.common.validation.RegExp;
 import am.infrastructure.data.hibernate.model.course.CourseReference;
 import org.hibernate.validator.constraints.Length;
 
@@ -10,7 +10,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import java.io.Serializable;
 
-import static am.common.ValidationErrorMsg.COURSE_REFERENCE;
+import static am.shared.common.ValidationErrorMsg.COURSE_REFERENCE;
 
 /**
  * Created by ahmed.motair on 11/6/2017.

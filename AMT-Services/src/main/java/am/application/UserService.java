@@ -1,22 +1,25 @@
 package am.application;
 
-import am.api.components.AMSecurityManager;
-import am.api.components.AppConfigManager;
-import am.api.components.AppLogger;
-import am.api.components.Validator;
-import am.api.components.db.DBManager;
-import am.api.enums.App_CC;
-import am.api.enums.EC;
-import am.api.enums.IC;
-import am.exception.BusinessException;
 import am.infrastructure.data.dto.LoginData;
 import am.infrastructure.data.dto.UserRegisterData;
 import am.infrastructure.data.enums.Roles;
 import am.infrastructure.data.hibernate.model.lookup.Role;
-import am.infrastructure.data.hibernate.model.user.*;
+import am.infrastructure.data.hibernate.model.user.UserIPDeActive;
+import am.infrastructure.data.hibernate.model.user.UserIPFailure;
+import am.infrastructure.data.hibernate.model.user.UserLoginLog;
+import am.infrastructure.data.hibernate.model.user.Users;
 import am.infrastructure.data.view.AuthenticatedUser;
+import am.main.api.components.AMSecurityManager;
+import am.main.api.components.AppConfigManager;
+import am.main.api.components.AppLogger;
+import am.main.api.components.Validator;
+import am.main.api.components.db.DBManager;
+import am.main.exception.BusinessException;
+import am.main.session.AppSession;
 import am.repository.UserRepository;
-import am.session.AppSession;
+import am.shared.enums.App_CC;
+import am.shared.enums.EC;
+import am.shared.enums.IC;
 
 import javax.inject.Inject;
 import javax.transaction.Transactional;

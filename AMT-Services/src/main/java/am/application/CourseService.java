@@ -1,10 +1,10 @@
 package am.application;
 
-import am.api.components.AMSecurityManager;
-import am.api.components.AppConfigManager;
-import am.api.components.AppLogger;
-import am.api.components.Validator;
-import am.api.components.db.DBManager;
+import am.main.api.components.AMSecurityManager;
+import am.main.api.components.AppConfigManager;
+import am.main.api.components.AppLogger;
+import am.main.api.components.Validator;
+import am.main.api.components.db.DBManager;
 import am.infrastructure.data.dto.course.CourseData;
 import am.infrastructure.data.hibernate.model.course.Course;
 import am.infrastructure.data.hibernate.model.lookup.CourseLevel;
@@ -13,7 +13,7 @@ import am.infrastructure.data.hibernate.model.lookup.MaterialType;
 import am.infrastructure.data.hibernate.model.user.Users;
 import am.infrastructure.data.view.NewCourseLookup;
 import am.repository.CourseRepository;
-import am.session.AppSession;
+import am.main.session.AppSession;
 
 import javax.inject.Inject;
 import javax.transaction.Transactional;

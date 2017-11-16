@@ -106,7 +106,7 @@
 
         <dependency>
             <groupId>com.amt.www</groupId>
-            <artifactId>AMT-Resources</artifactId>
+            <artifactId>AM-Resources</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
 

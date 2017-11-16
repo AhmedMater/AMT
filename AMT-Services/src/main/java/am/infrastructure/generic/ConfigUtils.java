@@ -1,10 +1,10 @@
 package am.infrastructure.generic;
 
 
-import am.api.components.AppLogger;
-import am.api.enums.EC;
-import am.exception.BusinessException;
-import am.session.AppSession;
+import am.main.api.components.AppLogger;
+import am.shared.enums.EC;
+import am.main.exception.BusinessException;
+import am.main.session.AppSession;
 
 /**
  * Created by ahmed.motair on 9/7/2017.

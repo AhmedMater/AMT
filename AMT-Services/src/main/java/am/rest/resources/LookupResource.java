@@ -1,17 +1,17 @@
 package am.rest.resources;
 
-import am.api.components.AppLogger;
-import am.api.components.ErrorHandler;
-import am.api.components.InfoHandler;
+import am.main.api.components.AppLogger;
+import am.main.api.components.ErrorHandler;
+import am.main.api.components.InfoHandler;
 import am.infrastructure.data.enums.Roles;
 import am.infrastructure.data.hibernate.model.lookup.CourseLevel;
 import am.infrastructure.data.hibernate.model.lookup.CourseType;
 import am.infrastructure.data.hibernate.model.lookup.DataType;
 import am.infrastructure.data.hibernate.model.lookup.MaterialType;
-import am.session.AppSession;
-import am.session.Interface;
-import am.session.Phase;
-import am.session.Source;
+import am.main.session.AppSession;
+import am.main.session.Interface;
+import am.shared.session.Phase;
+import am.main.session.Source;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -34,7 +34,7 @@ public class LookupResource {
     @Inject private ErrorHandler errorHandler;
     @Inject private InfoHandler infoHandler;
     @Inject private AppLogger logger;
-    @Inject private am.api.components.db.DBManager DBManager;
+    @Inject private am.main.api.components.db.DBManager DBManager;
 
     @Path("/courseTypes")
     @GET

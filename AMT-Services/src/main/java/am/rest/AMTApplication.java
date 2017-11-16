@@ -1,6 +1,6 @@
 package am.rest;
 
-import am.common.ConfigParam;
+import am.main.common.ConfigParam;
 import am.rest.filters.AuthenticationFilter;
 import am.rest.filters.AuthorizationFilter;
 import am.rest.filters.CORSResponseFilter;

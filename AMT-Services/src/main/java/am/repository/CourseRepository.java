@@ -1,11 +1,11 @@
 package am.repository;
 
-import am.api.components.AppLogger;
-import am.api.components.db.DBManager;
+import am.main.api.components.AppLogger;
+import am.main.api.components.db.DBManager;
 import am.infrastructure.data.hibernate.model.SystemParameter;
 import am.infrastructure.data.hibernate.model.course.Course;
 import am.infrastructure.generic.ConfigParam;
-import am.session.AppSession;
+import am.main.session.AppSession;
 import org.apache.commons.lang.StringUtils;
 
 import javax.inject.Inject;

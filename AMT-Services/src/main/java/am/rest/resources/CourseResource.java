@@ -1,17 +1,17 @@
 package am.rest.resources;
 
-import am.api.components.AppLogger;
-import am.api.components.ErrorHandler;
-import am.api.components.InfoHandler;
+import am.main.api.components.AppLogger;
+import am.main.api.components.ErrorHandler;
+import am.main.api.components.InfoHandler;
 import am.application.CourseService;
 import am.infrastructure.data.dto.course.CourseData;
 import am.infrastructure.data.enums.Roles;
 import am.infrastructure.data.view.NewCourseLookup;
 import am.rest.annotations.Secured;
-import am.session.AppSession;
-import am.session.Interface;
-import am.session.Phase;
-import am.session.Source;
+import am.main.session.AppSession;
+import am.main.session.Interface;
+import am.shared.session.Phase;
+import am.main.session.Source;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;

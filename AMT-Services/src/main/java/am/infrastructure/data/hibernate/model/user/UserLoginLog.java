@@ -1,6 +1,6 @@
 package am.infrastructure.data.hibernate.model.user;
 
-import am.exception.BusinessException;
+import am.main.exception.BusinessException;
 
 import javax.persistence.*;
 import java.io.Serializable;

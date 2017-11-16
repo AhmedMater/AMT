@@ -1,16 +1,16 @@
 package am.rest.filters;
 
-import am.api.components.AppLogger;
-import am.api.components.ErrorHandler;
-import am.api.components.InfoHandler;
-import am.api.enums.EC;
+import am.main.api.components.AppLogger;
+import am.main.api.components.ErrorHandler;
+import am.main.api.components.InfoHandler;
+import am.shared.enums.EC;
 import am.application.SecurityService;
-import am.exception.BusinessException;
+import am.main.exception.BusinessException;
 import am.rest.annotations.Secured;
-import am.session.AppSession;
-import am.session.Interface;
-import am.session.Phase;
-import am.session.Source;
+import am.main.session.AppSession;
+import am.main.session.Interface;
+import am.shared.session.Phase;
+import am.main.session.Source;
 
 import javax.annotation.Priority;
 import javax.inject.Inject;

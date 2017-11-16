@@ -1,12 +1,12 @@
 package am.repository;
 
-import am.api.components.AppLogger;
-import am.api.components.db.DBManager;
-import am.common.enums.AME;
-import am.exception.DBException;
+import am.main.api.components.AppLogger;
+import am.main.api.components.db.DBManager;
+import am.main.common.enums.AME;
+import am.main.exception.DBException;
 import am.infrastructure.data.hibernate.model.user.UserIPDeActive;
 import am.infrastructure.data.hibernate.model.user.Users;
-import am.session.AppSession;
+import am.main.session.AppSession;
 
 import javax.inject.Inject;
 import java.util.HashMap;

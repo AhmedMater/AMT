@@ -1,16 +1,16 @@
 package am.application;
 
 
-import am.api.components.AMSecurityManager;
-import am.api.components.AppLogger;
-import am.api.enums.EC;
-import am.exception.BusinessException;
+import am.main.api.components.AMSecurityManager;
+import am.main.api.components.AppLogger;
+import am.shared.enums.EC;
+import am.main.exception.BusinessException;
 import am.infrastructure.data.enums.Roles;
 import am.infrastructure.data.hibernate.model.lookup.Role;
 import am.infrastructure.data.hibernate.model.user.Users;
 import am.repository.UserRepository;
 import am.rest.annotations.Secured;
-import am.session.AppSession;
+import am.main.session.AppSession;
 
 import javax.inject.Inject;
 import javax.ws.rs.NotAuthorizedException;

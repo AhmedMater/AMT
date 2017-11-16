@@ -3,7 +3,7 @@ package am.infrastructure.data.dto.course;
 import am.infrastructure.data.hibernate.model.course.Course;
 import am.infrastructure.data.hibernate.model.course.CoursePreRequisite;
 import am.infrastructure.data.hibernate.model.course.CourseReference;
-import am.common.validation.RegExp;
+import am.main.common.validation.RegExp;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.Min;
@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import static am.common.ValidationErrorMsg.*;
+import static am.shared.common.ValidationErrorMsg.*;
 
 /**
  * Created by ahmed.motair on 11/6/2017.
