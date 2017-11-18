@@ -1,8 +1,8 @@
 package am.application;
 
 
-import am.main.api.components.AMSecurityManager;
-import am.main.api.components.AppLogger;
+import am.main.api.AMSecurityManager;
+import am.main.api.AppLogger;
 import am.shared.enums.EC;
 import am.main.exception.BusinessException;
 import am.infrastructure.data.enums.Roles;

@@ -1,7 +1,7 @@
 package am.repository;
 
-import am.main.api.components.AppLogger;
-import am.main.api.components.db.DBManager;
+import am.main.api.AppLogger;
+import am.main.api.db.DBManager;
 import am.infrastructure.data.hibernate.model.SystemParameter;
 import am.infrastructure.data.hibernate.model.course.Course;
 import am.infrastructure.generic.ConfigParam;

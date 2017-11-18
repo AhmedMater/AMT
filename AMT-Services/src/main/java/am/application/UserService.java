@@ -9,11 +9,10 @@ import am.infrastructure.data.hibernate.model.user.UserIPFailure;
 import am.infrastructure.data.hibernate.model.user.UserLoginLog;
 import am.infrastructure.data.hibernate.model.user.Users;
 import am.infrastructure.data.view.AuthenticatedUser;
-import am.main.api.components.AMSecurityManager;
-import am.main.api.components.AppConfigManager;
-import am.main.api.components.AppLogger;
-import am.main.api.components.Validator;
-import am.main.api.components.db.DBManager;
+import am.main.api.AMSecurityManager;
+import am.main.api.AppConfigManager;
+import am.main.api.AppLogger;
+import am.main.api.db.DBManager;
 import am.main.exception.BusinessException;
 import am.main.session.AppSession;
 import am.repository.UserRepository;
@@ -25,7 +24,6 @@ import javax.inject.Inject;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.util.Date;
-import java.util.List;
 
 /**
  * Created by ahmed.motair on 9/23/2017.
@@ -35,7 +33,6 @@ public class UserService {
 
     @Inject private AppLogger logger;
     @Inject private UserRepository userRepository;
-    @Inject private Validator validator;
     @Inject private AMSecurityManager securityManager;
     @Inject private AppConfigManager appConfigManager;
     @Inject private DBManager dbManager;
@@ -56,11 +53,11 @@ public class UserService {
         else
             logger.info(session, IC.AMT_0005, userData.getEmail());
 
-        List<String> errorList = validator.validateForm(session);
-        if(errorList.size() > 0)
-            throw new BusinessException(session, EC.AMT_0003, errorList.toArray());
-        else
-            logger.info(session, IC.AMT_0006);
+//        List<String> errorList = validator.validateForm(session);
+//        if(errorList.size() > 0)
+//            throw new BusinessException(session, EC.AMT_0003, errorList.toArray());
+//        else
+//            logger.info(session, IC.AMT_0006);
 
         //TODO: Insert the Username, Password and Email in the Database
         Users user = new Users();

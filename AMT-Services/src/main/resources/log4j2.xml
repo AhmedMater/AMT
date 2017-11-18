@@ -5,263 +5,43 @@
             <PatternLayout pattern="[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%t] [%-5level] [%logger{36}] - %msg%n%n"/>
         </Console>
 
-        <!-- Base Loggers -->
-        <RollingFile name="RootLogger" fileName="../logs/AMT/Root/Log.log" immediateFlush="true"
-                     filePattern="../logs/AMT/Root/Log-%i-%d{yyyy-MM-dd HH-mm-ss.SSS}.log">
+        <RollingFile name="Template" fileName="../logs/AMT/Template.log" immediateFlush="true"
+                     filePattern="../logs/AMT/Template/Template-%i-%d{yyyy-MM-dd HH-mm-ss.SSS}.log">
             <PatternLayout pattern="[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%t] [%-5level] [%logger{36}] - %msg%n%n"/>
             <Policies>
                 <SizeBasedTriggeringPolicy size="6144 KB"/>
             </Policies>
-            <!--<DefaultRolloverStrategy max="10"/>-->
-        </RollingFile>
-        <RollingFile name="FailureLogger" fileName="../logs/AMT/Failure/Log.log" immediateFlush="true"
-                     filePattern="../logs/AMT/Failure/Log-%i-%d{yyyy-MM-dd HH-mm-ss.SSS}.log">
-            <PatternLayout pattern="[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%t] [%-5level] [%logger{36}] - %msg%n%n"/>
-            <Policies>
-                <SizeBasedTriggeringPolicy size="6144 KB"/>
-            </Policies>
-            
+
         </RollingFile>
 
-        <!-- Source Loggers -->
-        <RollingFile name="AMLibLogger" fileName="../logs/AMT/Source/AM-Library/Log.log" immediateFlush="true"
-                     filePattern="../logs/AMT/Source/AM-Library/Log-%i-%d{yyyy-MM-dd HH-mm-ss.SSS}.log">
+        <RollingFile name="Failure" fileName="../logs/AMT/Failure.log" immediateFlush="true"
+                     filePattern="../logs/AMT/Failure/Failure-%i-%d{yyyy-MM-dd HH-mm-ss.SSS}.log">
             <PatternLayout pattern="[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%t] [%-5level] [%logger{36}] - %msg%n%n"/>
             <Policies>
                 <SizeBasedTriggeringPolicy size="6144 KB"/>
             </Policies>
-            
-        </RollingFile>
-        <RollingFile name="AppServiceLogger" fileName="../logs/AMT/Source/App-Services/Log.log" immediateFlush="true"
-                     filePattern="../logs/AMT/Source/App-Services/Log-%i-%d{yyyy-MM-dd HH-mm-ss.SSS}.log">
-            <PatternLayout pattern="[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%t] [%-5level] [%logger{36}] - %msg%n%n"/>
-            <Policies>
-                <SizeBasedTriggeringPolicy size="6144 KB"/>
-            </Policies>
-            
-        </RollingFile>
-        <RollingFile name="JobSourceLogger" fileName="../logs/AMT/Source/Job/Log.log" immediateFlush="true"
-                     filePattern="../logs/AMT/Source/Job/Log-%i-%d{yyyy-MM-dd HH-mm-ss.SSS}.log">
-            <PatternLayout pattern="[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%t] [%-5level] [%logger{36}] - %msg%n%n"/>
-            <Policies>
-                <SizeBasedTriggeringPolicy size="6144 KB"/>
-            </Policies>
-            
-        </RollingFile>
 
-        <!-- Interface Loggers -->
-        <RollingFile name="RESTLogger" fileName="../logs/AMT/Interface/REST/Log.log" immediateFlush="true"
-                     filePattern="../logs/AMT/Interface/REST/Log-%i-%d{yyyy-MM-dd HH-mm-ss.SSS}.log">
+        </RollingFile>
+        <RollingFile name="Initial" fileName="../logs/AMT/Initial.log" immediateFlush="true"
+                     filePattern="../logs/AMT/Initial/Initial-%i-%d{yyyy-MM-dd HH-mm-ss.SSS}.log">
             <PatternLayout pattern="[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%t] [%-5level] [%logger{36}] - %msg%n%n"/>
             <Policies>
                 <SizeBasedTriggeringPolicy size="6144 KB"/>
             </Policies>
-        </RollingFile>
-        <RollingFile name="SOAPLogger" fileName="../logs/AMT/Interface/SOAP/Log.log" immediateFlush="true"
-                     filePattern="../logs/AMT/Interface/SOAP/Log-%i-%d{yyyy-MM-dd HH-mm-ss.SSS}.log">
-            <PatternLayout pattern="[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%t] [%-5level] [%logger{36}] - %msg%n%n"/>
-            <Policies>
-                <SizeBasedTriggeringPolicy size="6144 KB"/>
-            </Policies>
-        </RollingFile>
-        <RollingFile name="JMSLogger" fileName="../logs/AMT/Interface/JMS/Log.log" immediateFlush="true"
-                     filePattern="../logs/AMT/Interface/JMS/Log-%i-%d{yyyy-MM-dd HH-mm-ss.SSS}.log">
-            <PatternLayout pattern="[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%t] [%-5level] [%logger{36}] - %msg%n%n"/>
-            <Policies>
-                <SizeBasedTriggeringPolicy size="6144 KB"/>
-            </Policies>
-        </RollingFile>
-        <RollingFile name="JobInterfaceLogger" fileName="../logs/AMT/Interface/Job/Log.log" immediateFlush="true"
-                     filePattern="../logs/AMT/Interface/Job/Log-%i-%d{yyyy-MM-dd HH-mm-ss.SSS}.log">
-            <PatternLayout pattern="[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%t] [%-5level] [%logger{36}] - %msg%n%n"/>
-            <Policies>
-                <SizeBasedTriggeringPolicy size="6144 KB"/>
-            </Policies>
-        </RollingFile>
-        <RollingFile name="InitializingLogger" fileName="../logs/AMT/Interface/Initializing/Log.log" immediateFlush="true"
-                     filePattern="../logs/AMT/Interface/Initializing/Log-%i-%d{yyyy-MM-dd HH-mm-ss.SSS}.log">
-            <PatternLayout pattern="[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%t] [%-5level] [%logger{36}] - %msg%n%n"/>
-            <Policies>
-                <SizeBasedTriggeringPolicy size="6144 KB"/>
-            </Policies>
-        </RollingFile>
 
-        <!-- Phase Loggers -->
-        <RollingFile name="DatabaseLogger" fileName="../logs/AMT/Phase/Database/Log.log" immediateFlush="true"
-                     filePattern="../logs/AMT/Phase/Database/Log-%i-%d{yyyy-MM-dd HH-mm-ss.SSS}.log">
-            <PatternLayout pattern="[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%t] [%-5level] [%logger{36}] - %msg%n%n"/>
-            <Policies>
-                <SizeBasedTriggeringPolicy size="6144 KB"/>
-            </Policies>
         </RollingFile>
-        <RollingFile name="ErrorHandlerLogger" fileName="../logs/AMT/Phase/ErrorHandler/Log.log" immediateFlush="true"
-                     filePattern="../logs/AMT/Phase/ErrorHandler/Log-%i-%d{yyyy-MM-dd HH-mm-ss.SSS}.log">
-            <PatternLayout pattern="[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%t] [%-5level] [%logger{36}] - %msg%n%n"/>
-            <Policies>
-                <SizeBasedTriggeringPolicy size="6144 KB"/>
-            </Policies>
-        </RollingFile>
-        <RollingFile name="InfoHandlerLogger" fileName="../logs/AMT/Phase/InfoHandler/Log.log" immediateFlush="true"
-                     filePattern="../logs/AMT/Phase/InfoHandler/Log-%i-%d{yyyy-MM-dd HH-mm-ss.SSS}.log">
-            <PatternLayout pattern="[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%t] [%-5level] [%logger{36}] - %msg%n%n"/>
-            <Policies>
-                <SizeBasedTriggeringPolicy size="6144 KB"/>
-            </Policies>
-        </RollingFile>
-        <RollingFile name="ValidationLogger" fileName="../logs/AMT/Phase/Validation/Log.log" immediateFlush="true"
-                     filePattern="../logs/AMT/Phase/Validation/Log-%i-%d{yyyy-MM-dd HH-mm-ss.SSS}.log">
-            <PatternLayout pattern="[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%t] [%-5level] [%logger{36}] - %msg%n%n"/>
-            <Policies>
-                <SizeBasedTriggeringPolicy size="6144 KB"/>
-            </Policies>
-        </RollingFile>
-        <RollingFile name="EmailNotificationLogger" fileName="../logs/AMT/Phase/Email-Notification/Log.log" immediateFlush="true"
-                     filePattern="../logs/AMT/Phase/Email-Notification/Log-%i-%d{yyyy-MM-dd HH-mm-ss.SSS}.log">
-            <PatternLayout pattern="[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%t] [%-5level] [%logger{36}] - %msg%n%n"/>
-            <Policies>
-                <SizeBasedTriggeringPolicy size="6144 KB"/>
-            </Policies>
-        </RollingFile>
-        <RollingFile name="SecurityLogger" fileName="../logs/AMT/Phase/Security/Log.log" immediateFlush="true"
-                     filePattern="../logs/AMT/Phase/Security/Log-%i-%d{yyyy-MM-dd HH-mm-ss.SSS}.log">
-            <PatternLayout pattern="[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%t] [%-5level] [%logger{36}] - %msg%n%n"/>
-            <Policies>
-                <SizeBasedTriggeringPolicy size="6144 KB"/>
-            </Policies>
-        </RollingFile>
-        <RollingFile name="AppConfigLogger" fileName="../logs/AMT/Phase/App-Config/Log.log" immediateFlush="true"
-                     filePattern="../logs/AMT/Phase/App-Config/Log-%i-%d{yyyy-MM-dd HH-mm-ss.SSS}.log">
-            <PatternLayout pattern="[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%t] [%-5level] [%logger{36}] - %msg%n%n"/>
-            <Policies>
-                <SizeBasedTriggeringPolicy size="6144 KB"/>
-            </Policies>
-        </RollingFile>
-        <RollingFile name="AMConfigLogger" fileName="../logs/AMT/Phase/AM-Config/Log.log" immediateFlush="true"
-                     filePattern="../logs/AMT/Phase/AM-Config/Log-%i-%d{yyyy-MM-dd HH-mm-ss.SSS}.log">
-            <PatternLayout pattern="[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%t] [%-5level] [%logger{36}] - %msg%n%n"/>
-            <Policies>
-                <SizeBasedTriggeringPolicy size="6144 KB"/>
-            </Policies>
-        </RollingFile>
-
-        <RollingFile name="RegistrationLogger" fileName="../logs/AMT/Phase/Registration/Log.log" immediateFlush="true"
-                     filePattern="../logs/AMT/Phase/Registration/Log-%i-%d{yyyy-MM-dd HH-mm-ss.SSS}.log">
-            <PatternLayout pattern="[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%t] [%-5level] [%logger{36}] - %msg%n%n"/>
-            <Policies>
-                <SizeBasedTriggeringPolicy size="6144 KB"/>
-            </Policies>
-        </RollingFile>
-        <RollingFile name="URLLogger" fileName="../logs/AMT/Phase/URLLogging/Log.log" immediateFlush="true"
-                     filePattern="../logs/AMT/Phase/URLLogging/Log-%i-%d{yyyy-MM-dd HH-mm-ss.SSS}.log">
-            <PatternLayout pattern="[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%t] [%-5level] [%logger{36}] - %msg%n%n"/>
-            <Policies>
-                <SizeBasedTriggeringPolicy size="6144 KB"/>
-            </Policies>
-        </RollingFile>
-        <RollingFile name="AuthorizationLogger" fileName="../logs/AMT/Phase/Authorization/Log.log" immediateFlush="true"
-                     filePattern="../logs/AMT/Phase/Authorization/Log-%i-%d{yyyy-MM-dd HH-mm-ss.SSS}.log">
-            <PatternLayout pattern="[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%t] [%-5level] [%logger{36}] - %msg%n%n"/>
-            <Policies>
-                <SizeBasedTriggeringPolicy size="6144 KB"/>
-            </Policies>
-        </RollingFile>
-        <RollingFile name="AuthenticationLogger" fileName="../logs/AMT/Phase/Authentication/Log.log" immediateFlush="true"
-                     filePattern="../logs/AMT/Phase/Authentication/Log-%i-%d{yyyy-MM-dd HH-mm-ss.SSS}.log">
-            <PatternLayout pattern="[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%t] [%-5level] [%logger{36}] - %msg%n%n"/>
-            <Policies>
-                <SizeBasedTriggeringPolicy size="6144 KB"/>
-            </Policies>
-        </RollingFile>
-        <RollingFile name="LoginLogger" fileName="../logs/AMT/Phase/Login/Log.log" immediateFlush="true"
-                     filePattern="../logs/AMT/Phase/Login/Log-%i-%d{yyyy-MM-dd HH-mm-ss.SSS}.log">
-            <PatternLayout pattern="[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%t] [%-5level] [%logger{36}] - %msg%n%n"/>
-            <Policies>
-                <SizeBasedTriggeringPolicy size="6144 KB"/>
-            </Policies>
-        </RollingFile>
-
     </appenders>
 
     <Loggers>
-        <!-- Base Loggers -->
-        <Root level="debug">
-            <AppenderRef ref="Console"/>
-            <AppenderRef ref="RootLogger"/>
-        </Root>
+        <Logger name="Template" level="debug">
+            <AppenderRef ref="Template"/>
+        </Logger>
+
         <Logger name="Failure" level="debug">
-            <AppenderRef ref="Console"/>
-            <AppenderRef ref="FailureLogger"/>
+            <AppenderRef ref="Failure"/>
         </Logger>
-
-        <!-- Source Loggers -->
-        <Logger name="AM-Library" level="debug">
-            <AppenderRef ref="AMLibLogger"/>
+        <Logger name="Initial" level="debug">
+            <AppenderRef ref="Initial"/>
         </Logger>
-        <Logger name="App-Services" level="debug">
-            <AppenderRef ref="AppServiceLogger"/>
-        </Logger>
-        <Logger name="Job-Source" level="debug">
-            <AppenderRef ref="JobSourceLogger"/>
-        </Logger>
-
-        <!-- Interface Loggers -->
-        <Logger name="REST" level="debug">
-            <AppenderRef ref="RESTLogger"/>
-        </Logger>
-        <Logger name="SOAP" level="debug">
-            <AppenderRef ref="SOAPLogger"/>
-        </Logger>
-        <Logger name="JMS" level="debug">
-            <AppenderRef ref="JMSLogger"/>
-        </Logger>
-        <Logger name="Job-Interface" level="debug">
-            <AppenderRef ref="JobInterfaceLogger"/>
-        </Logger>
-        <Logger name="Initializing" level="debug">
-            <AppenderRef ref="InitializingLogger"/>
-        </Logger>
-
-        <!-- Phase Loggers -->
-        <Logger name="Database" level="debug">
-            <AppenderRef ref="DatabaseLogger"/>
-        </Logger>
-        <Logger name="ErrorHandler" level="debug">
-            <AppenderRef ref="ErrorHandlerLogger"/>
-        </Logger>
-        <Logger name="InfoHandler" level="debug">
-            <AppenderRef ref="InfoHandlerLogger"/>
-        </Logger>
-        <Logger name="Validation" level="debug">
-            <AppenderRef ref="ValidationLogger"/>
-        </Logger>
-        <Logger name="Email-Notification" level="debug">
-            <AppenderRef ref="EmailNotificationLogger"/>
-        </Logger>
-        <Logger name="Security" level="debug">
-            <AppenderRef ref="SecurityLogger"/>
-        </Logger>
-        <Logger name="App-Config" level="debug">
-            <AppenderRef ref="AppConfigLogger"/>
-        </Logger>
-        <Logger name="AM-Config" level="debug">
-            <AppenderRef ref="AMConfigLogger"/>
-        </Logger>
-
-        <Logger name="Registration" level="error">
-            <AppenderRef ref="RegistrationLogger"/>
-        </Logger>
-        <Logger name="Login" level="debug">
-            <AppenderRef ref="LoginLogger"/>
-        </Logger>
-        <Logger name="Authentication" level="debug">
-            <AppenderRef ref="AuthenticationLogger"/>
-        </Logger>
-        <Logger name="Authorization" level="debug">
-            <AppenderRef ref="AuthorizationLogger"/>
-        </Logger>
-        <Logger name="URLLogging" level="debug">
-            <AppenderRef ref="URLLogger"/>
-        </Logger>
-
     </Loggers>
 </configuration>

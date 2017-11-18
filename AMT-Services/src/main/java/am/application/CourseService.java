@@ -1,10 +1,9 @@
 package am.application;
 
-import am.main.api.components.AMSecurityManager;
-import am.main.api.components.AppConfigManager;
-import am.main.api.components.AppLogger;
-import am.main.api.components.Validator;
-import am.main.api.components.db.DBManager;
+import am.main.api.AMSecurityManager;
+import am.main.api.AppConfigManager;
+import am.main.api.AppLogger;
+import am.main.api.db.DBManager;
 import am.infrastructure.data.dto.course.CourseData;
 import am.infrastructure.data.hibernate.model.course.Course;
 import am.infrastructure.data.hibernate.model.lookup.CourseLevel;
@@ -28,7 +27,6 @@ public class CourseService {
 
     @Inject private AppLogger logger;
     @Inject private CourseRepository courseRepository;
-    @Inject private Validator validator;
     @Inject private AMSecurityManager securityManager;
     @Inject private AppConfigManager appConfigManager;
     @Inject private DBManager dbManager;
@@ -39,11 +37,6 @@ public class CourseService {
         AppSession session = appSession.updateSession(CLASS, FN_NAME);
         logger.startDebug(session, courseData);
 
-//        ModelMapper mapper = new ModelMapper();
-//        mapper.createTypeMap(CourseData.class, Course.class);
-//        mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-//
-//        Course course = mapper.map(courseData, Course.class);
         Course course = new Course(courseData);
         course.setCreationDate(new Date());
         course.setCreatedBy(new Users(1));

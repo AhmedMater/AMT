@@ -1,7 +1,7 @@
 package am.infrastructure.generic;
 
 
-import am.main.api.components.AppLogger;
+import am.main.api.AppLogger;
 import am.shared.enums.EC;
 import am.main.exception.BusinessException;
 import am.main.session.AppSession;

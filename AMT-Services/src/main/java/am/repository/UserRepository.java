@@ -1,8 +1,8 @@
 package am.repository;
 
-import am.main.api.components.AppLogger;
-import am.main.api.components.db.DBManager;
-import am.main.common.enums.AME;
+import am.main.api.AppLogger;
+import am.main.api.db.DBManager;
+import am.main.data.enums.AME;
 import am.main.exception.DBException;
 import am.infrastructure.data.hibernate.model.user.UserIPDeActive;
 import am.infrastructure.data.hibernate.model.user.Users;

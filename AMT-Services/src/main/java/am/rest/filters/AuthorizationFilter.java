@@ -1,20 +1,21 @@
 package am.rest.filters;
 
 
-import am.main.api.components.AppLogger;
-import am.main.api.components.ErrorHandler;
-import am.main.api.components.InfoHandler;
+import am.main.api.AppLogger;
+import am.main.api.ErrorHandler;
+import am.main.api.InfoHandler;
 import am.shared.enums.EC;
 import am.application.SecurityService;
 import am.main.exception.BusinessException;
 import am.rest.annotations.Secured;
 import am.main.session.AppSession;
-import am.main.session.Interface;
+import am.main.data.enums.Interface;
 import am.shared.session.Phase;
-import am.main.session.Source;
+import am.main.data.enums.Source;
 
 import javax.annotation.Priority;
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.ws.rs.Priorities;
 import javax.ws.rs.container.ContainerRequestContext;
@@ -41,11 +42,12 @@ public class AuthorizationFilter implements ContainerRequestFilter {
     @Inject private ErrorHandler errorHandler;
     @Inject private InfoHandler infoHandler;
     @Inject private HttpSession httpSession;
+    @Context private HttpServletRequest httpServletRequest;
 
     public void filter(ContainerRequestContext requestContext) throws IOException {
         String FN_NAME = "filter";
         AppSession session = new AppSession(Source.APP_SERVICES, Interface.REST, Phase.AUTHORIZATION,
-                httpSession.getId(), CLASS, FN_NAME, errorHandler, infoHandler);
+                httpSession.getId(), CLASS, FN_NAME, errorHandler, infoHandler, httpServletRequest.getRemoteAddr());
         try {
             logger.startDebug(session);
 

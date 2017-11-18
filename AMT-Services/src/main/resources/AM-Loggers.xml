@@ -1,0 +1,71 @@
+<AM-Loggers>
+    <!--AM Initializing Loggers-->
+    <Logger>
+        <Name>AM-Initializing</Name>
+        <enabled>true</enabled>
+        <level>info</level>
+    </Logger>
+
+    <!--Filters Loggers-->
+    <Logger>
+        <Name>Authentication</Name>
+        <enabled>true</enabled>
+        <level>info</level>
+    </Logger>
+    <Logger>
+        <Name>Authorization</Name>
+        <enabled>true</enabled>
+        <level>info</level>
+    </Logger>
+    <Logger>
+        <Name>URLLogging</Name>
+        <enabled>true</enabled>
+        <level>info</level>
+    </Logger>
+
+    <!--User Loggers-->
+    <Logger>
+        <Name>Registration</Name>
+        <enabled>true</enabled>
+        <level>info</level>
+    </Logger>
+    <Logger>
+        <Name>Login</Name>
+        <enabled>true</enabled>
+        <level>info</level>
+    </Logger>
+
+    <!--Course Loggers-->
+    <Logger>
+        <Name>Course-Create</Name>
+        <enabled>true</enabled>
+        <level>info</level>
+    </Logger>
+    <Logger>
+        <Name>Course-View</Name>
+        <enabled>true</enabled>
+        <level>info</level>
+    </Logger>
+    <Logger>
+        <Name>Course-Update</Name>
+        <enabled>true</enabled>
+        <level>info</level>
+    </Logger>
+
+    <!--Article Loggers-->
+    <Logger>
+        <Name>Article-Create</Name>
+        <enabled>true</enabled>
+        <level>info</level>
+    </Logger>
+    <Logger>
+        <Name>Article-View</Name>
+        <enabled>true</enabled>
+        <level>info</level>
+    </Logger>
+    <Logger>
+        <Name>Article-Update</Name>
+        <enabled>true</enabled>
+        <level>info</level>
+    </Logger>
+</AM-Loggers>
