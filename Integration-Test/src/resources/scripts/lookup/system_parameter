@@ -1,0 +1,1 @@
+INSERT INTO system_parameter(param_name, param_type, param_value) VALUES ('Total Course Number', 'Nu', '0');

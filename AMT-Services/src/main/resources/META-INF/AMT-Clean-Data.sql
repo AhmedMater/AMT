@@ -17,4 +17,5 @@ INSERT INTO data_type(type, description, regex) VALUES ('Nu', 'Number', '[0-9]+'
 INSERT INTO system_parameter(param_name, param_type, param_value) VALUES ('Total Course Number', 'Nu', '0');
 
 INSERT INTO users(user_id, user_name, password, email, first_name, last_name, role, creation_date) VALUES
-  (1, 'Ahmed_Mater', 'e10adc3949ba59abbe56e057f20f883e', 'ahmedmotair@gmail.com', 'Ahmed', 'Mater', 'A', NOW());
+  (1, 'Ahmed_Mater', 'e10adc3949ba59abbe56e057f20f883e', 'ahmedmotair@gmail.com', 'Ahmed', 'Mater', 'Ad', NOW());
+
