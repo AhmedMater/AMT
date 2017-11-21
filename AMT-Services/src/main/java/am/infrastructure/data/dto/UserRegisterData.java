@@ -1,11 +1,15 @@
 package am.infrastructure.data.dto;
 
 import am.main.common.validation.RegExp;
-import org.hibernate.validator.constraints.Length;
+import am.main.common.validation.groups.BlankValidation;
+import am.main.common.validation.groups.InvalidValidation;
+import am.main.common.validation.groups.LengthValidation;
+import am.main.common.validation.groups.RequiredValidation;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 import static am.shared.common.ValidationErrorMsg.*;
@@ -13,35 +17,36 @@ import static am.shared.common.ValidationErrorMsg.*;
 /**
  * Created by ahmed.motair on 10/26/2017.
  */
-public class UserRegisterData implements Serializable{
-    @NotNull(message = FIRST_NAME.REQUIRED)
-    @NotEmpty(message = FIRST_NAME.EMPTY_STR)
-    @Length(min = 1, max = 15, message = FIRST_NAME.LENGTH)
-    @Pattern(regexp = RegExp.REAL_NAME, message = FIRST_NAME.INVALID)
+public class UserRegisterData implements Serializable, Cloneable{
+
+    @NotNull(message = FIRST_NAME.REQUIRED, groups = RequiredValidation.class)
+    @NotEmpty(message = FIRST_NAME.EMPTY_STR, groups = BlankValidation.class)
+    @Size(min = 1, max = 15, message = FIRST_NAME.LENGTH, groups = LengthValidation.class)
+    @Pattern(regexp = RegExp.REAL_NAME, message = FIRST_NAME.INVALID, groups = InvalidValidation.class)
     private String firstName;
 
-    @NotNull(message = LAST_NAME.REQUIRED)
-    @NotEmpty(message = LAST_NAME.EMPTY_STR)
-    @Length(min = 1, max = 15, message = LAST_NAME.LENGTH)
-    @Pattern(regexp = RegExp.REAL_NAME, message = LAST_NAME.INVALID)
+    @NotNull(message = LAST_NAME.REQUIRED, groups = RequiredValidation.class)
+    @NotEmpty(message = LAST_NAME.EMPTY_STR, groups = BlankValidation.class)
+    @Size(min = 1, max = 15, message = LAST_NAME.LENGTH, groups = LengthValidation.class)
+    @Pattern(regexp = RegExp.REAL_NAME, message = LAST_NAME.INVALID, groups = InvalidValidation.class)
     private String lastName;
 
-    @NotNull(message = USERNAME.REQUIRED)
-    @NotEmpty(message = USERNAME.EMPTY_STR)
-    @Length(min = 5, max = 50, message = USERNAME.LENGTH)
-    @Pattern(regexp = RegExp.USERNAME, message = USERNAME.INVALID)
+    @NotNull(message = USERNAME.REQUIRED, groups = RequiredValidation.class)
+    @NotEmpty(message = USERNAME.EMPTY_STR, groups = BlankValidation.class)
+    @Size(min = 5, max = 50, message = USERNAME.LENGTH, groups = LengthValidation.class)
+    @Pattern(regexp = RegExp.USERNAME, message = USERNAME.INVALID, groups = InvalidValidation.class)
     private String username;
 
-    @NotNull(message = PASSWORD.REQUIRED)
-    @NotEmpty(message = PASSWORD.EMPTY_STR)
-    @Length(min = 5, max = 30, message = PASSWORD.LENGTH)
-    @Pattern(regexp = RegExp.PASSWORD, message = PASSWORD.INVALID)
+    @NotNull(message = PASSWORD.REQUIRED, groups = RequiredValidation.class)
+    @NotEmpty(message = PASSWORD.EMPTY_STR, groups = BlankValidation.class)
+    @Size(min = 5, max = 30, message = PASSWORD.LENGTH, groups = LengthValidation.class)
+    @Pattern(regexp = RegExp.PASSWORD, message = PASSWORD.INVALID, groups = InvalidValidation.class)
     private String password;
 
-    @NotNull(message = EMAIL.REQUIRED)
-    @NotEmpty(message = EMAIL.EMPTY_STR)
-    @Length(min = 10, max = 100, message = EMAIL.LENGTH)
-    @Pattern(regexp = RegExp.EMAIL, message = EMAIL.INVALID)
+    @NotNull(message = EMAIL.REQUIRED, groups = RequiredValidation.class)
+    @NotEmpty(message = EMAIL.EMPTY_STR, groups = BlankValidation.class)
+    @Size(min = 10, max = 100, message = EMAIL.LENGTH, groups = LengthValidation.class)
+    @Pattern(regexp = RegExp.EMAIL, message = EMAIL.INVALID, groups = InvalidValidation.class)
     private String email;
 
     public UserRegisterData() {
@@ -126,5 +131,16 @@ public class UserRegisterData implements Serializable{
                 ", password = " + (password != null ? "Password" : "Null") +
                 ", email = " + email +
                 "}\n";
+    }
+
+    @Override
+    public UserRegisterData clone(){
+        UserRegisterData clone = new UserRegisterData();
+        clone.setFirstName(this.firstName);
+        clone.setLastName(this.lastName);
+        clone.setUsername(this.username);
+        clone.setPassword(this.password);
+        clone.setEmail(this.email);
+        return clone;
     }
 }

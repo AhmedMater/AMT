@@ -2,10 +2,12 @@ package amt.common.generic;
 
 
 import am.infrastructure.data.dto.LoginData;
+import am.main.common.validation.FormValidation;
 import am.rest.filters.LoggingFilter;
 import amt.common.constants.Method;
 import amt.common.constants.Rest;
 import org.glassfish.jersey.client.ClientConfig;
+import org.junit.Assert;
 import org.unitils.thirdparty.org.apache.commons.io.IOUtils;
 
 import javax.ws.rs.client.*;
@@ -13,8 +15,10 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.InputStream;
 import java.text.MessageFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 /**
  * Created by ahmed.motair on 11/19/2017.
@@ -84,5 +88,58 @@ public class Util {
 
 
         return response;
+    }
+
+    public static void callRestForFormValidation(String rest, String path, Object data, FormValidation expected) throws Exception{
+        Response response = restPOSTClient(rest, path, data);
+        Assert.assertEquals("Response Status failed", Response.Status.BAD_REQUEST.getStatusCode(), response.getStatus());
+
+        FormValidation actual = response.readEntity(FormValidation.class);
+        Util.validateInvalidFormField(actual, expected);
+    }
+    public static void callRestForStringError(String rest, String path, Object data, String expectedError) throws Exception{
+        Response response = restPOSTClient(rest, path, data);
+        Assert.assertEquals("Response Status failed", Response.Status.BAD_REQUEST.getStatusCode(), response.getStatus());
+
+        String actualError = response.readEntity(String.class);
+        Assert.assertEquals("Error returned doesn't match", expectedError, actualError);
+    }
+
+    public static Boolean isEqualDates(Date expected, Date actual){
+        long diff = actual.getTime() - expected.getTime();
+        return (Math.abs(diff) < 2000);
+    }
+
+    public static void validateInvalidFormField(FormValidation actual, FormValidation expected){
+        Assert.assertEquals("Main Error failed", expected.getMainError(), actual.getMainError());
+
+        if(expected.getFormErrors().size() != actual.getFormErrors().size())
+            Assert.fail("Form validation errors aren't complete");
+
+        boolean subErrorPassed = false;
+        for (Object expectedError : expected.getFormErrors()) {
+            for (Object actualError : actual.getFormErrors()) {
+                if(expectedError.equals(actualError)) {
+                    subErrorPassed = true;
+                    break;
+                }
+            }
+
+            if(!subErrorPassed)
+                Assert.fail("Form Validation Error '" + expectedError + "' is n't found");
+            else
+                subErrorPassed = false;
+        }
+    }
+
+    public static String generateString(int charNum){
+        char[] chars = "abcdefghijklmnopqrstuvwxyz".toCharArray();
+        StringBuilder sb = new StringBuilder();
+        Random random = new Random();
+        for (int i = 0; i < charNum; i++) {
+            char c = chars[random.nextInt(chars.length)];
+            sb.append(c);
+        }
+        return sb.toString();
     }
 }

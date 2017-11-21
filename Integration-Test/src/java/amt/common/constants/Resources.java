@@ -8,6 +8,6 @@ import java.util.List;
  */
 public class Resources {
     public static final List<String> USER = Arrays.asList(
-        SQL.CLEARING_SCRIPT, SQL.ROLE
+        SQL.CLEARING_SCRIPT, SQL.ROLE, SQL.REMOVE_USERS, SQL.NEW_USER
     );
 }

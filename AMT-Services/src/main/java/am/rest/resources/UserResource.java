@@ -7,11 +7,13 @@ import am.infrastructure.data.view.AuthenticatedUser;
 import am.main.api.AppLogger;
 import am.main.api.ErrorHandler;
 import am.main.api.InfoHandler;
-import am.main.exception.BusinessException;
-import am.main.session.AppSession;
+import am.main.common.validation.FormValidation;
 import am.main.data.enums.Interface;
 import am.main.data.enums.Source;
+import am.main.exception.BusinessException;
+import am.main.session.AppSession;
 import am.shared.enums.EC;
+import am.shared.enums.IC;
 import am.shared.session.Phase;
 
 import javax.inject.Inject;
@@ -46,11 +48,15 @@ public class UserResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response register(UserRegisterData userRegisterData) throws Exception {
+    public Response register(UserRegisterData userRegisterData) throws BusinessException {
         String FN_NAME = "register";
         AppSession session = new AppSession(Source.APP_SERVICES, Interface.REST, Phase.REGISTRATION,
                 httpSession.getId(), CLASS, FN_NAME, errorHandler, infoHandler, httpServletRequest.getRemoteAddr());
         try{
+            // Validating the Form Data
+            new FormValidation<UserRegisterData>(session, EC.AMT_0021, userRegisterData);
+            logger.info(session, IC.AMT_0006);
+
             userService.register(session, userRegisterData);
             return Response.ok().build();
         }catch (Exception ex){
@@ -68,6 +74,10 @@ public class UserResource {
         AppSession session = new AppSession(Source.APP_SERVICES, Interface.REST, Phase.LOGIN,
                 httpSession.getId(), CLASS, FN_NAME, errorHandler, infoHandler, httpServletRequest.getRemoteAddr());
         try{
+            // Validating the Form Data
+            new FormValidation<LoginData>(session, EC.AMT_0022, loginData);
+            logger.info(session, IC.AMT_0001);
+
             String loginUserIP = httpServletRequest.getRemoteAddr();
             AuthenticatedUser user = userService.login(session, loginData, loginUserIP);
             return Response.ok().entity(user).build();

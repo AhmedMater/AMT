@@ -1,71 +1,78 @@
 <AM-Loggers>
-    <!--AM Initializing Loggers-->
+    <!-- AM Initializing Logger -->
     <Logger>
         <Name>AM-Initializing</Name>
         <enabled>true</enabled>
         <level>info</level>
     </Logger>
 
-    <!--Filters Loggers-->
+    <!-- Integration Test Logger -->
+    <Logger>
+        <Name>Integration-Test</Name>
+        <enabled>true</enabled>
+        <level>debug</level>
+    </Logger>
+
+    <!-- Filters Loggers -->
     <Logger>
         <Name>Authentication</Name>
         <enabled>true</enabled>
-        <level>info</level>
+        <level>debug</level>
     </Logger>
     <Logger>
         <Name>Authorization</Name>
         <enabled>true</enabled>
-        <level>info</level>
+        <level>debug</level>
     </Logger>
     <Logger>
         <Name>URLLogging</Name>
         <enabled>true</enabled>
-        <level>info</level>
+        <level>debug</level>
     </Logger>
 
-    <!--User Loggers-->
+    <!-- User Loggers -->
     <Logger>
         <Name>Registration</Name>
         <enabled>true</enabled>
-        <level>info</level>
+        <level>debug</level>
     </Logger>
     <Logger>
         <Name>Login</Name>
         <enabled>true</enabled>
-        <level>info</level>
+        <level>debug</level>
     </Logger>
 
-    <!--Course Loggers-->
+    <!-- Course Loggers -->
     <Logger>
         <Name>Course-Create</Name>
         <enabled>true</enabled>
-        <level>info</level>
+        <level>debug</level>
     </Logger>
     <Logger>
         <Name>Course-View</Name>
         <enabled>true</enabled>
-        <level>info</level>
+        <level>debug</level>
     </Logger>
     <Logger>
         <Name>Course-Update</Name>
         <enabled>true</enabled>
-        <level>info</level>
+        <level>debug</level>
     </Logger>
 
-    <!--Article Loggers-->
+    <!-- Article Loggers -->
     <Logger>
         <Name>Article-Create</Name>
         <enabled>true</enabled>
-        <level>info</level>
+        <level>debug</level>
     </Logger>
     <Logger>
         <Name>Article-View</Name>
         <enabled>true</enabled>
-        <level>info</level>
+        <level>debug</level>
     </Logger>
     <Logger>
         <Name>Article-Update</Name>
         <enabled>true</enabled>
-        <level>info</level>
+        <level>debug</level>
     </Logger>
 </AM-Loggers>

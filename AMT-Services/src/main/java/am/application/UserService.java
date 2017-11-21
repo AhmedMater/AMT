@@ -22,7 +22,6 @@ import am.shared.enums.IC;
 
 import javax.inject.Inject;
 import javax.transaction.Transactional;
-import javax.validation.Valid;
 import java.util.Date;
 
 /**
@@ -53,13 +52,6 @@ public class UserService {
         else
             logger.info(session, IC.AMT_0005, userData.getEmail());
 
-//        List<String> errorList = validator.validateForm(session);
-//        if(errorList.size() > 0)
-//            throw new BusinessException(session, EC.AMT_0003, errorList.toArray());
-//        else
-//            logger.info(session, IC.AMT_0006);
-
-        //TODO: Insert the Username, Password and Email in the Database
         Users user = new Users();
         user.setFirstName(userData.getFirstName());
         user.setLastName(userData.getLastName());
@@ -76,7 +68,7 @@ public class UserService {
     }
 
     @Transactional
-    public AuthenticatedUser login(AppSession appSession, @Valid LoginData loginData, String loginUserIP) throws Exception{
+    public AuthenticatedUser login(AppSession appSession, LoginData loginData, String loginUserIP) throws Exception{
         String FN_NAME = "login";
         AppSession session = appSession.updateSession(CLASS, FN_NAME);
         logger.startDebug(session, loginData);
