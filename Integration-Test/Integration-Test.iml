@@ -65,5 +65,13 @@
     <orderEntry type="library" name="Maven: org.apache.logging.log4j:log4j-core:2.9.0" level="project" />
     <orderEntry type="library" name="Maven: org.apache.logging.log4j:log4j-api:2.9.0" level="project" />
     <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.25" level="project" />
+    <orderEntry type="library" name="Maven: org.jboss.arquillian.container:arquillian-container-spi:1.1.13.Final" level="project" />
+    <orderEntry type="library" name="Maven: org.jboss.arquillian.core:arquillian-core-spi:1.1.13.Final" level="project" />
+    <orderEntry type="library" name="Maven: org.jboss.arquillian.core:arquillian-core-api:1.1.13.Final" level="project" />
+    <orderEntry type="library" name="Maven: org.jboss.arquillian.config:arquillian-config-api:1.1.13.Final" level="project" />
+    <orderEntry type="library" name="Maven: org.jboss.arquillian.config:arquillian-config-impl-base:1.1.13.Final" level="project" />
+    <orderEntry type="library" name="Maven: org.jboss.shrinkwrap.descriptors:shrinkwrap-descriptors-spi:2.0.0-alpha-10" level="project" />
+    <orderEntry type="library" name="Maven: org.jboss.shrinkwrap:shrinkwrap-api:1.2.6" level="project" />
+    <orderEntry type="library" name="Maven: org.jboss.shrinkwrap.descriptors:shrinkwrap-descriptors-api-base:2.0.0-alpha-10" level="project" />
   </component>
 </module>

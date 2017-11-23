@@ -59,16 +59,23 @@
             <version>2.25.1</version>
         </dependency>
 
+        <!-- AM-Resources -->
         <dependency>
             <groupId>com.amt.www</groupId>
             <artifactId>AMT-Services</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
 
+        <!-- AMT-Services -->
         <dependency>
             <groupId>com.amt.www</groupId>
             <artifactId>AM-Resources</artifactId>
             <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.arquillian.container</groupId>
+            <artifactId>arquillian-container-spi</artifactId>
+            <version>1.1.13.Final</version>
         </dependency>
     </dependencies>
 </project>

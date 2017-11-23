@@ -4,8 +4,8 @@ package amt.common.generic;
 import am.infrastructure.data.dto.LoginData;
 import am.main.common.validation.FormValidation;
 import am.rest.filters.LoggingFilter;
-import amt.common.constants.Method;
 import amt.common.constants.Rest;
+import amt.common.enums.Method;
 import org.glassfish.jersey.client.ClientConfig;
 import org.junit.Assert;
 import org.unitils.thirdparty.org.apache.commons.io.IOUtils;
@@ -39,14 +39,14 @@ public class Util {
         return restClient(resource, path, false, null, Method.POST, null, null, payload);
     }
 
-    public static Response restGETSecClient(String resource, String path, Map<String, Object> queryParams, LoginData loginData) throws Exception{
+    public static Response restGETSecuredClient(String resource, String path, Map<String, Object> queryParams, LoginData loginData) throws Exception{
         Response response = restClient(Rest.USER.RESOURCE, Rest.USER.REGISTER, false, null, Method.POST, null, null, loginData);
         String token = response.readEntity(String.class);
 
         return restClient(resource, path, true, token, Method.GET, queryParams, null, null);
     }
 
-    public static Response restPOSTSecClient(String resource, String path, Object payload, LoginData loginData) throws Exception{
+    public static Response restPOSTSecuredClient(String resource, String path, Object payload, LoginData loginData) throws Exception{
         Response response = restClient(Rest.USER.RESOURCE, Rest.USER.REGISTER, false, null, Method.POST, null, null, loginData);
         String token = response.readEntity(String.class);
 
@@ -54,7 +54,7 @@ public class Util {
     }
 
     private static Response restClient(String resource, String path, boolean secured, String token,
-              String method, Map<String, Object> queryParams, List<String> pathParams, Object payload) throws Exception{
+               Method method, Map<String, Object> queryParams, List<String> pathParams, Object payload) throws Exception{
         Invocation.Builder invocationBuilder;
         Response response = null;
 
@@ -107,7 +107,7 @@ public class Util {
 
     public static Boolean isEqualDates(Date expected, Date actual){
         long diff = actual.getTime() - expected.getTime();
-        return (Math.abs(diff) < 2000);
+        return (Math.abs(diff) < 4000);
     }
 
     public static void validateInvalidFormField(FormValidation actual, FormValidation expected){

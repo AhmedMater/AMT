@@ -13,7 +13,7 @@ import static am.shared.common.ValidationErrorMsg.*;
 /**
  * Created by ahmed.motair on 10/26/2017.
  */
-public class LoginData implements Serializable{
+public class LoginData implements Serializable, Cloneable{
     @NotNull(message = USERNAME.REQUIRED)
     @NotEmpty(message = USERNAME.EMPTY_STR)
     @Length(min = 5, max = 50, message = USERNAME.LENGTH)
@@ -71,5 +71,14 @@ public class LoginData implements Serializable{
                 "username = " + username +
                 ", password = " + (password != null ? "Password" : "Null") +
                 "}\n";
+    }
+
+    @Override
+    public LoginData clone() throws CloneNotSupportedException {
+        super.clone();
+        LoginData clone = new LoginData();
+        clone.setUsername(this.username);
+        clone.setPassword(this.password);
+        return clone;
     }
 }

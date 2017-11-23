@@ -120,7 +120,7 @@ public class SecurityService {
         String token = authorizationHeader.substring("Bearer".length()).trim();
 
         //Validate the token
-        Users userOfToken = validateToken(session, token, requestContext);
+        Users userOfToken = validateToken(session, token);
 
         // Set the User in the Request
         requestContext.setProperty("Authenticated-User", userOfToken);
@@ -128,11 +128,11 @@ public class SecurityService {
         logger.endDebug(session);
     }
 
-    private Users validateToken(AppSession appSession, String token, ContainerRequestContext requestContext) {
+    public Users validateToken(AppSession appSession, String token) {
         String FN_NAME="validateToken";
         AppSession session = appSession.updateSession(CLASS, FN_NAME);
         try {
-            logger.startDebug(session ,token, requestContext);
+            logger.startDebug(session ,token);
 
             String key = new String(Base64.getDecoder().decode(token),"US-ASCII");
             String[] parts = key.split(":");

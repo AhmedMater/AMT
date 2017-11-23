@@ -1,9 +1,10 @@
 package amt.common;
 
-import amt.common.constants.Method;
-import amt.common.constants.Resources;
 import amt.common.constants.Rest;
-import amt.common.constants.SQL;
+import amt.common.constants.ScriptPaths;
+import amt.common.enums.Method;
+import amt.common.enums.Scripts;
+import amt.common.generic.DataGenerator;
 import amt.common.generic.Repository;
 import amt.common.generic.Util;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
@@ -15,13 +16,14 @@ import java.util.List;
 /**
  * Created by ahmed.motair on 11/18/2017.
  */
-public class Deployment {
+public class DeploymentManger {
 
     private static final String AMT_SERVICES_PATH = "F:\\Giza-Projects\\AMT\\AMT-Code\\target\\AMT-Services.war";
     private static final String BASE_URL = "http://localhost/AMT-Services/api";
 
     private static Class[] classes = {
-            Repository.class, Util.class, SQL.class, Error.class, Method.class, Resources.class, Rest.class
+            Repository.class, DataGenerator.class,
+            Util.class, ScriptPaths.class, Scripts.class, Error.class, Method.class, Rest.class
     };
 
     public static WebArchive createDeployment(List<String> ... resourceFiles) {

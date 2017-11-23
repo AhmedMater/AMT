@@ -1,0 +1,2 @@
+SET SQL_SAFE_UPDATES=0;
+DELETE FROM amt.users WHERE user_id > 0;
