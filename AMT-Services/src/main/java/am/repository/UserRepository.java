@@ -71,16 +71,16 @@ public class UserRepository {
         return user;
     }
 
-    public UserIPDeActive checkUsernameIsDeactivated(AppSession appSession, String username, String hashedPassword, String ip) throws Exception{
-        String FN_NAME = "checkUsernameDeactivated";
+    public UserIPDeActive getUserIPDeActive(AppSession appSession, String username, String hashedPassword, String ip) throws Exception{
+        String FN_NAME = "getUserIPDeActive";
         AppSession session = appSession.updateSession(CLASS, FN_NAME);
-        logger.startDebug(session, username, (hashedPassword != null ? "Hashed Password" : "Null"));
+        logger.startDebug(session, username, (hashedPassword != null ? "Hashed Password" : "Null"), ip);
 
         Map<String, Object> parameters = new HashMap<>();
         parameters.put(UserIPDeActive.USER_NAME, username);
-        parameters.put(UserIPDeActive.PASSWORD, hashedPassword);
+//        parameters.put(UserIPDeActive.PASSWORD, hashedPassword);
         parameters.put(UserIPDeActive.IP, ip);
-        parameters.put(UserIPDeActive.IS_ACTIVE, false);
+//        parameters.put(UserIPDeActive.IS_ACTIVE, false);
 
         UserIPDeActive user = null;
         try {

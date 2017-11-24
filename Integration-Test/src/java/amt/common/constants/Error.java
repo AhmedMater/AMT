@@ -12,6 +12,10 @@ public class Error {
         public static final String LOGIN_VALIDATION_ERROR = "AMT-0022: User Login validation failed";
         public static final String DUPLICATE_USER = "AMT-0001: Username: ''{0}'' already exists in the System";
         public static final String DUPLICATE_EMAIL = "AMT-0002: Email: ''{0}'' already exists in the System";
+        public static final String USER_IS_NOT_FOUND = "AMT-0008: User: ''{0}'' isn't found in the System";
+        public static final String WRONG_PASSWORD = "AMT-0014: Wrong Password, Please try again";
+        public static final String WRONG_PASSWORD_GT_MAX_TRAILS = "AMT-0015: Wrong Password, You have tried {0} trails, Your Account will be deactivated for {1} Min";
+        public static final String WRONG_PASSWORD_LT_LOGIN_DEACTIVATION_DURATION = "AMT-0016: This User is deactivated, you have to wait {0} more Minutes and try login again";
 
         public static final String REQUIRED_USERNAME = "AM-VALID-001: Field 'Username' is mandatory";
         public static final String LENGTH_USERNAME = "AM-VALID-002: Length of Field 'Username' has to be within 5 to 50 char";

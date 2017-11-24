@@ -67,7 +67,7 @@ public class UserService {
         logger.endDebug(session);
     }
 
-    @Transactional
+    @Transactional(dontRollbackOn = BusinessException.class)
     public AuthenticatedUser login(AppSession appSession, LoginData loginData, String loginUserIP) throws Exception{
         String FN_NAME = "login";
         AppSession session = appSession.updateSession(CLASS, FN_NAME);
@@ -89,7 +89,7 @@ public class UserService {
         BusinessException ex = null;
 
         String hashedPassword = securityManager.dm5Hash(session, password);
-        UserIPDeActive userIPDeActive = userRepository.checkUsernameIsDeactivated(session, username, hashedPassword, loginUserIP);
+        UserIPDeActive userIPDeActive = userRepository.getUserIPDeActive(session, username, hashedPassword, loginUserIP);
 
         Integer MAX_LOGIN_TRAILS = appConfigManager.getConfigValue(session, App_CC.MAX_LOGIN_TRAILS, Integer.class);
         Integer LOGIN_DEACTIVATION_DURATION = appConfigManager.getConfigValue(session, App_CC.LOGIN_ACTIVATE_MINUTES, Integer.class);
@@ -117,7 +117,7 @@ public class UserService {
         }else{
             // Case: Wrong Password, and new IP Address
             if(userIPDeActive == null){
-                UserIPDeActive newUserIPDeActive = new UserIPDeActive();
+                UserIPDeActive newUserIPDeActive = new UserIPDeActive(user, loginUserIP);
                 dbManager.persist(session, newUserIPDeActive, false);
 
                 ex = new BusinessException(session, EC.AMT_0014);
@@ -135,7 +135,7 @@ public class UserService {
             }else if(userIPDeActive.getActive()){
 
                 // Case: Wrong Password, IP still Active, and within the MAX_LOGIN_TRAILS
-                if(userIPDeActive.getTrailNum() < MAX_LOGIN_TRAILS){
+                if(userIPDeActive.getTrailNum() < MAX_LOGIN_TRAILS-1){
                     userIPDeActive.incTrail();
                     dbManager.merge(session, userIPDeActive, false);
 

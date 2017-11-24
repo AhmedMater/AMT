@@ -56,7 +56,7 @@ public class UserLoginLog implements Serializable{
         this.loginDate = new Date();
         this.isSuccess = false;
         this.errorCode = ex.getErrorCode().toString();
-        this.errorMsg = ex.getResponse().readEntity(String.class);
+        this.errorMsg = ex.getFormattedError();
     }
     public UserLoginLog(Users user, String ip, Date loginDate, Boolean isSuccess, String errorCode, String errorMsg) {
         this.user = user;

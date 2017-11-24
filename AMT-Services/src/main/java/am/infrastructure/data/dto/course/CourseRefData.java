@@ -2,6 +2,10 @@ package am.infrastructure.data.dto.course;
 
 import am.main.common.validation.RegExp;
 import am.infrastructure.data.hibernate.model.course.CourseReference;
+import am.main.common.validation.groups.BlankValidation;
+import am.main.common.validation.groups.InvalidValidation;
+import am.main.common.validation.groups.LengthValidation;
+import am.main.common.validation.groups.RequiredValidation;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.Min;
@@ -16,25 +20,25 @@ import static am.shared.common.ValidationErrorMsg.COURSE_REFERENCE;
  * Created by ahmed.motair on 11/6/2017.
  */
 public class CourseRefData implements Serializable {
-    @NotNull(message = COURSE_REFERENCE.ORDER.REQUIRED)
-    @Min(value = 1, message = COURSE_REFERENCE.ORDER.INVALID)
+    @NotNull(message = COURSE_REFERENCE.ORDER.REQUIRED, groups = RequiredValidation.class)
+    @Min(value = 1, message = COURSE_REFERENCE.ORDER.INVALID, groups = InvalidValidation.class)
     private Integer num;
 
-    @NotNull(message = COURSE_REFERENCE.NAME.REQUIRED)
-    @NotEmpty(message = COURSE_REFERENCE.NAME.EMPTY_STR)
-    @Length(min = 5, max = 100, message = COURSE_REFERENCE.NAME.LENGTH)
-    @Pattern(regexp = RegExp.CONTENT_NAME, message = COURSE_REFERENCE.NAME.INVALID)
+    @NotNull(message = COURSE_REFERENCE.NAME.REQUIRED, groups = RequiredValidation.class)
+    @NotEmpty(message = COURSE_REFERENCE.NAME.EMPTY_STR, groups = BlankValidation.class)
+    @Length(min = 5, max = 100, message = COURSE_REFERENCE.NAME.LENGTH, groups = LengthValidation.class)
+    @Pattern(regexp = RegExp.CONTENT_NAME, message = COURSE_REFERENCE.NAME.INVALID, groups = InvalidValidation.class)
     private String name;
 
-    @NotNull(message = COURSE_REFERENCE.TYPE.REQUIRED)
-    @NotEmpty(message = COURSE_REFERENCE.TYPE.EMPTY_STR)
-    @Length(min = 2, max = 2, message = COURSE_REFERENCE.TYPE.LENGTH)
+    @NotNull(message = COURSE_REFERENCE.TYPE.REQUIRED, groups = RequiredValidation.class)
+    @NotEmpty(message = COURSE_REFERENCE.TYPE.EMPTY_STR, groups = BlankValidation.class)
+    @Length(min = 2, max = 2, message = COURSE_REFERENCE.TYPE.LENGTH, groups = LengthValidation.class)
     private String type;
 
-    @NotNull(message = COURSE_REFERENCE.URL.REQUIRED)
-    @NotEmpty(message = COURSE_REFERENCE.URL.EMPTY_STR)
-    @Length(min = 5, max = 200, message = COURSE_REFERENCE.URL.LENGTH)
-    @Pattern(regexp = RegExp.URL, message = COURSE_REFERENCE.URL.INVALID)
+    @NotNull(message = COURSE_REFERENCE.URL.REQUIRED, groups = RequiredValidation.class)
+    @NotEmpty(message = COURSE_REFERENCE.URL.EMPTY_STR, groups = BlankValidation.class)
+    @Length(min = 5, max = 200, message = COURSE_REFERENCE.URL.LENGTH, groups = LengthValidation.class)
+    @Pattern(regexp = RegExp.URL, message = COURSE_REFERENCE.URL.INVALID, groups = InvalidValidation.class)
     private String url;
 
     public CourseRefData() {

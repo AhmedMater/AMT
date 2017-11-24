@@ -46,11 +46,9 @@ public class DataGenerator {
      * @param data UserRegisterData Object that will be inserted
      *
      */
-    public void registerUser(UserRegisterData data) throws Exception{
+    public Users registerUser(UserRegisterData data) throws Exception{
         String FN_NAME = "registerUser";
         AppSession session = appSession.updateSession(CLASS, FN_NAME);
-
-        repository.executeScript(Scripts.CLEARING_ALL_TABLES);
         repository.executeScript(Scripts.ROLE_LOOKUP);
 
         Response response = Util.restPOSTClient(Rest.USER.RESOURCE, Rest.USER.REGISTER, data);
@@ -68,6 +66,7 @@ public class DataGenerator {
 
         if(!Util.isEqualDates(new Date(), actual.getCreationDate()))
             Assert.fail("Creation Date failed");
+        return actual;
     }
 
     /**

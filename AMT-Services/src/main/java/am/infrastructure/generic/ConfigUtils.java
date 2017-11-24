@@ -16,18 +16,7 @@ public class ConfigUtils {
         if (ex instanceof BusinessException) {
             logger.error(session, ec, args);
             return (BusinessException) ex;
-        }
-//        else if(ex instanceof ConstraintViolationException){
-//            ConstraintViolationException exc = (ConstraintViolationException) ex;
-//            Set<ConstraintViolation<?>> violationSet = exc.getConstraintViolations();
-//
-//            List<String> errors = new ArrayList<>();
-//            for (ConstraintViolation<?> violation : violationSet)
-//                errors.add(violation.getMessage());
-//
-//            throw new BusinessException(session, EC.AMT_0021, errors.toString());
-//        }
-        else {
+        }else {
             logger.error(session, ex, ec, args);
             return new BusinessException(session, ex, EC.AMT_0000);
         }

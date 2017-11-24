@@ -2,6 +2,10 @@ package am.infrastructure.data.dto.course;
 
 import am.main.common.validation.RegExp;
 import am.infrastructure.data.hibernate.model.course.CoursePreRequisite;
+import am.main.common.validation.groups.BlankValidation;
+import am.main.common.validation.groups.InvalidValidation;
+import am.main.common.validation.groups.LengthValidation;
+import am.main.common.validation.groups.RequiredValidation;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.Min;
@@ -16,25 +20,25 @@ import static am.shared.common.ValidationErrorMsg.COURSE_PRE_REQUISITE;
  * Created by ahmed.motair on 11/6/2017.
  */
 public class CoursePRData implements Serializable{
-    @NotNull(message = COURSE_PRE_REQUISITE.ORDER.REQUIRED)
-    @Min(value = 1, message = COURSE_PRE_REQUISITE.ORDER.INVALID)
+    @NotNull(message = COURSE_PRE_REQUISITE.ORDER.REQUIRED, groups = RequiredValidation.class)
+    @Min(value = 1, message = COURSE_PRE_REQUISITE.ORDER.INVALID, groups = InvalidValidation.class)
     private Integer num;
 
-    @NotNull(message = COURSE_PRE_REQUISITE.NAME.REQUIRED)
-    @NotEmpty(message = COURSE_PRE_REQUISITE.NAME.EMPTY_STR)
-    @Length(min = 5, max = 100, message = COURSE_PRE_REQUISITE.NAME.LENGTH)
-    @Pattern(regexp = RegExp.CONTENT_NAME, message = COURSE_PRE_REQUISITE.NAME.INVALID)
+    @NotNull(message = COURSE_PRE_REQUISITE.NAME.REQUIRED, groups = RequiredValidation.class)
+    @NotEmpty(message = COURSE_PRE_REQUISITE.NAME.EMPTY_STR, groups = BlankValidation.class)
+    @Length(min = 5, max = 100, message = COURSE_PRE_REQUISITE.NAME.LENGTH, groups = LengthValidation.class)
+    @Pattern(regexp = RegExp.CONTENT_NAME, message = COURSE_PRE_REQUISITE.NAME.INVALID, groups = InvalidValidation.class)
     private String name;
 
-    @NotNull(message = COURSE_PRE_REQUISITE.TYPE.REQUIRED)
-    @NotEmpty(message = COURSE_PRE_REQUISITE.TYPE.EMPTY_STR)
-    @Length(min = 2, max = 2, message = COURSE_PRE_REQUISITE.TYPE.LENGTH)
+    @NotNull(message = COURSE_PRE_REQUISITE.TYPE.REQUIRED, groups = RequiredValidation.class)
+    @NotEmpty(message = COURSE_PRE_REQUISITE.TYPE.EMPTY_STR, groups = BlankValidation.class)
+    @Length(min = 2, max = 2, message = COURSE_PRE_REQUISITE.TYPE.LENGTH, groups = LengthValidation.class)
     private String type;
 
-    @NotNull(message = COURSE_PRE_REQUISITE.URL.REQUIRED)
-    @NotEmpty(message = COURSE_PRE_REQUISITE.URL.EMPTY_STR)
-    @Length(min = 5, max = 200, message = COURSE_PRE_REQUISITE.URL.LENGTH)
-    @Pattern(regexp = RegExp.URL, message = COURSE_PRE_REQUISITE.URL.INVALID)
+    @NotNull(message = COURSE_PRE_REQUISITE.URL.REQUIRED, groups = RequiredValidation.class)
+    @NotEmpty(message = COURSE_PRE_REQUISITE.URL.EMPTY_STR, groups = BlankValidation.class)
+    @Length(min = 5, max = 200, message = COURSE_PRE_REQUISITE.URL.LENGTH, groups = LengthValidation.class)
+    @Pattern(regexp = RegExp.URL, message = COURSE_PRE_REQUISITE.URL.INVALID, groups = InvalidValidation.class)
     private String url;
 
     public CoursePRData() {

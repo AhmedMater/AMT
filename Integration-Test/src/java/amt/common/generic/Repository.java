@@ -1,8 +1,12 @@
 package amt.common.generic;
 
+import am.infrastructure.data.hibernate.model.user.UserIPDeActive;
+import am.infrastructure.data.hibernate.model.user.UserIPFailure;
+import am.infrastructure.data.hibernate.model.user.UserLoginLog;
 import am.infrastructure.data.hibernate.model.user.Users;
 import am.shared.common.SharedParam;
 import amt.common.enums.Scripts;
+import org.junit.Assert;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -43,9 +47,33 @@ public class Repository {
         List<Users> list = em.createQuery("FROM Users WHERE username = :Username", Users.class)
                 .setParameter("Username", username).getResultList();
 
-        if(list.size() > 0)
-            return list.get(0);
-        else
-            return null;
+        Assert.assertTrue("User: " + username + " isn't found in Database", list.size() == 1);
+        return list.get(0);
+    }
+
+    public List<UserLoginLog> getUserLoginLog(Integer userID) {
+        List<UserLoginLog> list = em
+                .createQuery("FROM UserLoginLog WHERE user.userID = :UserID", UserLoginLog.class)
+                .setParameter("UserID", userID).getResultList();
+
+        Assert.assertTrue("UserLoginLog : " + userID + " isn't found in Database", list.size() != 0);
+        return list;
+    }
+
+    public UserIPFailure getUserIPFailure(String username) {
+        List<UserIPFailure> list = em.createQuery("FROM UserIPFailure WHERE username = :Username", UserIPFailure.class)
+                .setParameter("Username", username).getResultList();
+
+        Assert.assertTrue("UserIPFailure: " + username + " isn't found in Database", list.size() == 1);
+        return list.get(0);
+    }
+
+    public UserIPDeActive getUserIPDeActive(Integer userID) {
+        List<UserIPDeActive> list = em
+                .createQuery("FROM UserIPDeActive WHERE user.userID = :UserID", UserIPDeActive.class)
+                .setParameter("UserID", userID).getResultList();
+
+        Assert.assertTrue("UserIPDeActive : " + userID + " isn't found in Database", list.size() == 1);
+        return list.get(0);
     }
 }

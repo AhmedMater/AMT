@@ -1,29 +1,34 @@
 package am.infrastructure.data.dto;
 
 import am.main.common.validation.RegExp;
-import org.hibernate.validator.constraints.Length;
+import am.main.common.validation.groups.BlankValidation;
+import am.main.common.validation.groups.InvalidValidation;
+import am.main.common.validation.groups.LengthValidation;
+import am.main.common.validation.groups.RequiredValidation;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 
-import static am.shared.common.ValidationErrorMsg.*;
+import static am.shared.common.ValidationErrorMsg.PASSWORD;
+import static am.shared.common.ValidationErrorMsg.USERNAME;
 
 /**
  * Created by ahmed.motair on 10/26/2017.
  */
 public class LoginData implements Serializable, Cloneable{
-    @NotNull(message = USERNAME.REQUIRED)
-    @NotEmpty(message = USERNAME.EMPTY_STR)
-    @Length(min = 5, max = 50, message = USERNAME.LENGTH)
-    @Pattern(regexp = RegExp.USERNAME, message = USERNAME.INVALID)
+    @NotNull(message = USERNAME.REQUIRED, groups = RequiredValidation.class)
+    @NotEmpty(message = USERNAME.EMPTY_STR, groups = BlankValidation.class)
+    @Size(min = 5, max = 50, message = USERNAME.LENGTH, groups = LengthValidation.class)
+    @Pattern(regexp = RegExp.USERNAME, message = USERNAME.INVALID, groups = InvalidValidation.class)
     private String username;
 
-    @NotNull(message = PASSWORD.REQUIRED)
-    @NotEmpty(message = PASSWORD.EMPTY_STR)
-    @Length(min = 5, max = 30, message = PASSWORD.LENGTH)
-    @Pattern(regexp = RegExp.PASSWORD, message = PASSWORD.INVALID)
+    @NotNull(message = PASSWORD.REQUIRED, groups = RequiredValidation.class)
+    @NotEmpty(message = PASSWORD.EMPTY_STR, groups = BlankValidation.class)
+    @Size(min = 5, max = 30, message = PASSWORD.LENGTH, groups = LengthValidation.class)
+    @Pattern(regexp = RegExp.PASSWORD, message = PASSWORD.INVALID, groups = InvalidValidation.class)
     private String password;
 
     public LoginData() {

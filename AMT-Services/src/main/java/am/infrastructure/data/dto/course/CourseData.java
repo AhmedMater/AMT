@@ -4,6 +4,10 @@ import am.infrastructure.data.hibernate.model.course.Course;
 import am.infrastructure.data.hibernate.model.course.CoursePreRequisite;
 import am.infrastructure.data.hibernate.model.course.CourseReference;
 import am.main.common.validation.RegExp;
+import am.main.common.validation.groups.BlankValidation;
+import am.main.common.validation.groups.InvalidValidation;
+import am.main.common.validation.groups.LengthValidation;
+import am.main.common.validation.groups.RequiredValidation;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.Min;
@@ -21,31 +25,31 @@ import static am.shared.common.ValidationErrorMsg.*;
  * Created by ahmed.motair on 11/6/2017.
  */
 public class CourseData implements Serializable{
-    @NotNull(message = COURSE_NAME.REQUIRED)
-    @NotEmpty(message = COURSE_NAME.EMPTY_STR)
-    @Length(min = 5, max = 100, message = COURSE_NAME.LENGTH)
-    @Pattern(regexp = RegExp.CONTENT_NAME, message = COURSE_NAME.INVALID)
+    @NotNull(message = COURSE_NAME.REQUIRED, groups = RequiredValidation.class)
+    @NotEmpty(message = COURSE_NAME.EMPTY_STR, groups = BlankValidation.class)
+    @Length(min = 5, max = 100, message = COURSE_NAME.LENGTH, groups = LengthValidation.class)
+    @Pattern(regexp = RegExp.CONTENT_NAME, message = COURSE_NAME.INVALID, groups = InvalidValidation.class)
     private String courseName;
 
-    @NotNull(message = COURSE_LEVEL.REQUIRED)
-    @NotEmpty(message = COURSE_LEVEL.EMPTY_STR)
-    @Length(min = 2, max = 2, message = COURSE_LEVEL.LENGTH)
+    @NotNull(message = COURSE_LEVEL.REQUIRED, groups = RequiredValidation.class)
+    @NotEmpty(message = COURSE_LEVEL.EMPTY_STR, groups = BlankValidation.class)
+    @Length(min = 2, max = 2, message = COURSE_LEVEL.LENGTH, groups = LengthValidation.class)
     private String courseLevel;
 
-    @NotNull(message = COURSE_TYPE.REQUIRED)
-    @NotEmpty(message = COURSE_TYPE.EMPTY_STR)
-    @Length(min = 2, max = 2, message = COURSE_TYPE.LENGTH)
+    @NotNull(message = COURSE_TYPE.REQUIRED, groups = RequiredValidation.class)
+    @NotEmpty(message = COURSE_TYPE.EMPTY_STR, groups = BlankValidation.class)
+    @Length(min = 2, max = 2, message = COURSE_TYPE.LENGTH, groups = LengthValidation.class)
     private String courseType;
 
-    @NotEmpty(message = COURSE_DESCRIPTION.EMPTY_STR)
-    @Length(max = 200, message = COURSE_DESCRIPTION.LENGTH)
+    @NotEmpty(message = COURSE_DESCRIPTION.EMPTY_STR, groups = BlankValidation.class)
+    @Length(max = 200, message = COURSE_DESCRIPTION.LENGTH, groups = LengthValidation.class)
     private String description;
 
-    @NotNull(message = COURSE_DURATION.REQUIRED)
-    @Min(value = 1, message = COURSE_DURATION.INVALID)
+    @NotNull(message = COURSE_DURATION.REQUIRED, groups = RequiredValidation.class)
+    @Min(value = 1, message = COURSE_DURATION.INVALID, groups = InvalidValidation.class)
     private Integer estimatedDuration;
 
-    @Min(value = 1, message = COURSE_DURATION.INVALID)
+    @Min(value = 1, message = COURSE_DURATION.INVALID, groups = InvalidValidation.class)
     private Integer actualDuration;
 
     private Date createdOn;

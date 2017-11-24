@@ -5,6 +5,11 @@
         <enabled>true</enabled>
         <level>info</level>
     </Logger>
+    <Logger>
+        <Name>AM-Library</Name>
+        <enabled>true</enabled>
+        <level>info</level>
+    </Logger>
 
     <!-- Integration Test Logger -->
     <Logger>

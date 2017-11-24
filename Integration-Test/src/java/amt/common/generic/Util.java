@@ -107,7 +107,7 @@ public class Util {
 
     public static Boolean isEqualDates(Date expected, Date actual){
         long diff = actual.getTime() - expected.getTime();
-        return (Math.abs(diff) < 4000);
+        return (Math.abs(diff) < 10000);
     }
 
     public static void validateInvalidFormField(FormValidation actual, FormValidation expected){
