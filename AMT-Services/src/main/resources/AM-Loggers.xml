@@ -46,6 +46,16 @@
         <enabled>true</enabled>
         <level>debug</level>
     </Logger>
+    <Logger>
+        <Name>User-View</Name>
+        <enabled>true</enabled>
+        <level>debug</level>
+    </Logger>
+    <Logger>
+        <Name>User-Update</Name>
+        <enabled>true</enabled>
+        <level>debug</level>
+    </Logger>
 
     <!-- Course Loggers -->
     <Logger>

@@ -98,7 +98,7 @@ public class SecurityService {
 
         boolean authorized = false;
         for (Roles allowedRole : allowedRoles)
-            if (allowedRole.name().equals(userRole.getDescription()))
+            if (allowedRole.description().equals(userRole.getDescription()))
                 authorized = true;
 
         if(!authorized)

@@ -12,12 +12,14 @@ public class AuthenticatedUser implements Serializable{
     private String fullName;
     private String token;
     private String role;
+    private Integer userID;
 
     public AuthenticatedUser() {
     }
     public AuthenticatedUser(Users user, String token) {
         this.username = user.getUsername();
         this.fullName = user.getFullName();
+        this.userID = user.getUserID();
         this.token = token;
         this.role = user.getRole().getRole();
     }
@@ -56,6 +58,13 @@ public class AuthenticatedUser implements Serializable{
         this.role = role;
     }
 
+    public Integer getUserID() {
+        return userID;
+    }
+    public void setUserID(Integer userID) {
+        this.userID = userID;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -84,6 +93,7 @@ public class AuthenticatedUser implements Serializable{
                 ", username = " + username +
                 ", token = " + token +
                 ", role = " + role +
+                ", userID = " + userID +
                 "}\n";
     }
 }

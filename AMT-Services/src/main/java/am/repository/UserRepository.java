@@ -78,9 +78,7 @@ public class UserRepository {
 
         Map<String, Object> parameters = new HashMap<>();
         parameters.put(UserIPDeActive.USER_NAME, username);
-//        parameters.put(UserIPDeActive.PASSWORD, hashedPassword);
         parameters.put(UserIPDeActive.IP, ip);
-//        parameters.put(UserIPDeActive.IS_ACTIVE, false);
 
         UserIPDeActive user = null;
         try {
@@ -103,7 +101,6 @@ public class UserRepository {
         Users user = null;
         try {
             user = dbManager.getSingleResult(session, true, Users.class, parameters);
-//            user.setPassword(null);
         }catch (DBException ex){
             if(ex.getAME_CODE().equals(AME.DB_016)) {
                 logger.error(session, ex);

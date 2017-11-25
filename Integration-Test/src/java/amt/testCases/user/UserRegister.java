@@ -1,6 +1,6 @@
 package amt.testCases.user;
 
-import am.infrastructure.data.dto.UserRegisterData;
+import am.infrastructure.data.dto.user.UserRegisterData;
 import am.infrastructure.data.hibernate.model.user.Users;
 import am.main.api.AMSecurityManager;
 import am.main.api.ErrorHandler;
@@ -68,16 +68,16 @@ public class UserRegister {
     private void callRestForFormValidation(UserRegisterData data, FormValidation expected) throws Exception{
         Util.callRestForFormValidation(USER.RESOURCE, USER.REGISTER, data, expected);
 
-        Users user = repository.getUserByUsername(data.getUsername());
+        Users user = repository.getUserByUsername(data.getUsername(), false);
         Assert.assertNull("User is found in Database", user);
     }
 
     private void callRestOk(AppSession session, UserRegisterData expected) throws Exception{
-        dataGenerator.registerUser(expected);
+        dataGenerator.registerUser(expected, false);
         repository.executeScript(Scripts.CLEARING_USER_TABLE);
     }
 
-    @Test
+    @Test @InSequence(2)
     public void user_register_FirstName_AllowChar(){
         String TEST_CASE_NAME = "user_register_FirstName_AllowChar";
         try{
@@ -91,7 +91,7 @@ public class UserRegister {
         }
     }
 
-    @Test
+    @Test @InSequence(3)
     public void user_register_FirstName_AllowHyphen(){
         String TEST_CASE_NAME = "user_register_FirstName_AllowHyphen";
         try{
@@ -105,7 +105,7 @@ public class UserRegister {
         }
     }
 
-    @Test
+    @Test @InSequence(4)
     public void user_register_FirstName_AllowComma(){
         String TEST_CASE_NAME = "user_register_FirstName_AllowComma";
         try{
@@ -119,7 +119,7 @@ public class UserRegister {
         }
     }
 
-    @Test
+    @Test @InSequence(5)
     public void user_register_FirstName_AllowPeriod(){
         String TEST_CASE_NAME = "user_register_FirstName_AllowPeriod";
         try{
@@ -133,7 +133,7 @@ public class UserRegister {
         }
     }
 
-    @Test
+    @Test @InSequence(6)
     public void user_register_FirstName_AllowApostrophe(){
         String TEST_CASE_NAME = "user_register_FirstName_AllowApostrophe";
         try{
@@ -147,7 +147,7 @@ public class UserRegister {
         }
     }
 
-    @Test
+    @Test @InSequence(7)
     public void user_register_FirstName_InvalidValue(){
         String TEST_CASE_NAME = "user_register_FirstName_InvalidValue";
         try{
@@ -162,7 +162,7 @@ public class UserRegister {
         }
     }
 
-    @Test
+    @Test @InSequence(8)
     public void user_register_FirstName_EmptyString(){
         String TEST_CASE_NAME = "user_register_FirstName_EmptyString";
         try{
@@ -177,7 +177,7 @@ public class UserRegister {
         }
     }
 
-    @Test
+    @Test @InSequence(9)
     public void user_register_FirstName_MaxLength(){
         String TEST_CASE_NAME = "user_register_FirstName_MaxLength";
         try{
@@ -192,7 +192,7 @@ public class UserRegister {
         }
     }
 
-    @Test
+    @Test @InSequence(10)
     public void user_register_FirstName_Required(){
         String TEST_CASE_NAME = "user_register_FirstName_Required";
         try{
@@ -207,7 +207,7 @@ public class UserRegister {
         }
     }
 
-    @Test
+    @Test @InSequence(11)
     public void user_register_LastName_AllowChar(){
         String TEST_CASE_NAME = "user_register_LastName_AllowChar";
         try{
@@ -221,7 +221,7 @@ public class UserRegister {
         }
     }
 
-    @Test
+    @Test @InSequence(12)
     public void user_register_LastName_AllowHyphen(){
         String TEST_CASE_NAME = "user_register_LastName_AllowHyphen";
         try{
@@ -235,7 +235,7 @@ public class UserRegister {
         }
     }
 
-    @Test
+    @Test @InSequence(13)
     public void user_register_LastName_AllowComma(){
         String TEST_CASE_NAME = "user_register_LastName_AllowComma";
         try{
@@ -249,7 +249,7 @@ public class UserRegister {
         }
     }
 
-    @Test
+    @Test @InSequence(14)
     public void user_register_LastName_AllowPeriod(){
         String TEST_CASE_NAME = "user_register_LastName_AllowPeriod";
         try{
@@ -263,7 +263,7 @@ public class UserRegister {
         }
     }
 
-    @Test
+    @Test @InSequence(15)
     public void user_register_LastName_AllowApostrophe(){
         String TEST_CASE_NAME = "user_register_LastName_AllowApostrophe";
         try{
@@ -277,7 +277,7 @@ public class UserRegister {
         }
     }
 
-    @Test
+    @Test @InSequence(16)
     public void user_register_LastName_InvalidValue(){
         String TEST_CASE_NAME = "user_register_LastName_";
         try{
@@ -292,7 +292,7 @@ public class UserRegister {
         }
     }
 
-    @Test
+    @Test @InSequence(17)
     public void user_register_LastName_EmptyString(){
         String TEST_CASE_NAME = "user_register_LastName_EmptyString";
         try{
@@ -307,7 +307,7 @@ public class UserRegister {
         }
     }
 
-    @Test
+    @Test @InSequence(18)
     public void user_register_LastName_MaxLength(){
         String TEST_CASE_NAME = "user_register_LastName_MaxLength";
         try{
@@ -322,7 +322,7 @@ public class UserRegister {
         }
     }
 
-    @Test
+    @Test @InSequence(19)
     public void user_register_LastName_Required(){
         String TEST_CASE_NAME = "user_register_LastName_Required";
         try{
@@ -337,7 +337,7 @@ public class UserRegister {
         }
     }
 
-    @Test
+    @Test @InSequence(20)
     public void user_register_Username_AllowChar(){
         String TEST_CASE_NAME = "user_register_Username_AllowChar";
         try{
@@ -351,7 +351,7 @@ public class UserRegister {
         }
     }
 
-    @Test
+    @Test @InSequence(21)
     public void user_register_Username_AllowUnderscore(){
         String TEST_CASE_NAME = "user_register_Username_AllowUnderscore";
         try{
@@ -365,7 +365,7 @@ public class UserRegister {
         }
     }
 
-    @Test
+    @Test @InSequence(22)
     public void user_register_Username_AllowPeriod(){
         String TEST_CASE_NAME = "user_register_Username_AllowPeriod";
         try{
@@ -379,7 +379,7 @@ public class UserRegister {
         }
     }
 
-    @Test
+    @Test @InSequence(23)
     public void user_register_Username_AllowHyphen(){
         String TEST_CASE_NAME = "user_register_Username_AllowHyphen";
         try{
@@ -393,7 +393,7 @@ public class UserRegister {
         }
     }
 
-    @Test
+    @Test @InSequence(24)
     public void user_register_Username_AllowNumber(){
         String TEST_CASE_NAME = "user_register_Username_AllowNumber";
         try{
@@ -407,7 +407,7 @@ public class UserRegister {
         }
     }
 
-    @Test
+    @Test @InSequence(25)
     public void user_register_Username_InvalidValue(){
         String TEST_CASE_NAME = "user_register_Username_InvalidValue";
         try{
@@ -422,7 +422,7 @@ public class UserRegister {
         }
     }
 
-    @Test
+    @Test @InSequence(26)
     public void user_register_Username_EmptyString(){
         String TEST_CASE_NAME = "user_register_Username_EmptyString";
         try{
@@ -437,7 +437,7 @@ public class UserRegister {
         }
     }
 
-    @Test
+    @Test @InSequence(27)
     public void user_register_Username_MinLength(){
         String TEST_CASE_NAME = "user_register_Username_MinLength";
         try{
@@ -452,7 +452,7 @@ public class UserRegister {
         }
     }
 
-    @Test
+    @Test @InSequence(28)
     public void user_register_Username_MaxLength(){
         String TEST_CASE_NAME = "user_register_Username_MaxLength";
         try{
@@ -467,7 +467,7 @@ public class UserRegister {
         }
     }
 
-    @Test
+    @Test @InSequence(29)
     public void user_register_Username_Required(){
         String TEST_CASE_NAME = "user_register_Username_Required";
         try{
@@ -482,14 +482,14 @@ public class UserRegister {
         }
     }
 
-    @Test
+    @Test @InSequence(30)
     public void user_register_Username_Duplicate(){
         String TEST_CASE_NAME = "user_register_Username_Duplicate";
         try{
             AppSession session = appSession.updateSession(CLASS, TEST_CASE_NAME);
 
             UserRegisterData validData = this.userData.clone();
-            dataGenerator.registerUser(validData);
+            dataGenerator.registerUser(validData, false);
 
             UserRegisterData invalidData = this.userData.clone();
             invalidData.setEmail("ahmedmotair@gmail.com");
@@ -502,7 +502,7 @@ public class UserRegister {
         }
     }
 
-    @Test
+    @Test @InSequence(31)
     public void user_register_Password_AllowChar(){
         String TEST_CASE_NAME = "user_register_Password_AllowChar";
         try{
@@ -517,7 +517,7 @@ public class UserRegister {
         }
     }
 
-    @Test
+    @Test @InSequence(32)
     public void user_register_Password_AllowNumber(){
         String TEST_CASE_NAME = "user_register_Password_AllowNumber";
         try{
@@ -531,7 +531,7 @@ public class UserRegister {
         }
     }
 
-    @Test
+    @Test @InSequence(33)
     public void user_register_Password_AllowPeriod(){
         String TEST_CASE_NAME = "user_register_Password_AllowPeriod";
         try{
@@ -545,7 +545,7 @@ public class UserRegister {
         }
     }
 
-    @Test
+    @Test @InSequence(34)
     public void user_register_Password_AllowHyphen(){
         String TEST_CASE_NAME = "user_register_Password_AllowHyphen";
         try{
@@ -559,7 +559,7 @@ public class UserRegister {
         }
     }
 
-    @Test
+    @Test @InSequence(35)
     public void user_register_Password_AllowAmpersand(){
         String TEST_CASE_NAME = "user_register_Password_AllowAmpersand";
         try{
@@ -573,7 +573,7 @@ public class UserRegister {
         }
     }
 
-    @Test
+    @Test @InSequence(36)
     public void user_register_Password_AllowUnderscore(){
         String TEST_CASE_NAME = "user_register_Password_AllowUnderscore";
         try{
@@ -587,7 +587,7 @@ public class UserRegister {
         }
     }
 
-    @Test
+    @Test @InSequence(37)
     public void user_register_Password_InvalidValue(){
         String TEST_CASE_NAME = "user_register_Password_InvalidValue";
         try{
@@ -602,7 +602,7 @@ public class UserRegister {
         }
     }
 
-    @Test
+    @Test @InSequence(38)
     public void user_register_Password_EmptyString(){
         String TEST_CASE_NAME = "user_register_Password_EmptyString";
         try{
@@ -617,7 +617,7 @@ public class UserRegister {
         }
     }
 
-    @Test
+    @Test @InSequence(39)
     public void user_register_Password_MinLength(){
         String TEST_CASE_NAME = "user_register_Password_MinLength";
         try{
@@ -632,7 +632,7 @@ public class UserRegister {
         }
     }
 
-    @Test
+    @Test @InSequence(40)
     public void user_register_Password_MaxLength(){
         String TEST_CASE_NAME = "user_register_Password_MaxLength";
         try{
@@ -647,7 +647,7 @@ public class UserRegister {
         }
     }
 
-    @Test
+    @Test @InSequence(41)
     public void user_register_Password_Required(){
         String TEST_CASE_NAME = "user_register_Password_Required";
         try{
@@ -662,7 +662,7 @@ public class UserRegister {
         }
     }
 
-    @Test
+    @Test @InSequence(42)
     public void user_register_Email_AllowChar(){
         String TEST_CASE_NAME = "user_register_Email_AllowChar";
         try{
@@ -676,7 +676,7 @@ public class UserRegister {
         }
     }
 
-    @Test
+    @Test @InSequence(43)
     public void user_register_Email_AllowNumber(){
         String TEST_CASE_NAME = "user_register_Email_AllowNumber";
         try{
@@ -690,7 +690,7 @@ public class UserRegister {
         }
     }
 
-    @Test
+    @Test @InSequence(44)
     public void user_register_Email_AllowPeriod(){
         String TEST_CASE_NAME = "user_register_Email_AllowPeriod";
         try{
@@ -704,7 +704,7 @@ public class UserRegister {
         }
     }
 
-    @Test
+    @Test @InSequence(45)
     public void user_register_Email_AllowHyphen(){
         String TEST_CASE_NAME = "user_register_Email_AllowHyphen";
         try{
@@ -718,7 +718,7 @@ public class UserRegister {
         }
     }
 
-    @Test
+    @Test @InSequence(46)
     public void user_register_Email_AllowHyphenInDomain(){
         String TEST_CASE_NAME = "user_register_Email_AllowHyphenInDomain";
         try{
@@ -732,7 +732,7 @@ public class UserRegister {
         }
     }
 
-    @Test
+    @Test @InSequence(47)
     public void user_register_Email_Invalid(){
         String TEST_CASE_NAME = "user_register_Email_Invalid";
         try{
@@ -747,7 +747,7 @@ public class UserRegister {
         }
     }
 
-    @Test
+    @Test @InSequence(48)
     public void user_register_Email_EmptyString(){
         String TEST_CASE_NAME = "user_register_Email_EmptyString";
         try{
@@ -762,7 +762,7 @@ public class UserRegister {
         }
     }
 
-    @Test
+    @Test @InSequence(49)
     public void user_register_Email_MinLength(){
         String TEST_CASE_NAME = "user_register_Email_MinLength";
         try{
@@ -777,7 +777,7 @@ public class UserRegister {
         }
     }
 
-    @Test
+    @Test @InSequence(50)
     public void user_register_Email_MaxLength(){
         String TEST_CASE_NAME = "user_register_Email_MaxLength";
         try{
@@ -792,7 +792,7 @@ public class UserRegister {
         }
     }
 
-    @Test
+    @Test @InSequence(51)
     public void user_register_Email_Required(){
         String TEST_CASE_NAME = "user_register_Email_Required";
         try{
@@ -807,14 +807,14 @@ public class UserRegister {
         }
     }
 
-    @Test
+    @Test @InSequence(52)
     public void user_register_Email_Duplicate(){
         String TEST_CASE_NAME = "user_register_Email_Duplicate";
         try{
             AppSession session = appSession.updateSession(CLASS, TEST_CASE_NAME);
 
             UserRegisterData validData = this.userData.clone();
-            dataGenerator.registerUser(validData);
+            dataGenerator.registerUser(validData, false);
 
             UserRegisterData invalidData = this.userData.clone();
             invalidData.setUsername("ahmed_Ali");

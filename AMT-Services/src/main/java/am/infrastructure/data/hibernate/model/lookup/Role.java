@@ -16,6 +16,8 @@ import java.io.Serializable;
 @Cache(usage = CacheConcurrencyStrategy.READ_ONLY, region = ConfigParam.EH_CACHE_LOOKUP_REGION)
 @Table(name = "role")
 public class Role implements Serializable{
+    public static final String IS_ADMIN = "admin";
+
     @Id
     @Column(name = "role")
     private String role;
@@ -23,6 +25,10 @@ public class Role implements Serializable{
     @Basic
     @Column(name = "description")
     private String description;
+
+    @Basic
+    @Column(name = "isAdmin")
+    private Boolean admin;
 
     public Role() {
     }
@@ -49,6 +55,13 @@ public class Role implements Serializable{
     }
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Boolean isAdmin() {
+        return admin;
+    }
+    public void setAdmin(Boolean admin) {
+        this.admin = admin;
     }
 
     @Override

@@ -1,17 +1,14 @@
 package amt.testCases.user;
 
-import am.application.SecurityService;
-import am.infrastructure.data.dto.LoginData;
-import am.infrastructure.data.dto.UserRegisterData;
+import am.infrastructure.data.dto.user.LoginData;
+import am.infrastructure.data.dto.user.UserRegisterData;
 import am.infrastructure.data.hibernate.model.user.UserIPDeActive;
 import am.infrastructure.data.hibernate.model.user.UserIPFailure;
 import am.infrastructure.data.hibernate.model.user.UserLoginLog;
 import am.infrastructure.data.hibernate.model.user.Users;
-import am.main.api.AMSecurityManager;
 import am.main.api.AppConfigManager;
 import am.main.api.ErrorHandler;
 import am.main.api.InfoHandler;
-import am.main.api.db.DBManager;
 import am.main.common.validation.FormValidation;
 import am.main.session.AppSession;
 import am.shared.enums.App_CC;
@@ -47,11 +44,8 @@ import static amt.common.constants.Error.USER.*;
 @RunWith(Arquillian.class)
 public class UserLogin {
     @Inject private Repository repository;
-    @Inject private DBManager dbManager;
     @Inject private AppConfigManager appConfigManager;
     @Inject private DataGenerator dataGenerator;
-    @Inject private AMSecurityManager securityManager;
-    @Inject private SecurityService securityService;
     @Inject private ErrorHandler errorHandler;
     @Inject private InfoHandler infoHandler;
 
@@ -76,7 +70,7 @@ public class UserLogin {
             AppSession session = appSession.updateSession(CLASS, TEST_CASE_NAME);
 
             repository.executeScript(Scripts.CLEARING_ALL_TABLES);
-            Users user = dataGenerator.registerUser(userData.clone());
+            Users user = dataGenerator.registerUser(userData.clone(), true);
 
             LoginData validData = this.loginData.clone();
             dataGenerator.login(validData);
@@ -106,7 +100,7 @@ public class UserLogin {
             AppSession session = appSession.updateSession(CLASS, TEST_CASE_NAME);
 
             repository.executeScript(Scripts.CLEARING_ALL_TABLES);
-            Users user = dataGenerator.registerUser(userData.clone());
+            Users user = dataGenerator.registerUser(userData.clone(), true);
 
             LoginData invalidData = this.loginData.clone();
             invalidData.setUsername("Ahmed_Ali");
@@ -132,7 +126,7 @@ public class UserLogin {
             AppSession session = appSession.updateSession(CLASS, TEST_CASE_NAME);
 
             repository.executeScript(Scripts.CLEARING_ALL_TABLES);
-            Users user = dataGenerator.registerUser(userData.clone());
+            Users user = dataGenerator.registerUser(userData.clone(), true);
 
             LoginData invalidData = this.loginData.clone();
             invalidData.setPassword("12advf34");
@@ -172,7 +166,7 @@ public class UserLogin {
             AppSession session = appSession.updateSession(CLASS, TEST_CASE_NAME);
 
             repository.executeScript(Scripts.CLEARING_ALL_TABLES);
-            Users user = dataGenerator.registerUser(userData.clone());
+            Users user = dataGenerator.registerUser(userData.clone(), true);
 
             LoginData invalidData = this.loginData.clone();
             invalidData.setPassword("12advf34");
@@ -216,7 +210,7 @@ public class UserLogin {
             AppSession session = appSession.updateSession(CLASS, TEST_CASE_NAME);
 
             repository.executeScript(Scripts.CLEARING_ALL_TABLES);
-            Users user = dataGenerator.registerUser(userData.clone());
+            Users user = dataGenerator.registerUser(userData.clone(), true);
 
             LoginData invalidData = this.loginData.clone();
             invalidData.setPassword("12advf34");
@@ -264,7 +258,7 @@ public class UserLogin {
             AppSession session = appSession.updateSession(CLASS, TEST_CASE_NAME);
 
             repository.executeScript(Scripts.CLEARING_ALL_TABLES);
-            Users user = dataGenerator.registerUser(userData.clone());
+            Users user = dataGenerator.registerUser(userData.clone(), true);
 
             LoginData invalidData = this.loginData.clone();
             invalidData.setPassword("12advf34");
@@ -317,7 +311,7 @@ public class UserLogin {
             AppSession session = appSession.updateSession(CLASS, TEST_CASE_NAME);
 
             repository.executeScript(Scripts.CLEARING_ALL_TABLES);
-            Users user = dataGenerator.registerUser(userData.clone());
+            Users user = dataGenerator.registerUser(userData.clone(), true);
 
             LoginData invalidData = this.loginData.clone();
             invalidData.setPassword("12advf34");
@@ -340,7 +334,7 @@ public class UserLogin {
             LoginData validData = this.loginData.clone();
             validData.setPassword("123456");
 
-            Thread.sleep(60 * 1000);
+            Thread.sleep(65 * 1000);
 
             Util.callRestForStringError(USER.RESOURCE, USER.LOGIN, validData,
                     MessageFormat.format(WRONG_PASSWORD_LT_LOGIN_DEACTIVATION_DURATION, LOGIN_DEACTIVATION_DURATION-1));
@@ -372,7 +366,7 @@ public class UserLogin {
             AppSession session = appSession.updateSession(CLASS, TEST_CASE_NAME);
 
             repository.executeScript(Scripts.CLEARING_ALL_TABLES);
-            Users user = dataGenerator.registerUser(userData.clone());
+            Users user = dataGenerator.registerUser(userData.clone(), true);
 
             LoginData invalidData = this.loginData.clone();
             invalidData.setPassword("12advf34");
@@ -433,7 +427,7 @@ public class UserLogin {
             
             UserRegisterData validUserData = userData.clone();
             validUserData.setUsername("AhmedMater");
-            Users user = dataGenerator.registerUser(validUserData);
+            Users user = dataGenerator.registerUser(validUserData, true);
 
             LoginData validData = this.loginData.clone();
             validData.setUsername("AhmedMater");
@@ -453,7 +447,7 @@ public class UserLogin {
 
             UserRegisterData validUserData = userData.clone();
             validUserData.setUsername("Ahmed_Mater");
-            Users user = dataGenerator.registerUser(validUserData);
+            Users user = dataGenerator.registerUser(validUserData, true);
 
             LoginData validData = this.loginData.clone();
             validData.setUsername("Ahmed_Mater");
@@ -473,7 +467,7 @@ public class UserLogin {
 
             UserRegisterData validUserData = userData.clone();
             validUserData.setUsername("Ahmed.Mater");
-            Users user = dataGenerator.registerUser(validUserData);
+            Users user = dataGenerator.registerUser(validUserData, true);
 
             LoginData validData = this.loginData.clone();
             validData.setUsername("Ahmed.Mater");
@@ -493,7 +487,7 @@ public class UserLogin {
 
             UserRegisterData validUserData = userData.clone();
             validUserData.setUsername("Ahmed-Mater");
-            Users user = dataGenerator.registerUser(validUserData);
+            Users user = dataGenerator.registerUser(validUserData, true);
 
             LoginData validData = this.loginData.clone();
             validData.setUsername("Ahmed-Mater");
@@ -513,7 +507,7 @@ public class UserLogin {
 
             UserRegisterData validUserData = userData.clone();
             validUserData.setUsername("AhmedMater123");
-            Users user = dataGenerator.registerUser(validUserData);
+            Users user = dataGenerator.registerUser(validUserData, true);
 
             LoginData validData = this.loginData.clone();
             validData.setUsername("AhmedMater123");
@@ -613,7 +607,7 @@ public class UserLogin {
 
             UserRegisterData validUserData = userData.clone();
             validUserData.setPassword("AhmedAli");
-            Users user = dataGenerator.registerUser(validUserData);
+            Users user = dataGenerator.registerUser(validUserData, true);
 
             LoginData validData = this.loginData.clone();
             validData.setPassword("AhmedAli");
@@ -633,7 +627,7 @@ public class UserLogin {
 
             UserRegisterData validUserData = userData.clone();
             validUserData.setPassword("Ahmed123");
-            Users user = dataGenerator.registerUser(validUserData);
+            Users user = dataGenerator.registerUser(validUserData, true);
 
             LoginData validData = this.loginData.clone();
             validData.setPassword("Ahmed123");
@@ -653,7 +647,7 @@ public class UserLogin {
 
             UserRegisterData validUserData = userData.clone();
             validUserData.setPassword("Ahmed.Ali");
-            Users user = dataGenerator.registerUser(validUserData);
+            Users user = dataGenerator.registerUser(validUserData, true);
 
             LoginData validData = this.loginData.clone();
             validData.setPassword("Ahmed.Ali");
@@ -673,7 +667,7 @@ public class UserLogin {
 
             UserRegisterData validUserData = userData.clone();
             validUserData.setPassword("Ahmed-Ali");
-            Users user = dataGenerator.registerUser(validUserData);
+            Users user = dataGenerator.registerUser(validUserData, true);
 
             LoginData validData = this.loginData.clone();
             validData.setPassword("Ahmed-Ali");
@@ -693,7 +687,7 @@ public class UserLogin {
 
             UserRegisterData validUserData = userData.clone();
             validUserData.setPassword("Ahmed@Ali");
-            Users user = dataGenerator.registerUser(validUserData);
+            Users user = dataGenerator.registerUser(validUserData, true);
 
             LoginData validData = this.loginData.clone();
             validData.setPassword("Ahmed@Ali");
@@ -713,7 +707,7 @@ public class UserLogin {
 
             UserRegisterData validUserData = userData.clone();
             validUserData.setPassword("Ahmed_Ali");
-            Users user = dataGenerator.registerUser(validUserData);
+            Users user = dataGenerator.registerUser(validUserData, true);
 
             LoginData validData = this.loginData.clone();
             validData.setPassword("Ahmed_Ali");

@@ -413,39 +413,44 @@
       <DataType>varchar(100)|0</DataType>
       <NotNull>1</NotNull>
     </column>
-    <key id="103" parent="19" name="PRIMARY">
+    <column id="103" parent="19" name="isAdmin">
+      <Position>3</Position>
+      <DataType>bit(1)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <key id="104" parent="19" name="PRIMARY">
       <ColNames>role</ColNames>
       <Primary>1</Primary>
     </key>
-    <column id="104" parent="20" name="param_name">
+    <column id="105" parent="20" name="param_name">
       <Position>2</Position>
       <DataType>varchar(100)|0</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="105" parent="20" name="param_value">
+    <column id="106" parent="20" name="param_value">
       <Position>3</Position>
       <DataType>varchar(200)|0</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="106" parent="20" name="param_type">
+    <column id="107" parent="20" name="param_type">
       <Position>4</Position>
       <DataType>varchar(2)|0</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="107" parent="20" name="param_id">
+    <column id="108" parent="20" name="param_id">
       <Position>1</Position>
       <DataType>int(11)|0</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>1</SequenceIdentity>
     </column>
-    <index id="108" parent="20" name="FK_system_parameters_data_type">
+    <index id="109" parent="20" name="FK_system_parameters_data_type">
       <ColNames>param_type</ColNames>
     </index>
-    <key id="109" parent="20" name="PRIMARY">
+    <key id="110" parent="20" name="PRIMARY">
       <ColNames>param_id</ColNames>
       <Primary>1</Primary>
     </key>
-    <foreign-key id="110" parent="20" name="FK_system_parameters_data_type">
+    <foreign-key id="111" parent="20" name="FK_system_parameters_data_type">
       <ColNames>param_type</ColNames>
       <RefSchemaName>amt</RefSchemaName>
       <RefTableName>data_type</RefTableName>
@@ -453,45 +458,45 @@
       <OnUpdate>no-action</OnUpdate>
       <OnDelete>no-action</OnDelete>
     </foreign-key>
-    <column id="111" parent="21" name="user_id">
+    <column id="112" parent="21" name="user_id">
       <Position>2</Position>
       <DataType>int(11)|0</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="112" parent="21" name="ip">
+    <column id="113" parent="21" name="ip">
       <Position>3</Position>
       <DataType>varchar(50)|0</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="113" parent="21" name="trail_num">
+    <column id="114" parent="21" name="trail_num">
       <Position>4</Position>
       <DataType>int(11)|0</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="114" parent="21" name="last_trail_date">
+    <column id="115" parent="21" name="last_trail_date">
       <Position>5</Position>
       <DataType>datetime|0</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="115" parent="21" name="is_active">
+    <column id="116" parent="21" name="is_active">
       <Position>6</Position>
       <DataType>tinyint(1)|0</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="116" parent="21" name="user_ip_deactive_id">
+    <column id="117" parent="21" name="user_ip_deactive_id">
       <Position>1</Position>
       <DataType>int(11)|0</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>1</SequenceIdentity>
     </column>
-    <index id="117" parent="21" name="FK_user_ip_deactive_users">
+    <index id="118" parent="21" name="FK_user_ip_deactive_users">
       <ColNames>user_id</ColNames>
     </index>
-    <key id="118" parent="21" name="PRIMARY">
+    <key id="119" parent="21" name="PRIMARY">
       <ColNames>user_ip_deactive_id</ColNames>
       <Primary>1</Primary>
     </key>
-    <foreign-key id="119" parent="21" name="FK_user_ip_deactive_users">
+    <foreign-key id="120" parent="21" name="FK_user_ip_deactive_users">
       <ColNames>user_id</ColNames>
       <RefSchemaName>amt</RefSchemaName>
       <RefTableName>users</RefTableName>
@@ -499,73 +504,73 @@
       <OnUpdate>no-action</OnUpdate>
       <OnDelete>no-action</OnDelete>
     </foreign-key>
-    <column id="120" parent="22" name="username">
+    <column id="121" parent="22" name="username">
       <Position>2</Position>
       <DataType>varchar(50)|0</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="121" parent="22" name="ip">
+    <column id="122" parent="22" name="ip">
       <Position>3</Position>
       <DataType>varchar(50)|0</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="122" parent="22" name="login_date">
+    <column id="123" parent="22" name="login_date">
       <Position>4</Position>
       <DataType>datetime|0</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="123" parent="22" name="user_ip_failure_id">
+    <column id="124" parent="22" name="user_ip_failure_id">
       <Position>1</Position>
       <DataType>int(11)|0</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>1</SequenceIdentity>
     </column>
-    <key id="124" parent="22" name="PRIMARY">
+    <key id="125" parent="22" name="PRIMARY">
       <ColNames>user_ip_failure_id</ColNames>
       <Primary>1</Primary>
     </key>
-    <column id="125" parent="23" name="user_id">
+    <column id="126" parent="23" name="user_id">
       <Position>2</Position>
       <DataType>int(11)|0</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="126" parent="23" name="ip">
+    <column id="127" parent="23" name="ip">
       <Position>3</Position>
       <DataType>varchar(50)|0</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="127" parent="23" name="login_date">
+    <column id="128" parent="23" name="login_date">
       <Position>4</Position>
       <DataType>datetime|0</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="128" parent="23" name="is_success">
+    <column id="129" parent="23" name="is_success">
       <Position>5</Position>
       <DataType>tinyint(1)|0</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="129" parent="23" name="error_code">
+    <column id="130" parent="23" name="error_code">
       <Position>6</Position>
       <DataType>varchar(10)|0</DataType>
     </column>
-    <column id="130" parent="23" name="error_msg">
+    <column id="131" parent="23" name="error_msg">
       <Position>7</Position>
       <DataType>varchar(150)|0</DataType>
     </column>
-    <column id="131" parent="23" name="user_login_log_id">
+    <column id="132" parent="23" name="user_login_log_id">
       <Position>1</Position>
       <DataType>int(11)|0</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>1</SequenceIdentity>
     </column>
-    <index id="132" parent="23" name="FK_user_login_log_users">
+    <index id="133" parent="23" name="FK_user_login_log_users">
       <ColNames>user_id</ColNames>
     </index>
-    <key id="133" parent="23" name="PRIMARY">
+    <key id="134" parent="23" name="PRIMARY">
       <ColNames>user_login_log_id</ColNames>
       <Primary>1</Primary>
     </key>
-    <foreign-key id="134" parent="23" name="FK_user_login_log_users">
+    <foreign-key id="135" parent="23" name="FK_user_login_log_users">
       <ColNames>user_id</ColNames>
       <RefSchemaName>amt</RefSchemaName>
       <RefTableName>users</RefTableName>
@@ -573,53 +578,53 @@
       <OnUpdate>no-action</OnUpdate>
       <OnDelete>no-action</OnDelete>
     </foreign-key>
-    <column id="135" parent="24" name="user_id">
+    <column id="136" parent="24" name="user_id">
       <Position>1</Position>
       <DataType>int(11)|0</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>1</SequenceIdentity>
     </column>
-    <column id="136" parent="24" name="user_name">
+    <column id="137" parent="24" name="user_name">
       <Position>4</Position>
       <DataType>varchar(50)|0</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="137" parent="24" name="password">
+    <column id="138" parent="24" name="password">
       <Position>5</Position>
       <DataType>varchar(50)|0</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="138" parent="24" name="email">
+    <column id="139" parent="24" name="email">
       <Position>6</Position>
       <DataType>varchar(50)|0</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="139" parent="24" name="first_name">
+    <column id="140" parent="24" name="first_name">
       <Position>2</Position>
       <DataType>varchar(15)|0</DataType>
     </column>
-    <column id="140" parent="24" name="last_name">
+    <column id="141" parent="24" name="last_name">
       <Position>3</Position>
       <DataType>varchar(15)|0</DataType>
     </column>
-    <column id="141" parent="24" name="role">
+    <column id="142" parent="24" name="role">
       <Position>7</Position>
       <DataType>varchar(2)|0</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="142" parent="24" name="creation_date">
+    <column id="143" parent="24" name="creation_date">
       <Position>8</Position>
       <DataType>datetime|0</DataType>
       <NotNull>1</NotNull>
     </column>
-    <index id="143" parent="24" name="FK_users_role">
+    <index id="144" parent="24" name="FK_users_role">
       <ColNames>role</ColNames>
     </index>
-    <key id="144" parent="24" name="PRIMARY">
+    <key id="145" parent="24" name="PRIMARY">
       <ColNames>user_id</ColNames>
       <Primary>1</Primary>
     </key>
-    <foreign-key id="145" parent="24" name="FK_users_role">
+    <foreign-key id="146" parent="24" name="FK_users_role">
       <ColNames>role</ColNames>
       <RefSchemaName>amt</RefSchemaName>
       <RefTableName>role</RefTableName>

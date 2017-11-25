@@ -1,7 +1,8 @@
 package amt.common.generic;
 
 
-import am.infrastructure.data.dto.LoginData;
+import am.infrastructure.data.dto.user.LoginData;
+import am.infrastructure.data.view.AuthenticatedUser;
 import am.main.common.validation.FormValidation;
 import am.rest.filters.LoggingFilter;
 import amt.common.constants.Rest;
@@ -34,21 +35,39 @@ public class Util {
     public static Response restGETClient(String resource, String path, Map<String, Object> queryParams) throws Exception{
         return restClient(resource, path, false, null, Method.GET, queryParams, null, null);
     }
+    public static Response restGETClient(String resource, String path, List<String> pathParams) throws Exception{
+        return restClient(resource, path, false, null, Method.GET, null, pathParams, null);
+    }
+    public static Response restGETClient(String resource, String path, Map<String, Object> queryParams, List<String> pathParams) throws Exception{
+        return restClient(resource, path, false, null, Method.GET, queryParams, pathParams, null);
+    }
 
-    public static Response restPOSTClient(String resource, String path,Object payload) throws Exception{
+    public static Response restPOSTClient(String resource, String path, Object payload) throws Exception{
         return restClient(resource, path, false, null, Method.POST, null, null, payload);
     }
 
-    public static Response restGETSecuredClient(String resource, String path, Map<String, Object> queryParams, LoginData loginData) throws Exception{
-        Response response = restClient(Rest.USER.RESOURCE, Rest.USER.REGISTER, false, null, Method.POST, null, null, loginData);
-        String token = response.readEntity(String.class);
+    public static Response restGETSecuredClient(String resource, String path, LoginData loginData, Map<String, Object> queryParams, List<String> pathParams) throws Exception{
+        Response response = restClient(Rest.USER.RESOURCE, Rest.USER.LOGIN, false, null, Method.POST, null, null, loginData);
+        String token = response.readEntity(AuthenticatedUser.class).getToken();
 
-        return restClient(resource, path, true, token, Method.GET, queryParams, null, null);
+        return restClient(resource, path, true, token, Method.GET, queryParams, pathParams, null);
+    }
+    public static Response restGETSecuredClient(String resource, String path, LoginData loginData, List<String> pathParams) throws Exception{
+        Response response = restClient(Rest.USER.RESOURCE, Rest.USER.LOGIN, false, null, Method.POST, null, null, loginData);
+        String token = response.readEntity(AuthenticatedUser.class).getToken();
+
+        return restGETSecuredClient(resource, path, loginData, null, pathParams);
+    }
+    public static Response restGETSecuredClient(String resource, String path, LoginData loginData, Map<String, Object> queryParams) throws Exception{
+        Response response = restClient(Rest.USER.RESOURCE, Rest.USER.REGISTER, false, null, Method.POST, null, null, loginData);
+        String token = response.readEntity(AuthenticatedUser.class).getToken();
+
+        return restGETSecuredClient(resource, path, loginData, queryParams, null);
     }
 
     public static Response restPOSTSecuredClient(String resource, String path, Object payload, LoginData loginData) throws Exception{
-        Response response = restClient(Rest.USER.RESOURCE, Rest.USER.REGISTER, false, null, Method.POST, null, null, loginData);
-        String token = response.readEntity(String.class);
+        Response response = restClient(Rest.USER.RESOURCE, Rest.USER.LOGIN, false, null, Method.POST, null, null, loginData);
+        String token = response.readEntity(AuthenticatedUser.class).getToken();
 
         return restClient(resource, path, true, token, Method.POST, null, null, payload);
     }
@@ -61,7 +80,7 @@ public class Util {
         Client client = ClientBuilder.newClient(new ClientConfig().register(LoggingFilter.class));
 
         if(pathParams != null)
-            path = MessageFormat.format(path, pathParams);
+            path = MessageFormat.format(path, pathParams.toArray());
 
         WebTarget webTarget = client.target(resource).path(path);
 

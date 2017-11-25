@@ -1,7 +1,9 @@
 package am.application;
 
-import am.infrastructure.data.dto.LoginData;
-import am.infrastructure.data.dto.UserRegisterData;
+import am.infrastructure.data.dto.user.ChangeRoleData;
+import am.infrastructure.data.dto.user.LoginData;
+import am.infrastructure.data.view.UserProfileData;
+import am.infrastructure.data.dto.user.UserRegisterData;
 import am.infrastructure.data.enums.Roles;
 import am.infrastructure.data.hibernate.model.lookup.Role;
 import am.infrastructure.data.hibernate.model.user.UserIPDeActive;
@@ -15,6 +17,7 @@ import am.main.api.AppLogger;
 import am.main.api.db.DBManager;
 import am.main.exception.BusinessException;
 import am.main.session.AppSession;
+import am.repository.LookupRepository;
 import am.repository.UserRepository;
 import am.shared.enums.App_CC;
 import am.shared.enums.EC;
@@ -35,6 +38,7 @@ public class UserService {
     @Inject private AMSecurityManager securityManager;
     @Inject private AppConfigManager appConfigManager;
     @Inject private DBManager dbManager;
+    @Inject private LookupRepository lookupRepository;
 
     @Transactional
     public void register(AppSession appSession, UserRegisterData userData) throws Exception{
@@ -177,5 +181,67 @@ public class UserService {
 
         logger.endDebug(session, authenticatedUser);
         return authenticatedUser;
+    }
+
+    public void changeRole(AppSession appSession, ChangeRoleData changeRoleData) throws Exception{
+        String FN_NAME = "changeRole";
+        AppSession session = appSession.updateSession(CLASS, FN_NAME);
+        logger.startDebug(session, changeRoleData);
+
+        Role role = dbManager.find(session, Role.class, changeRoleData.getNewRole(), true);
+        if(role == null)
+            throw new BusinessException(session, EC.AMT_0026, changeRoleData.getNewRole());
+        else if(role.isAdmin())
+            throw new BusinessException(session, EC.AMT_0027);
+
+        Users viewerUser = dbManager.find(session, Users.class, changeRoleData.getViewerUserID(), false);
+        if(viewerUser == null)
+            throw new BusinessException(session, EC.AMT_0023, changeRoleData.getViewerUserID());
+        else if(!viewerUser.getRole().isAdmin())
+            throw new BusinessException(session, EC.AMT_0029);
+
+        Users profileOwner = dbManager.find(session, Users.class, changeRoleData.getOwnerUserID(), false);
+        if(profileOwner == null)
+            throw new BusinessException(session, EC.AMT_0023, changeRoleData.getOwnerUserID());
+
+
+        profileOwner.setRole(role);
+        dbManager.merge(session, profileOwner, false);
+
+        logger.endDebug(session);
+    }
+
+    public UserProfileData getProfileData(AppSession appSession, String ownerID, String viewerID) throws Exception{
+        String FN_NAME = "getProfileData";
+        AppSession session = appSession.updateSession(CLASS, FN_NAME);
+        logger.startDebug(session, ownerID, viewerID);
+        Users viewerUser = null;
+
+        if(viewerID != null) {
+            viewerUser = dbManager.find(session, Users.class, new Integer(viewerID), false);
+            if (viewerUser == null)
+                throw new BusinessException(session, EC.AMT_0023, viewerID);
+        }
+
+        Users profileOwner = dbManager.find(session, Users.class, new Integer(ownerID), false);
+        if(profileOwner == null)
+            throw new BusinessException(session, EC.AMT_0023, ownerID);
+
+        UserProfileData profileData = new UserProfileData(profileOwner);
+
+        if(viewerUser == null) {
+            profileData.setCanEdit(false);
+            profileData.setCanUpgradeRole(false);
+        }else if(ownerID.equals(viewerID)){
+            profileData.setCanEdit(true);
+            profileData.setCanUpgradeRole(false);
+        }else if(viewerUser.getRole().isAdmin()){
+            profileData.setCanEdit(false);
+            profileData.setCanUpgradeRole(true);
+            profileData.setRoleList(lookupRepository.getAllNonAdminRoles(session));
+        }
+
+        logger.endDebug(session, profileData);
+        return profileData;
     }
 }

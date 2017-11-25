@@ -1,13 +1,14 @@
 package amt.common.generic;
 
 import am.application.SecurityService;
-import am.infrastructure.data.dto.LoginData;
-import am.infrastructure.data.dto.UserRegisterData;
+import am.infrastructure.data.dto.user.LoginData;
+import am.infrastructure.data.dto.user.UserRegisterData;
 import am.infrastructure.data.hibernate.model.user.Users;
-import am.infrastructure.data.hibernate.view.AuthenticatedUser;
+import am.infrastructure.data.view.AuthenticatedUser;
 import am.main.api.AMSecurityManager;
 import am.main.api.ErrorHandler;
 import am.main.api.InfoHandler;
+import am.main.api.db.DBManager;
 import am.main.session.AppSession;
 import am.shared.session.Phase;
 import amt.common.constants.Rest;
@@ -16,7 +17,7 @@ import org.junit.Assert;
 
 import javax.inject.Inject;
 import javax.ws.rs.core.Response;
-import java.util.Date;
+import java.util.*;
 
 import static am.main.data.enums.Interface.ARQUILLIAN;
 import static am.main.data.enums.Source.INTEGRATION_TEST;
@@ -26,6 +27,7 @@ import static am.main.data.enums.Source.INTEGRATION_TEST;
  */
 public class DataGenerator {
     @Inject private Repository repository;
+    @Inject private DBManager dbManager;
     @Inject private AMSecurityManager securityManager;
     @Inject private SecurityService securityService;
 
@@ -46,16 +48,16 @@ public class DataGenerator {
      * @param data UserRegisterData Object that will be inserted
      *
      */
-    public Users registerUser(UserRegisterData data) throws Exception{
+    public Users registerUser(UserRegisterData data, boolean firstTime) throws Exception{
         String FN_NAME = "registerUser";
         AppSession session = appSession.updateSession(CLASS, FN_NAME);
-        repository.executeScript(Scripts.ROLE_LOOKUP);
+        if(firstTime)
+            repository.executeScript(Scripts.ROLE_LOOKUP);
 
         Response response = Util.restPOSTClient(Rest.USER.RESOURCE, Rest.USER.REGISTER, data);
         Assert.assertEquals("Register New User failed", Response.Status.OK.getStatusCode(), response.getStatus());
 
-        Users actual = repository.getUserByUsername(data.getUsername());
-        Assert.assertNotNull("User isn't found in Database", actual);
+        Users actual = repository.getUserByUsername(data.getUsername(), true);
 
         Assert.assertEquals("First name failed", data.getFirstName(), actual.getFirstName());
         Assert.assertEquals("Last name failed", data.getLastName(), actual.getLastName());
@@ -84,14 +86,23 @@ public class DataGenerator {
         AuthenticatedUser actual = response.readEntity(AuthenticatedUser.class);
         Assert.assertNotNull("Authenticated User isn't returned", actual);
 
-        Users user = repository.getUserByUsername(data.getUsername());
-        Assert.assertNotNull("User isn't found in Database", actual);
+        Users user = repository.getUserByUsername(data.getUsername(), true);
 
         Assert.assertEquals("Full Name isn't correct", user.getFullName(), actual.getFullName());
+        Assert.assertEquals("User ID isn't correct", user.getUserID(), actual.getUserID());
         Assert.assertEquals("User Role isn't correct", user.getRole().getRole(), actual.getRole());
         Assert.assertNotNull("User Token isn't generated", actual.getToken());
         Assert.assertNotNull("User Token isn't valid", securityService.validateToken(session, actual.getToken()));
 
         return actual.getToken();
+    }
+
+    public LoginData getAdminLoginData() throws Exception{
+        repository.executeScript(Scripts.ADMIN_USER_LOOKUP);
+        Users adminUser = dbManager.find(appSession, Users.class, 1, false);
+
+        LoginData loginData = new LoginData(adminUser.getUsername(), "123456");
+        loginData.setUsername("Admin_User");
+        return loginData;
     }
 }

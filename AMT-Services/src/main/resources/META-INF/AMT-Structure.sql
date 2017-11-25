@@ -123,6 +123,7 @@ CREATE TABLE `role`
 (
 	`role` VARCHAR(2) NOT NULL,
 	`description` VARCHAR(100) NOT NULL,
+  `isAdmin` BOOL NOT NULL,
 	CONSTRAINT `PK_role` PRIMARY KEY (`role` ASC)
 )
 
