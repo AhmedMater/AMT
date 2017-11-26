@@ -11,9 +11,9 @@ import {CourseListComponent} from "./list/course-list.component";
 const routes: Routes = [
     {path: '',
         children: [
-            {path: 'new', component: NewCourseComponent},
-            {path: 'list', component: CourseListComponent},
-            {path: ':courseID', component: CourseDetailComponent}
+            {path: 'new', component: NewCourseComponent, data: {title: 'New Course'}},
+            {path: 'list', component: CourseListComponent, data: {title: 'Course List'}},
+            {path: ':courseID', component: CourseDetailComponent, data: {title: 'Course Details'}}
         ]
     }
 ];

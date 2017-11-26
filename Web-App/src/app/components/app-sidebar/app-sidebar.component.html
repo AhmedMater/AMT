@@ -2,6 +2,10 @@
   <nav class="sidebar-nav">
     <ul class="nav">
 
+      <li class="nav-item">
+        <a class="nav-link" routerLinkActive="active" [routerLink]="HOME_URL"><i class="icon-home"></i> Home <span class="badge badge-info">NEW</span></a>
+      </li>
+      <li class="divider"></li>
       <li class="nav-title">
         Administration
       </li>
@@ -12,25 +16,16 @@
 
         <ul class="nav-dropdown-items">
           <li class="nav-item">
-            <a class="nav-link" routerLinkActive="active" [routerLink]="['/course/new']">
+            <a class="nav-link" routerLinkActive="active" [routerLink]="NEW_COURSE_URL">
               <i class="icon-puzzle"></i> New Course
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" routerLinkActive="active" [routerLink]="['/course/2']">
-              <i class="icon-puzzle"></i> Course Details
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" routerLinkActive="active" [routerLink]="['/course/list']">
+            <a class="nav-link" routerLinkActive="active" [routerLink]="COURSE_LIST_URL">
               <i class="icon-puzzle"></i> Course List
             </a>
           </li>
         </ul>
-      </li>
-
-      <li class="nav-item">
-        <a class="nav-link" routerLinkActive="active" [routerLink]="['/home']"><i class="icon-speedometer"></i> Dashboard <span class="badge badge-info">NEW</span></a>
       </li>
       <li class="divider"></li>
       <li class="nav-title">

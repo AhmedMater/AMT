@@ -1,4 +1,4 @@
-import {Component, ViewContainerRef} from '@angular/core';
+import {Component, ViewContainerRef, OnInit} from '@angular/core';
 import {UserService} from "../../services/UserService";
 import {RESTClient} from "../../services/RESTClient";
 import {LoginData} from "../../util/dto/user/LoginData";
@@ -15,17 +15,17 @@ import {FormValidation} from "../../util/dto/exception/FormValidation";
   templateUrl: 'login.component.html',
     providers: [RESTClient, UserService, FormBuilder, AuthenticationService],
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit{
 
     loginForm:FormGroup;
     loginData:LoginData;
 
     formInvalid: boolean;
     formValidationErrors: FormValidation;
-    TOASTR_TITLE :string = "Register New User";
 
     HOME_URL: string = FullRoutes.HOME_URL;
     REGISTER_URL: string = FullRoutes.REGISTER_URL;
+    TOASTR_TITLE :string = "Login";
 
     constructor(
         private userService: UserService,
@@ -37,7 +37,6 @@ export class LoginComponent {
     ) {
         this.toastr.setRootViewContainerRef(vcr);
     }
-
 
     ngOnInit(): void {
         this.loginForm = this.formBuilder.group({
@@ -53,16 +52,20 @@ export class LoginComponent {
 
         this.userService.login(this.loginData).subscribe(
             res => {
-                // console.log(res);
                 this.authService.setAuthenticationData(res);
-                this.toastr.success("User Login successfully");
+                console.log(ConfigParam.LOGGED_IN_USER);
+                console.log(ConfigParam.IS_LOGIN);
+                this.toastr.success("User Login successfully", this.TOASTR_TITLE);
                 this.router.navigate([this.HOME_URL]);
             },
             err => {
-                console.log(err);
-                this.toastr.error(err._body, "Error");
-            },
-            () => {console.log("Completed")}
+                this.formValidationErrors = err.error;
+
+                if(this.formValidationErrors.mainError != null)
+                    this.formInvalid = true;
+                else
+                    this.toastr.error(this.formValidationErrors.message, this.TOASTR_TITLE);
+            }
         );
     }
 }
