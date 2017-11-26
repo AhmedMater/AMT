@@ -27,7 +27,8 @@ const APP_DIRECTIVES = [AsideToggleDirective, NAV_DROPDOWN_DIRECTIVES, SIDEBAR_T
 
 
 @NgModule({
-    imports: [ HttpClientModule, BrowserModule, BrowserAnimationsModule, AppRoutingModule, BsDropdownModule.forRoot(),
+    imports: [ HttpClientModule, BrowserModule, BrowserAnimationsModule, AppRoutingModule,
+        BsDropdownModule.forRoot(), CommonModule,
         TabsModule.forRoot(), ChartsModule, ToastModule.forRoot(), ReactiveFormsModule, HttpModule],
     declarations: [AppComponent, APP_CONTAINERS, APP_COMPONENTS, APP_DIRECTIVES],
     providers: [

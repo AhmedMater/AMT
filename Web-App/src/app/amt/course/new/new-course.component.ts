@@ -9,7 +9,7 @@ import {Router} from "@angular/router";
 
 import {RESTClient} from "../../services/RESTClient";
 import {CourseService} from "../../services/CourseService";
-import {LoginData} from "../../util/dto/LoginData";
+import {LoginData} from "../../util/dto/user/LoginData";
 import {CourseData} from "../../util/dto/course/CourseData";
 import {CourseType} from "../../util/dto/lookup/CourseType";
 import {CourseLevel} from "../../util/dto/lookup/CourseLevel";

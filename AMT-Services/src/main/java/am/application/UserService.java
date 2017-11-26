@@ -47,12 +47,12 @@ public class UserService {
         logger.startDebug(session, userData);
 
         if(userRepository.checkUsernameInDatabase(session, userData.getUsername()))
-            throw new BusinessException(session, EC.AMT_0001, userData.getUsername());
+            throw new BusinessException(session, EC.AMT_0021, userData.getUsername());
         else
             logger.info(session, IC.AMT_0004, userData.getUsername());
 
         if(userRepository.checkEmailInDatabase(session, userData.getEmail()))
-            throw new BusinessException(session, EC.AMT_0002, userData.getEmail());
+            throw new BusinessException(session, EC.AMT_0022, userData.getEmail());
         else
             logger.info(session, IC.AMT_0005, userData.getEmail());
 

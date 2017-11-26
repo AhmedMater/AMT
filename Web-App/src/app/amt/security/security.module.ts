@@ -14,9 +14,11 @@ import {RESTClient} from "../services/RESTClient";
 import {UserService} from "../services/UserService";
 import {ToastModule} from "ng2-toastr";
 import {HttpClientModule, HTTP_INTERCEPTORS} from "@angular/common/http";
+import {BrowserModule} from "@angular/platform-browser";
+import {CommonModule} from "@angular/common";
 
 @NgModule({
-    imports: [SecurityRoutingModule,
+    imports: [SecurityRoutingModule, CommonModule,
         ChartsModule, ToastModule.forRoot(), //HttpClientModule,
         BsDropdownModule,  ReactiveFormsModule, HttpModule
     ],

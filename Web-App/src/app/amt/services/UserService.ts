@@ -3,8 +3,8 @@
  */
 import {Injectable} from "@angular/core";
 import {RESTClient} from "./RESTClient";
-import {LoginData} from "../util/dto/LoginData";
-import {UserRegisterData} from "../util/dto/UserRegisterData";
+import {LoginData} from "../util/dto/user/LoginData";
+import {UserRegisterData} from "../util/dto/user/UserRegisterData";
 
 @Injectable()
 export class UserService{

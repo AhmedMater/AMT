@@ -17,6 +17,7 @@ import am.main.exception.BusinessException;
 import am.main.session.AppSession;
 import am.rest.annotations.Secured;
 import am.shared.enums.EC;
+import am.shared.enums.Forms;
 import am.shared.enums.IC;
 import am.shared.session.Phase;
 
@@ -55,8 +56,8 @@ public class UserResource {
                 httpSession.getId(), CLASS, FN_NAME, errorHandler, infoHandler, httpServletRequest.getRemoteAddr());
         try{
             // Validating the Form Data
-            new FormValidation<UserRegisterData>(session, EC.AMT_0021, userRegisterData);
-            logger.info(session, IC.AMT_0006);
+            new FormValidation<UserRegisterData>(session, userRegisterData, EC.AMT_0001, Forms.REGISTER);
+            logger.info(session, IC.AMT_0001, Forms.LOGIN);
 
             userService.register(session, userRegisterData);
             return Response.ok().build();
@@ -75,8 +76,8 @@ public class UserResource {
                 httpSession.getId(), CLASS, FN_NAME, errorHandler, infoHandler, httpServletRequest.getRemoteAddr());
         try{
             // Validating the Form Data
-            new FormValidation<LoginData>(session, EC.AMT_0022, loginData);
-            logger.info(session, IC.AMT_0001);
+            new FormValidation<LoginData>(session, loginData, EC.AMT_0001, Forms.LOGIN);
+            logger.info(session, IC.AMT_0001, Forms.LOGIN);
 
             String loginUserIP = httpServletRequest.getRemoteAddr();
             AuthenticatedUser user = userService.login(session, loginData, loginUserIP);
@@ -97,8 +98,8 @@ public class UserResource {
                 httpSession.getId(), CLASS, FN_NAME, errorHandler, infoHandler, httpServletRequest.getRemoteAddr());
         try{
             // Validating the Form Data
-            new FormValidation<ChangeRoleData>(session, EC.AMT_0028, changeRoleData);
-//            logger.info(session, IC.AMT_0001);
+            new FormValidation<ChangeRoleData>(session, changeRoleData, EC.AMT_0001, Forms.CHANGE_ROLE);
+            logger.info(session, IC.AMT_0001, Forms.CHANGE_ROLE);
 
             userService.changeRole(session, changeRoleData);
             return Response.ok().build();

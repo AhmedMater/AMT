@@ -12,9 +12,12 @@ export class RESTInterceptor implements HttpInterceptor{
 
     intercept(req: HttpRequest<any>,
               next: HttpHandler): Observable<HttpEvent<any>> {
-        let token: string = JSON.parse(localStorage.getItem(ConfigParam.AUTH_DATA)).UserToken;
+        let token: string = null;
 
-        if (token)
+        if(localStorage.getItem(ConfigParam.AUTH_DATA) != null)
+            token = JSON.parse(localStorage.getItem(ConfigParam.AUTH_DATA)).UserToken;
+
+        if (token != null)
             req = req.clone({ headers: req.headers.set('Authorization', 'Bearer ' + token) });
 
         if (!req.headers.has('Content-Type'))

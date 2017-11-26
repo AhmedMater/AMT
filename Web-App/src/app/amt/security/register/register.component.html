@@ -11,7 +11,7 @@
               <div class="input-group mb-3">
                 <span class="input-group-addon"><i class="icon-user"></i></span>
                 <input type="text" class="form-control" placeholder="First Name"
-                  formControlName="firstName">
+                       formControlName="firstName">
               </div>
 
               <div class="input-group mb-3">
@@ -46,22 +46,46 @@
                 </div>
               </div>
 
-              <button type="submit" class="btn btn-block btn-success">Create Account</button>
+              <div class="row">
+                <div class="col-8">
+                  <button type="submit" class="btn btn-block btn-success">Create Account</button>
+                </div>
+                <div class="col-4">
+                  <button type="button" class="btn btn-block btn-danger" (click)="clear()">Clear</button>
+                </div>
+              </div>
             </form>
           </div>
           <div class="card-footer p-4">
             <div class="row">
-              <div class="col-6">
+              <div class="col-2"></div>
+              <div class="col-3">
                 <button class="btn btn-block btn-primary" type="button" [routerLink]="LOGIN_URL">
-                  <span>Login</span>
+                  <strong>Login</strong>
                 </button>
               </div>
-              <div class="col-6">
-                <button class="btn btn-block btn-danger" type="button" [routerLink]="HOME_URL">
-                  <span>Home</span>
+              <div class="col-2"></div>
+              <div class="col-3">
+                <button class="btn btn-block btn-primary" type="button" [routerLink]="HOME_URL">
+                  <strong>Home</strong>
                 </button>
               </div>
             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row justify-content-center" *ngIf="formInvalid">
+      <div class="col-md-6">
+        <div class="card mx-4">
+          <div class="card-header p-4">
+            <strong>Register Form Errors</strong>
+          </div>
+          <div class="card-body p-4">
+            <h6><strong>{{formValidationErrors.mainError}}</strong></h6>
+            <ul *ngFor="let item of formValidationErrors.formErrors">
+              <li>{{item}}</li>
+            </ul>
           </div>
         </div>
       </div>

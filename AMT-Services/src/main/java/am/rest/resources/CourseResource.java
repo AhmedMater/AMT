@@ -1,18 +1,21 @@
 package am.rest.resources;
 
-import am.main.api.AppLogger;
-import am.main.api.ErrorHandler;
-import am.main.api.InfoHandler;
 import am.application.CourseService;
 import am.infrastructure.data.dto.course.CourseData;
 import am.infrastructure.data.enums.Roles;
 import am.infrastructure.data.view.NewCourseLookup;
-import am.rest.annotations.Secured;
-import am.main.session.AppSession;
+import am.main.api.AppLogger;
+import am.main.api.ErrorHandler;
+import am.main.api.InfoHandler;
+import am.main.common.validation.FormValidation;
 import am.main.data.enums.Interface;
-import am.shared.enums.EC;
-import am.shared.session.Phase;
 import am.main.data.enums.Source;
+import am.main.session.AppSession;
+import am.rest.annotations.Secured;
+import am.shared.enums.EC;
+import am.shared.enums.Forms;
+import am.shared.enums.IC;
+import am.shared.session.Phase;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
@@ -50,6 +53,10 @@ public class CourseResource {
         AppSession session = new AppSession(Source.APP_SERVICES, Interface.REST, Phase.COURSE_CREATE,
                 httpSession.getId(), CLASS, FN_NAME, errorHandler, infoHandler, httpServletRequest.getRemoteAddr());
         try {
+            // Validating the Form Data
+            new FormValidation<CourseData>(session, courseData, EC.AMT_0001, Forms.NEW_COURSE);
+            logger.info(session, IC.AMT_0001, Forms.NEW_COURSE);
+
             courseService.addNewCourse(session, courseData);
             return Response.ok().build();
         }catch (Exception ex){

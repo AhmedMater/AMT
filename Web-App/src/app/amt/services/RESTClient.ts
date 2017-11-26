@@ -40,8 +40,8 @@ export class RESTClient{
         const url = this.BASE_URL + path;
 
         if(authenticated)
-            return this.http.post<Response>(url, object).map(res => res.json());
+            return this.http.post<Response>(url, object);//.map(res => res.json(), err => err.json());
         else
-            return this.http.post<Response>(url, object).map(res => res.json());
+            return this.http.post<Response>(url, object);//.map(res => res.json(), err => err.json())
     }
 }

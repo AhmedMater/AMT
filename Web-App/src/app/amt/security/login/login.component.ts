@@ -1,13 +1,14 @@
 import {Component, ViewContainerRef} from '@angular/core';
 import {UserService} from "../../services/UserService";
 import {RESTClient} from "../../services/RESTClient";
-import {LoginData} from "../../util/dto/LoginData";
+import {LoginData} from "../../util/dto/user/LoginData";
 import {FormBuilder, FormGroup} from "@angular/forms";
 import {ToastsManager} from "ng2-toastr";
 import {FullRoutes} from "../../util/constants/FullRoutes";
 import {Router} from "@angular/router";
 import {ConfigParam} from "../../util/constants/ConfigParam";
 import {AuthenticationService} from "../../services/AuthenticationService";
+import {FormValidation} from "../../util/dto/exception/FormValidation";
 
 @Component({
     selector: 'app-login',
@@ -18,6 +19,10 @@ export class LoginComponent {
 
     loginForm:FormGroup;
     loginData:LoginData;
+
+    formInvalid: boolean;
+    formValidationErrors: FormValidation;
+    TOASTR_TITLE :string = "Register New User";
 
     HOME_URL: string = FullRoutes.HOME_URL;
     REGISTER_URL: string = FullRoutes.REGISTER_URL;
