@@ -6,17 +6,27 @@
         <a class="nav-link" routerLinkActive="active" [routerLink]="HOME_URL"><i class="icon-home"></i> Home <span class="badge badge-info">NEW</span></a>
       </li>
       <li class="divider"></li>
-      <li class="nav-title">
+      <li class="nav-title" *ngIf="isUserAdmin">
         Administration
       </li>
-      <li class="nav-item nav-dropdown" routerLinkActive="open" appNavDropdown>
-        <a class="nav-link nav-dropdown-toggle" href="#" appNavDropdownToggle>
-          <i class="icon-puzzle"></i> Course
-        </a>
-
+      <li class="nav-item nav-dropdown" routerLinkActive="open" appNavDropdown *ngIf="isUserAdmin">
         <ul class="nav-dropdown-items">
-          <li class="nav-item">
-            <a class="nav-link" routerLinkActive="active" [routerLink]="NEW_COURSE_URL">
+          <li class="nav-item" *ngIf="isUserAdmin">
+            <a class="nav-link" routerLinkActive="active" [routerLink]="USER_LIST_URL">
+              <i class="icon-puzzle"></i> User List
+            </a>
+          </li>
+        </ul>
+      </li>
+      <li class="divider"></li>
+      <li class="nav-title">
+        Courses
+      </li>
+      <li class="nav-item nav-dropdown" routerLinkActive="open" appNavDropdown>
+        <a class="nav-link nav-dropdown-toggle" href="#" appNavDropdownToggle><i class="icon-star"></i> Courses</a>
+        <ul class="nav-dropdown-items">
+          <li class="nav-item" *ngIf="isUserTutor">
+            <a class="nav-link" routerLinkActive="active" [routerLink]="NEW_COURSE_URL" >
               <i class="icon-puzzle"></i> New Course
             </a>
           </li>
@@ -27,6 +37,9 @@
           </li>
         </ul>
       </li>
+      <li class="divider"></li>
+      <li class="divider"></li>
+      <li class="divider"></li>
       <li class="divider"></li>
       <li class="nav-title">
         UI Elements

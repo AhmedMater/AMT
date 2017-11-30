@@ -6,6 +6,7 @@ import {FullLayout, SimpleLayout} from './containers';
 import {NewCourseComponent} from "./amt/course/new/new-course.component";
 import {CourseListComponent} from "./amt/course/list/course-list.component";
 import {CourseDetailComponent} from "./amt/course/details/course-details.component";
+import {P404Component} from "./views/pages/404.component";
 
 export const routes: Routes = [
     {path: '', redirectTo: 'register', pathMatch: 'full'},
@@ -25,7 +26,8 @@ export const routes: Routes = [
             {path: 'widgets', loadChildren: './views/widgets/widgets.module#WidgetsModule'},
             {path: 'charts', loadChildren: './views/chartjs/chartjs.module#ChartJSModule'}
         ]
-    }
+    },
+    { path: '**', component: P404Component }
 ];
 
 @NgModule({

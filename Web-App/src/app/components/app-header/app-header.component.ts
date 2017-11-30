@@ -14,6 +14,10 @@ export class AppHeader implements OnInit{
     isLoggedIn:boolean;
     userID: number;
 
+    //Roles
+    isAdmin: boolean;
+    isTutor: boolean;
+
     HOME_URL: string = FullRoutes.HOME_URL;
     LOGIN_URL: string = FullRoutes.LOGIN_URL;
     REGISTER_URL: string = FullRoutes.REGISTER_URL;
@@ -44,6 +48,10 @@ export class AppHeader implements OnInit{
       if(this.isLoggedIn) {
           this.fullName = this.authService.getUserFullName();
           this.userID = this.authService.getUserID();
+
+          let role: string = this.authService.getUserRole();
+          this.isAdmin = role == 'Ad';
+          this.isTutor = role == 'Tu';
       }
   }
 

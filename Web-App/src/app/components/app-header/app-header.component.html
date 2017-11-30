@@ -12,7 +12,7 @@
       </a>
 
       <div class="dropdown-menu dropdown-menu-right" *dropdownMenu aria-labelledby="simple-dropdown">
-        <a class="dropdown-item" href="#" [routerLink]="NEW_COURSE_URL"><i class="fa fa-book"></i> New Course</a>
+        <a class="dropdown-item" href="#" [routerLink]="NEW_COURSE_URL" *ngIf="isTutor"><i class="fa fa-book"></i> New Course</a>
         <a class="dropdown-item" href="#" [routerLink]="COURSE_LIST_URL"><i class="fa fa-list"></i> Course List</a>
       </div>
     </li>

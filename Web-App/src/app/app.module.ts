@@ -20,6 +20,7 @@ import {ReactiveFormsModule} from "@angular/forms";
 import {ToastModule} from "ng2-toastr";
 import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import {RESTInterceptor} from "./amt/services/RESTInterceptor";
+import {P404Component} from "./views/pages/404.component";
 
 const APP_COMPONENTS = [AppAside, AppBreadcrumbs, AppFooter, AppHeader, AppSidebar];
 const APP_CONTAINERS = [FullLayout, SimpleLayout];
@@ -30,7 +31,7 @@ const APP_DIRECTIVES = [AsideToggleDirective, NAV_DROPDOWN_DIRECTIVES, SIDEBAR_T
     imports: [ HttpClientModule, BrowserModule, BrowserAnimationsModule, AppRoutingModule,
         BsDropdownModule.forRoot(), CommonModule,
         TabsModule.forRoot(), ChartsModule, ToastModule.forRoot(), ReactiveFormsModule, HttpModule],
-    declarations: [AppComponent, APP_CONTAINERS, APP_COMPONENTS, APP_DIRECTIVES],
+    declarations: [AppComponent, P404Component, APP_CONTAINERS, APP_COMPONENTS, APP_DIRECTIVES],
     providers: [
         {provide: LocationStrategy, useClass: HashLocationStrategy},
         {provide: HTTP_INTERCEPTORS, useClass: RESTInterceptor, multi: true}
@@ -38,4 +39,5 @@ const APP_DIRECTIVES = [AsideToggleDirective, NAV_DROPDOWN_DIRECTIVES, SIDEBAR_T
     bootstrap: [AppComponent]
 })
 export class AppModule {
+    asd: boolean = true;
 }

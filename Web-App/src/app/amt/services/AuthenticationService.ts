@@ -18,6 +18,9 @@ export class AuthenticationService{
     public getUserID(){
         return JSON.parse(localStorage.getItem(ConfigParam.AUTH_DATA)).UserID;
     }
+    public getUserRole(){
+        return JSON.parse(localStorage.getItem(ConfigParam.AUTH_DATA)).Role;
+    }
 
     public setAuthenticationData(authUser){
         localStorage.setItem(ConfigParam.AUTH_DATA, JSON.stringify({
