@@ -25,12 +25,11 @@ import {Role} from "../../util/dto/lookup/Role";
 export class ProfileComponent implements OnInit{
     userID: number;
     userProfileData: UserProfileData = new UserProfileData();
+    fullRoleList: Role[];
 
     editRole: boolean = false;
     changeRoleForm: FormGroup;
 
-    // HOME_URL: string = FullRoutes.HOME_URL;
-    // LOGIN_URL: string = FullRoutes.LOGIN_URL;
     TOASTR_TITLE :string = "User Profile";
 
     constructor(
@@ -40,14 +39,19 @@ export class ProfileComponent implements OnInit{
         private authService: AuthenticationService
     ) {
         this.toastr.setRootViewContainerRef(vcr);
-        console.log(this.userProfileData);
     }
 
     ngOnInit(): void {
         this.route.params.subscribe(params => {
             this.userID = +params['userID'];
             this.userService.getUserProfileData(this.userID).subscribe(
-                res => {this.userProfileData = res; console.log(res)},
+                res => {
+                    this.userProfileData = res;
+                    this.fullRoleList = this.userProfileData.roleList;
+                    this.userProfileData.roleList = this.fullRoleList.filter(role => role.description != this.userProfileData.role);
+                    console.log(this.fullRoleList);
+                    console.log(this.userProfileData.roleList);
+                },
                 err => {console.log(err);}
             );
         });
@@ -67,9 +71,8 @@ export class ProfileComponent implements OnInit{
         this.userService.changeUserRole(this.userID, this.changeRoleForm.value.newRole).subscribe(
             res => {
                 this.toastr.success("Role is changed successfully", this.TOASTR_TITLE);
-                for(let item of this.userProfileData.roleList)
-                    if(item.role == this.changeRoleForm.value.newRole)
-                        this.userProfileData.role = item.description;
+                setTimeout(()=> window.location.reload(), 500);
+
             },
             err => {console.log(err);}
         );
