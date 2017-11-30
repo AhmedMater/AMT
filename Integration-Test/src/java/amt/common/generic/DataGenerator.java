@@ -3,6 +3,7 @@ package amt.common.generic;
 import am.application.SecurityService;
 import am.infrastructure.data.dto.user.LoginData;
 import am.infrastructure.data.dto.user.UserRegisterData;
+import am.infrastructure.data.enums.Roles;
 import am.infrastructure.data.hibernate.model.user.Users;
 import am.infrastructure.data.view.AuthenticatedUser;
 import am.main.api.AMSecurityManager;
@@ -17,7 +18,9 @@ import org.junit.Assert;
 
 import javax.inject.Inject;
 import javax.ws.rs.core.Response;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 import static am.main.data.enums.Interface.ARQUILLIAN;
 import static am.main.data.enums.Source.INTEGRATION_TEST;
@@ -48,16 +51,14 @@ public class DataGenerator {
      * @param data UserRegisterData Object that will be inserted
      *
      */
-    public Users registerUser(UserRegisterData data, boolean firstTime) throws Exception{
+    public Users registerUser(UserRegisterData data) throws Exception{
         String FN_NAME = "registerUser";
         AppSession session = appSession.updateSession(CLASS, FN_NAME);
-        if(firstTime)
-            repository.executeScript(Scripts.ROLE_LOOKUP);
 
-        Response response = Util.restPOSTClient(Rest.USER.RESOURCE, Rest.USER.REGISTER, data);
+        Response response = RestUtil.post(Rest.USER.RESOURCE, Rest.USER.REGISTER, data);
         Assert.assertEquals("Register New User failed", Response.Status.OK.getStatusCode(), response.getStatus());
 
-        Users actual = repository.getUserByUsername(data.getUsername(), true);
+        Users actual = repository.getUserByUsername(data.getUsername());
 
         Assert.assertEquals("First name failed", data.getFirstName(), actual.getFirstName());
         Assert.assertEquals("Last name failed", data.getLastName(), actual.getLastName());
@@ -80,13 +81,13 @@ public class DataGenerator {
         String FN_NAME = "data";
         AppSession session = appSession.updateSession(CLASS, FN_NAME);
 
-        Response response = Util.restPOSTClient(Rest.USER.RESOURCE, Rest.USER.LOGIN, data);
+        Response response = RestUtil.post(Rest.USER.RESOURCE, Rest.USER.LOGIN, data);
         Assert.assertEquals("Register New User failed", Response.Status.OK.getStatusCode(), response.getStatus());
 
         AuthenticatedUser actual = response.readEntity(AuthenticatedUser.class);
         Assert.assertNotNull("Authenticated User isn't returned", actual);
 
-        Users user = repository.getUserByUsername(data.getUsername(), true);
+        Users user = repository.getUserByUsername(data.getUsername());
 
         Assert.assertEquals("Full Name isn't correct", user.getFullName(), actual.getFullName());
         Assert.assertEquals("User ID isn't correct", user.getUserID(), actual.getUserID());
@@ -102,7 +103,19 @@ public class DataGenerator {
         Users adminUser = dbManager.find(appSession, Users.class, 1, false);
 
         LoginData loginData = new LoginData(adminUser.getUsername(), "123456");
-        loginData.setUsername("Admin_User");
         return loginData;
+    }
+
+    public void upgradeUserRole_ToTutor(Integer studentUserID) throws Exception{
+        LoginData adminLoginData = getAdminLoginData().clone();
+
+        List<String> pathParams = new ArrayList<>();
+        pathParams.add(studentUserID.toString());
+
+        Response response1 = RestUtil.postSecured(Rest.USER.RESOURCE, Rest.USER.CHANGE_ROLE, Roles.TUTOR.role(), pathParams, adminLoginData);
+        Assert.assertEquals("Viewing User Profile REST CAll Response isn't correct", Response.Status.OK.getStatusCode(), response1.getStatus());
+
+        Users tutorUser = dbManager.find(appSession, Users.class, studentUserID, false);
+        Assert.assertEquals("Role hasn't been changed", Roles.TUTOR.role(), tutorUser.getRole().getRole());
     }
 }

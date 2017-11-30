@@ -6,6 +6,7 @@ import amt.common.enums.Method;
 import amt.common.enums.Scripts;
 import amt.common.generic.DataGenerator;
 import amt.common.generic.Repository;
+import amt.common.generic.RestUtil;
 import amt.common.generic.Util;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
@@ -22,7 +23,7 @@ public class DeploymentManger {
     private static final String BASE_URL = "http://localhost/AMT-Services/api";
 
     private static Class[] classes = {
-            Repository.class, DataGenerator.class,
+            Repository.class, DataGenerator.class, RestUtil.class,
             Util.class, ScriptPaths.class, Scripts.class, Error.class, Method.class, Rest.class
     };
 

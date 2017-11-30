@@ -2,7 +2,6 @@
  * Created by ahmed.motair on 11/8/2017.
  */
 
-import {CourseRefData} from "../dto/course/CourseRefData";
 import {FormGroup, FormBuilder} from "@angular/forms";
 import {OnInit, Injectable} from "@angular/core";
 

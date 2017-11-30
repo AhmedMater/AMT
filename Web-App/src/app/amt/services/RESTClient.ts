@@ -19,22 +19,23 @@ export class RESTClient{
 
     constructor(private http: HttpClient ){}
 
-    get(path:string, params, authenticated:boolean): Observable<Response>{
+    get(path:string, queryParams, authenticated:boolean): Observable<Response>{
         const url = this.BASE_URL + path;
 
         if(authenticated) {
-            if(params != null)
-                this.observer = this.http.get<Response>(url, { params: params });
+            if(queryParams != null)
+                this.observer = this.http.get<Response>(url, { params: queryParams });
             else
                 this.observer = this.http.get<Response>(url);
         }else{
-            if(params != null)
-                this.observer = this.http.get<Response>(url, { params: params });
+            if(queryParams != null)
+                this.observer = this.http.get<Response>(url, { params: queryParams });
             else
                 this.observer = this.http.get<Response>(url);
         }
         return this.observer;
     }
+
 
     post(path:string, object:any, authenticated:boolean): Observable<Response>{
         const url = this.BASE_URL + path;

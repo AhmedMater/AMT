@@ -11,7 +11,7 @@ public class Rest {
 
         public static final String REGISTER = "/register";
         public static final String LOGIN = "/login";
-        public static final String CHANGE_ROLE = "/profile/changeRole";
+        public static final String CHANGE_ROLE = "/profile/changeRole/{0}";
 
         public static final class GET_PROFILE {
             public static final String PATH = "/profile/{0}/";

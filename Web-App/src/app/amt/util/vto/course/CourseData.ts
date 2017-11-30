@@ -1,6 +1,7 @@
 /**
  * Created by ahmed.motair on 11/4/2017.
  */
+
 import {CoursePRData} from "./CoursePRData";
 import {CourseRefData} from "./CourseRefData";
 

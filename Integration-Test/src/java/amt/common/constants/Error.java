@@ -9,15 +9,15 @@ public class Error {
     public static final String NOT_AUTHORIZED = "AMT-0012: You aren't authorized to access this page";
 
     public static class USER {
-        public static final String REGISTER_VALIDATION_ERROR = "AMT-0021: User Register validation failed";
-        public static final String LOGIN_VALIDATION_ERROR = "AMT-0022: User Login validation failed";
-        public static final String CHANGE_ROLE_VALIDATION_ERROR = "AMT-0028: Change User Role Data Validation failed";
+        public static final String REGISTER_VALIDATION_ERROR = "AMT-0001: Register Form validation failed";
+        public static final String LOGIN_VALIDATION_ERROR = "AMT-0001: Login Form validation failed";
+        public static final String CHANGE_ROLE_VALIDATION_ERROR = "AMT-0001: Change Role Form validation failed";
 
         public static final String REQUIRED_USERNAME = "AM-VALID-001: Field 'Username' is mandatory";
         public static final String LENGTH_USERNAME = "AM-VALID-002: Length of Field 'Username' has to be within 5 to 50 char";
         public static final String INVALID_USERNAME = "AM-VALID-003: Invalid Field 'Username' as It allows only chars, numbers, period, hyphen, and Underscore";
         public static final String EMPTY_STR_USERNAME = "AM-VALID-004: Field 'Username' can't be empty";
-        public static final String DUPLICATE_USER = "AMT-0001: Username: ''{0}'' already exists in the System";
+        public static final String DUPLICATE_USER = "AMT-0021: Username: ''{0}'' already exists in the System";
 
         public static final String REQUIRED_PASSWORD = "AM-VALID-001: Field 'Password' is mandatory";
         public static final String LENGTH_PASSWORD = "AM-VALID-002: Length of Field 'Password' has to be within 5 to 30 char";
@@ -28,7 +28,7 @@ public class Error {
         public static final String LENGTH_EMAIL = "AM-VALID-002: Length of Field 'Email' has to be within 10 to 100 char";
         public static final String INVALID_EMAIL = "AM-VALID-003: Invalid Field 'Email'";
         public static final String EMPTY_STR_EMAIL = "AM-VALID-004: Field 'Email' can't be empty";
-        public static final String DUPLICATE_EMAIL = "AMT-0002: Email: ''{0}'' already exists in the System";
+        public static final String DUPLICATE_EMAIL = "AMT-0022: Email: ''{0}'' already exists in the System";
 
         public static final String REQUIRED_FIRST_NAME = "AM-VALID-001: Field 'First Name' is mandatory";
         public static final String LENGTH_FIRST_NAME = "AM-VALID-002: Length of Field 'First Name' has to be within 1 to 15 char";
@@ -40,10 +40,10 @@ public class Error {
         public static final String INVALID_LAST_NAME = "AM-VALID-003: Invalid Field 'Last Name' as It allows only chars, hyphen, comma, period, and Apostrophe";
         public static final String EMPTY_STR_LAST_NAME = "AM-VALID-004: Field 'Last Name' can't be empty";
 
-        public static final String REQUIRED_OWNER_ID = "AM-VALID-001: Field 'Owner UserID' is mandatory";
+//        public static final String REQUIRED_OWNER_ID = "AM-VALID-001: Field 'Owner UserID' is mandatory";
         public static final String INVALID_OWNER_ID = "AM-VALID-003: Invalid Field 'Owner UserID' as It allows only positive numbers";
 
-        public static final String REQUIRED_VIEWER_ID = "AM-VALID-001: Field 'Viewer UserID' is mandatory";
+//        public static final String REQUIRED_VIEWER_ID = "AM-VALID-001: Field 'Viewer UserID' is mandatory";
         public static final String INVALID_VIEWER_ID = "AM-VALID-003: Invalid Field 'Viewer UserID' as It allows only positive numbers";
 
         public static final String REQUIRED_ROLE = "AM-VALID-001: Field 'User Role' is mandatory";

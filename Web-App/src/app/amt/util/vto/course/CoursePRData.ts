@@ -1,4 +1,3 @@
-import {MaterialType} from "../lookup/MaterialType";
 /**
  * Created by ahmed.motair on 11/4/2017.
  */

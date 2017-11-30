@@ -4,10 +4,10 @@ package am.rest.filters;
 import am.main.api.AppLogger;
 import am.main.api.ErrorHandler;
 import am.main.api.InfoHandler;
+import am.rest.annotations.Authorized;
 import am.shared.enums.EC;
 import am.application.SecurityService;
 import am.main.exception.BusinessException;
-import am.rest.annotations.Secured;
 import am.main.session.AppSession;
 import am.main.data.enums.Interface;
 import am.shared.session.Phase;
@@ -30,8 +30,7 @@ import java.io.IOException;
  * Created by mohamed.elewa on 5/4/2016.
  */
 
-
-@Secured
+@Authorized
 @Provider
 @Priority(Priorities.AUTHORIZATION)
 public class AuthorizationFilter implements ContainerRequestFilter {
@@ -51,6 +50,7 @@ public class AuthorizationFilter implements ContainerRequestFilter {
         try {
             logger.startDebug(session);
 
+            securityService.checkAuthentication(session, requestContext);
             securityService.checkAuthorization(session, resourceInfo, requestContext);
 
             logger.endDebug(session);
@@ -59,11 +59,11 @@ public class AuthorizationFilter implements ContainerRequestFilter {
 
             if(e instanceof BusinessException)
                 requestContext.abortWith(
-                    Response.status(Response.Status.FORBIDDEN).entity(e.getMessage()).build()
+                    Response.status(Response.Status.UNAUTHORIZED).entity(e.getMessage()).build()
                 );
             else
                 requestContext.abortWith(
-                    Response.status(Response.Status.FORBIDDEN).entity(errorHandler.getMsg(session, EC.AMT_0012)).build()
+                    Response.status(Response.Status.UNAUTHORIZED).entity(errorHandler.getMsg(session, EC.AMT_0012)).build()
                 );
         }
     }

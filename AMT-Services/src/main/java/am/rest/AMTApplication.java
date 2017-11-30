@@ -1,7 +1,7 @@
 package am.rest;
 
 import am.main.common.ConfigParam;
-import am.rest.filters.AuthenticationFilter;
+//import am.rest.filters.AuthenticationFilter;
 import am.rest.filters.AuthorizationFilter;
 import am.rest.filters.CORSResponseFilter;
 import am.rest.filters.LoggingFilter;
@@ -27,7 +27,7 @@ public class AMTApplication extends ResourceConfig {
 
             //register filters
             register(CORSResponseFilter.class);
-            register(AuthenticationFilter.class);
+//            register(AuthenticationFilter.class);
             register(AuthorizationFilter.class);
             register(LoggingFilter.class);
 

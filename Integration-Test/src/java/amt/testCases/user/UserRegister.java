@@ -27,7 +27,6 @@ import java.text.MessageFormat;
 
 import static am.main.data.enums.Interface.ARQUILLIAN;
 import static am.main.data.enums.Source.INTEGRATION_TEST;
-import static amt.common.constants.Error.SET_UP;
 import static amt.common.constants.Error.TEST_CASE;
 import static amt.common.constants.Error.USER.*;
 import static amt.common.constants.Rest.USER;
@@ -56,36 +55,23 @@ public class UserRegister {
     }
 
     @Test @InSequence(1)
-    public void beforeClass(){
-        try {
-            repository.executeScript(Scripts.CLEARING_ALL_TABLES);
-            repository.executeScript(Scripts.ROLE_LOOKUP);
-        } catch (Exception ex){
-            Assert.fail(MessageFormat.format(SET_UP, ex.getMessage()));
-        }
+    public void startClearingAllDBTables() throws Exception{
+        repository.executeScript(Scripts.CLEARING_ALL_TABLES);
     }
-
-    private void callRestForFormValidation(UserRegisterData data, FormValidation expected) throws Exception{
-        Util.callRestForFormValidation(USER.RESOURCE, USER.REGISTER, data, expected);
-
-        Users user = repository.getUserByUsername(data.getUsername(), false);
-        Assert.assertNull("User is found in Database", user);
-    }
-
-    private void callRestOk(AppSession session, UserRegisterData expected) throws Exception{
-        dataGenerator.registerUser(expected, false);
-        repository.executeScript(Scripts.CLEARING_USER_TABLE);
-    }
-
+    
     @Test @InSequence(2)
     public void user_register_FirstName_AllowChar(){
         String TEST_CASE_NAME = "user_register_FirstName_AllowChar";
         try{
             AppSession session = appSession.updateSession(CLASS, TEST_CASE_NAME);
+            
+            repository.executeScript(Scripts.CLEARING_ALL_TABLES);
+            repository.executeScript(Scripts.ROLE_LOOKUP);
+            
             UserRegisterData validData = this.userData.clone();
-
             validData.setFirstName("Ahmed");
-            callRestOk(session, validData);
+
+            dataGenerator.registerUser(validData);
         }catch (Exception ex){
             Assert.fail(MessageFormat.format(TEST_CASE, TEST_CASE_NAME, ex.getMessage()));
         }
@@ -96,10 +82,14 @@ public class UserRegister {
         String TEST_CASE_NAME = "user_register_FirstName_AllowHyphen";
         try{
             AppSession session = appSession.updateSession(CLASS, TEST_CASE_NAME);
+            
+            repository.executeScript(Scripts.CLEARING_ALL_TABLES);
+            repository.executeScript(Scripts.ROLE_LOOKUP);
+            
             UserRegisterData validData = this.userData.clone();
-
             validData.setFirstName("Ali-Amr");
-            callRestOk(session, validData);
+
+            dataGenerator.registerUser(validData);
         }catch (Exception ex){
             Assert.fail(MessageFormat.format(TEST_CASE, TEST_CASE_NAME, ex.getMessage()));
         }
@@ -110,10 +100,14 @@ public class UserRegister {
         String TEST_CASE_NAME = "user_register_FirstName_AllowComma";
         try{
             AppSession session = appSession.updateSession(CLASS, TEST_CASE_NAME);
-            UserRegisterData validData = this.userData.clone();
 
+            repository.executeScript(Scripts.CLEARING_ALL_TABLES);
+            repository.executeScript(Scripts.ROLE_LOOKUP);
+
+            UserRegisterData validData = this.userData.clone();
             validData.setFirstName("Ahmed,Amr");
-            callRestOk(session, validData);
+
+            dataGenerator.registerUser(validData);
         }catch (Exception ex){
             Assert.fail(MessageFormat.format(TEST_CASE, TEST_CASE_NAME, ex.getMessage()));
         }
@@ -124,10 +118,14 @@ public class UserRegister {
         String TEST_CASE_NAME = "user_register_FirstName_AllowPeriod";
         try{
             AppSession session = appSession.updateSession(CLASS, TEST_CASE_NAME);
-            UserRegisterData validData = this.userData.clone();
 
+            repository.executeScript(Scripts.CLEARING_ALL_TABLES);
+            repository.executeScript(Scripts.ROLE_LOOKUP);
+
+            UserRegisterData validData = this.userData.clone();
             validData.setFirstName("Dr.Ahmed");
-            callRestOk(session, validData);
+
+            dataGenerator.registerUser(validData);
         }catch (Exception ex){
             Assert.fail(MessageFormat.format(TEST_CASE, TEST_CASE_NAME, ex.getMessage()));
         }
@@ -138,10 +136,14 @@ public class UserRegister {
         String TEST_CASE_NAME = "user_register_FirstName_AllowApostrophe";
         try{
             AppSession session = appSession.updateSession(CLASS, TEST_CASE_NAME);
-            UserRegisterData validData = this.userData.clone();
 
+            repository.executeScript(Scripts.CLEARING_ALL_TABLES);
+            repository.executeScript(Scripts.ROLE_LOOKUP);
+
+            UserRegisterData validData = this.userData.clone();
             validData.setFirstName("Dr'Ahmed");
-            callRestOk(session, validData);
+
+            dataGenerator.registerUser(validData);
         }catch (Exception ex){
             Assert.fail(MessageFormat.format(TEST_CASE, TEST_CASE_NAME, ex.getMessage()));
         }
@@ -152,11 +154,18 @@ public class UserRegister {
         String TEST_CASE_NAME = "user_register_FirstName_InvalidValue";
         try{
             AppSession session = appSession.updateSession(CLASS, TEST_CASE_NAME);
-            UserRegisterData invalidData = this.userData.clone();
 
+            repository.executeScript(Scripts.CLEARING_ALL_TABLES);
+            repository.executeScript(Scripts.ROLE_LOOKUP);
+
+            UserRegisterData invalidData = this.userData.clone();
             invalidData.setFirstName("Ahm/ed");
+
             FormValidation expected = new FormValidation(REGISTER_VALIDATION_ERROR, INVALID_FIRST_NAME);
-            callRestForFormValidation(invalidData, expected);
+            Util.postFormValidation(USER.RESOURCE, USER.REGISTER, invalidData, expected);
+            
+            Users user = repository.getUserByUsername(invalidData.getUsername());
+            Assert.assertNull("User is found in Database", user);
         }catch (Exception ex){
             Assert.fail(MessageFormat.format(TEST_CASE, TEST_CASE_NAME, ex.getMessage()));
         }
@@ -167,11 +176,18 @@ public class UserRegister {
         String TEST_CASE_NAME = "user_register_FirstName_EmptyString";
         try{
             AppSession session = appSession.updateSession(CLASS, TEST_CASE_NAME);
-            UserRegisterData invalidData = this.userData.clone();
 
+            repository.executeScript(Scripts.CLEARING_ALL_TABLES);
+            repository.executeScript(Scripts.ROLE_LOOKUP);
+
+            UserRegisterData invalidData = this.userData.clone();
             invalidData.setFirstName("");
+
             FormValidation expected = new FormValidation(REGISTER_VALIDATION_ERROR, EMPTY_STR_FIRST_NAME);
-            callRestForFormValidation(invalidData, expected);
+            Util.postFormValidation(USER.RESOURCE, USER.REGISTER, invalidData, expected);
+
+            Users user = repository.getUserByUsername(invalidData.getUsername());
+            Assert.assertNull("User is found in Database", user);
         }catch (Exception ex){
             Assert.fail(MessageFormat.format(TEST_CASE, TEST_CASE_NAME, ex.getMessage()));
         }
@@ -182,11 +198,18 @@ public class UserRegister {
         String TEST_CASE_NAME = "user_register_FirstName_MaxLength";
         try{
             AppSession session = appSession.updateSession(CLASS, TEST_CASE_NAME);
-            UserRegisterData invalidData = this.userData.clone();
 
+            repository.executeScript(Scripts.CLEARING_ALL_TABLES);
+            repository.executeScript(Scripts.ROLE_LOOKUP);
+
+            UserRegisterData invalidData = this.userData.clone();
             invalidData.setFirstName(Util.generateString(20));
+
             FormValidation expected = new FormValidation(REGISTER_VALIDATION_ERROR, LENGTH_FIRST_NAME);
-            callRestForFormValidation(invalidData, expected);
+            Util.postFormValidation(USER.RESOURCE, USER.REGISTER, invalidData, expected);
+
+            Users user = repository.getUserByUsername(invalidData.getUsername());
+            Assert.assertNull("User is found in Database", user);
         }catch (Exception ex){
             Assert.fail(MessageFormat.format(TEST_CASE, TEST_CASE_NAME, ex.getMessage()));
         }
@@ -197,11 +220,18 @@ public class UserRegister {
         String TEST_CASE_NAME = "user_register_FirstName_Required";
         try{
             AppSession session = appSession.updateSession(CLASS, TEST_CASE_NAME);
-            UserRegisterData invalidData = this.userData.clone();
 
+            repository.executeScript(Scripts.CLEARING_ALL_TABLES);
+            repository.executeScript(Scripts.ROLE_LOOKUP);
+
+            UserRegisterData invalidData = this.userData.clone();
             invalidData.setFirstName(null);
+
             FormValidation expected = new FormValidation(REGISTER_VALIDATION_ERROR, REQUIRED_FIRST_NAME);
-            callRestForFormValidation(invalidData, expected);
+            Util.postFormValidation(USER.RESOURCE, USER.REGISTER, invalidData, expected);
+
+            Users user = repository.getUserByUsername(invalidData.getUsername());
+            Assert.assertNull("User is found in Database", user);
         }catch (Exception ex){
             Assert.fail(MessageFormat.format(TEST_CASE, TEST_CASE_NAME, ex.getMessage()));
         }
@@ -212,10 +242,14 @@ public class UserRegister {
         String TEST_CASE_NAME = "user_register_LastName_AllowChar";
         try{
             AppSession session = appSession.updateSession(CLASS, TEST_CASE_NAME);
-            UserRegisterData validData = this.userData.clone();
 
+            repository.executeScript(Scripts.CLEARING_ALL_TABLES);
+            repository.executeScript(Scripts.ROLE_LOOKUP);
+
+            UserRegisterData validData = this.userData.clone();
             validData.setLastName("Ahmed");
-            callRestOk(session, validData);
+
+            dataGenerator.registerUser(validData);
         }catch (Exception ex){
             Assert.fail(MessageFormat.format(TEST_CASE, TEST_CASE_NAME, ex.getMessage()));
         }
@@ -226,10 +260,14 @@ public class UserRegister {
         String TEST_CASE_NAME = "user_register_LastName_AllowHyphen";
         try{
             AppSession session = appSession.updateSession(CLASS, TEST_CASE_NAME);
-            UserRegisterData validData = this.userData.clone();
 
+            repository.executeScript(Scripts.CLEARING_ALL_TABLES);
+            repository.executeScript(Scripts.ROLE_LOOKUP);
+
+            UserRegisterData validData = this.userData.clone();
             validData.setLastName("Ali-Amr");
-            callRestOk(session, validData);
+
+            dataGenerator.registerUser(validData);
         }catch (Exception ex){
             Assert.fail(MessageFormat.format(TEST_CASE, TEST_CASE_NAME, ex.getMessage()));
         }
@@ -240,10 +278,14 @@ public class UserRegister {
         String TEST_CASE_NAME = "user_register_LastName_AllowComma";
         try{
             AppSession session = appSession.updateSession(CLASS, TEST_CASE_NAME);
-            UserRegisterData validData = this.userData.clone();
 
+            repository.executeScript(Scripts.CLEARING_ALL_TABLES);
+            repository.executeScript(Scripts.ROLE_LOOKUP);
+
+            UserRegisterData validData = this.userData.clone();
             validData.setLastName("Ahmed,Amr");
-            callRestOk(session, validData);
+
+            dataGenerator.registerUser(validData);
         }catch (Exception ex){
             Assert.fail(MessageFormat.format(TEST_CASE, TEST_CASE_NAME, ex.getMessage()));
         }
@@ -254,10 +296,14 @@ public class UserRegister {
         String TEST_CASE_NAME = "user_register_LastName_AllowPeriod";
         try{
             AppSession session = appSession.updateSession(CLASS, TEST_CASE_NAME);
-            UserRegisterData validData = this.userData.clone();
 
+            repository.executeScript(Scripts.CLEARING_ALL_TABLES);
+            repository.executeScript(Scripts.ROLE_LOOKUP);
+
+            UserRegisterData validData = this.userData.clone();
             validData.setLastName("Dr.Ahmed");
-            callRestOk(session, validData);
+
+            dataGenerator.registerUser(validData);
         }catch (Exception ex){
             Assert.fail(MessageFormat.format(TEST_CASE, TEST_CASE_NAME, ex.getMessage()));
         }
@@ -268,10 +314,14 @@ public class UserRegister {
         String TEST_CASE_NAME = "user_register_LastName_AllowApostrophe";
         try{
             AppSession session = appSession.updateSession(CLASS, TEST_CASE_NAME);
-            UserRegisterData validData = this.userData.clone();
 
+            repository.executeScript(Scripts.CLEARING_ALL_TABLES);
+            repository.executeScript(Scripts.ROLE_LOOKUP);
+
+            UserRegisterData validData = this.userData.clone();
             validData.setLastName("Dr'Ahmed");
-            callRestOk(session, validData);
+
+            dataGenerator.registerUser(validData);
         }catch (Exception ex){
             Assert.fail(MessageFormat.format(TEST_CASE, TEST_CASE_NAME, ex.getMessage()));
         }
@@ -282,11 +332,18 @@ public class UserRegister {
         String TEST_CASE_NAME = "user_register_LastName_";
         try{
             AppSession session = appSession.updateSession(CLASS, TEST_CASE_NAME);
-            UserRegisterData invalidData = this.userData.clone();
 
+            repository.executeScript(Scripts.CLEARING_ALL_TABLES);
+            repository.executeScript(Scripts.ROLE_LOOKUP);
+
+            UserRegisterData invalidData = this.userData.clone();
             invalidData.setLastName("Ahmed Mater");
-            FormValidation expected = new FormValidation(REGISTER_VALIDATION_ERROR, INVALID_LAST_NAME);
-            callRestForFormValidation(invalidData, expected);
+
+            FormValidation expected = new FormValidation(REGISTER_VALIDATION_ERROR, INVALID_LAST_NAME);            
+            Util.postFormValidation(USER.RESOURCE, USER.REGISTER, invalidData, expected);
+
+            Users user = repository.getUserByUsername(invalidData.getUsername());
+            Assert.assertNull("User is found in Database", user);
         }catch (Exception ex){
             Assert.fail(MessageFormat.format(TEST_CASE, TEST_CASE_NAME, ex.getMessage()));
         }
@@ -297,11 +354,18 @@ public class UserRegister {
         String TEST_CASE_NAME = "user_register_LastName_EmptyString";
         try{
             AppSession session = appSession.updateSession(CLASS, TEST_CASE_NAME);
-            UserRegisterData invalidData = this.userData.clone();
 
+            repository.executeScript(Scripts.CLEARING_ALL_TABLES);
+            repository.executeScript(Scripts.ROLE_LOOKUP);
+
+            UserRegisterData invalidData = this.userData.clone();
             invalidData.setLastName("");
+
             FormValidation expected = new FormValidation(REGISTER_VALIDATION_ERROR, EMPTY_STR_LAST_NAME);
-            callRestForFormValidation(invalidData, expected);
+            Util.postFormValidation(USER.RESOURCE, USER.REGISTER, invalidData, expected);
+
+            Users user = repository.getUserByUsername(invalidData.getUsername());
+            Assert.assertNull("User is found in Database", user);
         }catch (Exception ex){
             Assert.fail(MessageFormat.format(TEST_CASE, TEST_CASE_NAME, ex.getMessage()));
         }
@@ -312,11 +376,18 @@ public class UserRegister {
         String TEST_CASE_NAME = "user_register_LastName_MaxLength";
         try{
             AppSession session = appSession.updateSession(CLASS, TEST_CASE_NAME);
-            UserRegisterData invalidData = this.userData.clone();
 
+            repository.executeScript(Scripts.CLEARING_ALL_TABLES);
+            repository.executeScript(Scripts.ROLE_LOOKUP);
+
+            UserRegisterData invalidData = this.userData.clone();
             invalidData.setLastName(Util.generateString(55));
+
             FormValidation expected = new FormValidation(REGISTER_VALIDATION_ERROR, LENGTH_LAST_NAME);
-            callRestForFormValidation(invalidData, expected);
+            Util.postFormValidation(USER.RESOURCE, USER.REGISTER, invalidData, expected);
+
+            Users user = repository.getUserByUsername(invalidData.getUsername());
+            Assert.assertNull("User is found in Database", user);
         }catch (Exception ex){
             Assert.fail(MessageFormat.format(TEST_CASE, TEST_CASE_NAME, ex.getMessage()));
         }
@@ -327,11 +398,18 @@ public class UserRegister {
         String TEST_CASE_NAME = "user_register_LastName_Required";
         try{
             AppSession session = appSession.updateSession(CLASS, TEST_CASE_NAME);
-            UserRegisterData invalidData = this.userData.clone();
 
+            repository.executeScript(Scripts.CLEARING_ALL_TABLES);
+            repository.executeScript(Scripts.ROLE_LOOKUP);
+
+            UserRegisterData invalidData = this.userData.clone();
             invalidData.setLastName(null);
+
             FormValidation expected = new FormValidation(REGISTER_VALIDATION_ERROR, REQUIRED_LAST_NAME);
-            callRestForFormValidation(invalidData, expected);
+            Util.postFormValidation(USER.RESOURCE, USER.REGISTER, invalidData, expected);
+
+            Users user = repository.getUserByUsername(invalidData.getUsername());
+            Assert.assertNull("User is found in Database", user);
         }catch (Exception ex){
             Assert.fail(MessageFormat.format(TEST_CASE, TEST_CASE_NAME, ex.getMessage()));
         }
@@ -342,10 +420,14 @@ public class UserRegister {
         String TEST_CASE_NAME = "user_register_Username_AllowChar";
         try{
             AppSession session = appSession.updateSession(CLASS, TEST_CASE_NAME);
-            UserRegisterData validData = this.userData.clone();
 
+            repository.executeScript(Scripts.CLEARING_ALL_TABLES);
+            repository.executeScript(Scripts.ROLE_LOOKUP);
+
+            UserRegisterData validData = this.userData.clone();
             validData.setUsername("AhmedMater");
-            callRestOk(session, validData);
+
+            dataGenerator.registerUser(validData);
         }catch (Exception ex){
             Assert.fail(MessageFormat.format(TEST_CASE, TEST_CASE_NAME, ex.getMessage()));
         }
@@ -356,10 +438,14 @@ public class UserRegister {
         String TEST_CASE_NAME = "user_register_Username_AllowUnderscore";
         try{
             AppSession session = appSession.updateSession(CLASS, TEST_CASE_NAME);
-            UserRegisterData validData = this.userData.clone();
 
+            repository.executeScript(Scripts.CLEARING_ALL_TABLES);
+            repository.executeScript(Scripts.ROLE_LOOKUP);
+
+            UserRegisterData validData = this.userData.clone();
             validData.setUsername("Ahmed_Mater");
-            callRestOk(session, validData);
+
+            dataGenerator.registerUser(validData);
         }catch (Exception ex){
             Assert.fail(MessageFormat.format(TEST_CASE, TEST_CASE_NAME, ex.getMessage()));
         }
@@ -370,10 +456,14 @@ public class UserRegister {
         String TEST_CASE_NAME = "user_register_Username_AllowPeriod";
         try{
             AppSession session = appSession.updateSession(CLASS, TEST_CASE_NAME);
-            UserRegisterData validData = this.userData.clone();
 
+            repository.executeScript(Scripts.CLEARING_ALL_TABLES);
+            repository.executeScript(Scripts.ROLE_LOOKUP);
+
+            UserRegisterData validData = this.userData.clone();
             validData.setUsername("Ahmed.Mater");
-            callRestOk(session, validData);
+
+            dataGenerator.registerUser(validData);
         }catch (Exception ex){
             Assert.fail(MessageFormat.format(TEST_CASE, TEST_CASE_NAME, ex.getMessage()));
         }
@@ -384,10 +474,14 @@ public class UserRegister {
         String TEST_CASE_NAME = "user_register_Username_AllowHyphen";
         try{
             AppSession session = appSession.updateSession(CLASS, TEST_CASE_NAME);
-            UserRegisterData validData = this.userData.clone();
 
+            repository.executeScript(Scripts.CLEARING_ALL_TABLES);
+            repository.executeScript(Scripts.ROLE_LOOKUP);
+
+            UserRegisterData validData = this.userData.clone();
             validData.setUsername("Ahmed-Mater");
-            callRestOk(session, validData);
+
+            dataGenerator.registerUser(validData);
         }catch (Exception ex){
             Assert.fail(MessageFormat.format(TEST_CASE, TEST_CASE_NAME, ex.getMessage()));
         }
@@ -398,10 +492,14 @@ public class UserRegister {
         String TEST_CASE_NAME = "user_register_Username_AllowNumber";
         try{
             AppSession session = appSession.updateSession(CLASS, TEST_CASE_NAME);
-            UserRegisterData validData = this.userData.clone();
 
+            repository.executeScript(Scripts.CLEARING_ALL_TABLES);
+            repository.executeScript(Scripts.ROLE_LOOKUP);
+
+            UserRegisterData validData = this.userData.clone();
             validData.setUsername("Ahmed123");
-            callRestOk(session, validData);
+
+            dataGenerator.registerUser(validData);
         }catch (Exception ex){
             Assert.fail(MessageFormat.format(TEST_CASE, TEST_CASE_NAME, ex.getMessage()));
         }
@@ -412,11 +510,18 @@ public class UserRegister {
         String TEST_CASE_NAME = "user_register_Username_InvalidValue";
         try{
             AppSession session = appSession.updateSession(CLASS, TEST_CASE_NAME);
-            UserRegisterData invalidData = this.userData.clone();
 
+            repository.executeScript(Scripts.CLEARING_ALL_TABLES);
+            repository.executeScript(Scripts.ROLE_LOOKUP);
+
+            UserRegisterData invalidData = this.userData.clone();
             invalidData.setUsername("Ahmed Mater");
+
             FormValidation expected = new FormValidation(REGISTER_VALIDATION_ERROR, INVALID_USERNAME);
-            callRestForFormValidation(invalidData, expected);
+            Util.postFormValidation(USER.RESOURCE, USER.REGISTER, invalidData, expected);
+
+            Users user = repository.getUserByUsername(invalidData.getUsername());
+            Assert.assertNull("User is found in Database", user);
         }catch (Exception ex){
             Assert.fail(MessageFormat.format(TEST_CASE, TEST_CASE_NAME, ex.getMessage()));
         }
@@ -427,11 +532,18 @@ public class UserRegister {
         String TEST_CASE_NAME = "user_register_Username_EmptyString";
         try{
             AppSession session = appSession.updateSession(CLASS, TEST_CASE_NAME);
-            UserRegisterData invalidData = this.userData.clone();
 
+            repository.executeScript(Scripts.CLEARING_ALL_TABLES);
+            repository.executeScript(Scripts.ROLE_LOOKUP);
+
+            UserRegisterData invalidData = this.userData.clone();
             invalidData.setUsername("");
+
             FormValidation expected = new FormValidation(REGISTER_VALIDATION_ERROR, EMPTY_STR_USERNAME);
-            callRestForFormValidation(invalidData, expected);
+            Util.postFormValidation(USER.RESOURCE, USER.REGISTER, invalidData, expected);
+
+            Users user = repository.getUserByUsername(invalidData.getUsername());
+            Assert.assertNull("User is found in Database", user);
         }catch (Exception ex){
             Assert.fail(MessageFormat.format(TEST_CASE, TEST_CASE_NAME, ex.getMessage()));
         }
@@ -442,11 +554,18 @@ public class UserRegister {
         String TEST_CASE_NAME = "user_register_Username_MinLength";
         try{
             AppSession session = appSession.updateSession(CLASS, TEST_CASE_NAME);
-            UserRegisterData invalidData = this.userData.clone();
 
+            repository.executeScript(Scripts.CLEARING_ALL_TABLES);
+            repository.executeScript(Scripts.ROLE_LOOKUP);
+
+            UserRegisterData invalidData = this.userData.clone();
             invalidData.setUsername(Util.generateString(2));
+
             FormValidation expected = new FormValidation(REGISTER_VALIDATION_ERROR, LENGTH_USERNAME);
-            callRestForFormValidation(invalidData, expected);
+            Util.postFormValidation(USER.RESOURCE, USER.REGISTER, invalidData, expected);
+
+            Users user = repository.getUserByUsername(invalidData.getUsername());
+            Assert.assertNull("User is found in Database", user);
         }catch (Exception ex){
             Assert.fail(MessageFormat.format(TEST_CASE, TEST_CASE_NAME, ex.getMessage()));
         }
@@ -457,11 +576,18 @@ public class UserRegister {
         String TEST_CASE_NAME = "user_register_Username_MaxLength";
         try{
             AppSession session = appSession.updateSession(CLASS, TEST_CASE_NAME);
-            UserRegisterData invalidData = this.userData.clone();
 
+            repository.executeScript(Scripts.CLEARING_ALL_TABLES);
+            repository.executeScript(Scripts.ROLE_LOOKUP);
+
+            UserRegisterData invalidData = this.userData.clone();
             invalidData.setUsername(Util.generateString(55));
+
             FormValidation expected = new FormValidation(REGISTER_VALIDATION_ERROR, LENGTH_USERNAME);
-            callRestForFormValidation(invalidData, expected);
+            Util.postFormValidation(USER.RESOURCE, USER.REGISTER, invalidData, expected);
+
+            Users user = repository.getUserByUsername(invalidData.getUsername());
+            Assert.assertNull("User is found in Database", user);
         }catch (Exception ex){
             Assert.fail(MessageFormat.format(TEST_CASE, TEST_CASE_NAME, ex.getMessage()));
         }
@@ -472,11 +598,18 @@ public class UserRegister {
         String TEST_CASE_NAME = "user_register_Username_Required";
         try{
             AppSession session = appSession.updateSession(CLASS, TEST_CASE_NAME);
-            UserRegisterData invalidData = this.userData.clone();
 
+            repository.executeScript(Scripts.CLEARING_ALL_TABLES);
+            repository.executeScript(Scripts.ROLE_LOOKUP);
+
+            UserRegisterData invalidData = this.userData.clone();
             invalidData.setUsername(null);
+
             FormValidation expected = new FormValidation(REGISTER_VALIDATION_ERROR, REQUIRED_USERNAME);
-            callRestForFormValidation(invalidData, expected);
+            Util.postFormValidation(USER.RESOURCE, USER.REGISTER, invalidData, expected);
+
+            Users user = repository.getUserByUsername(invalidData.getUsername());
+            Assert.assertNull("User is found in Database", user);
         }catch (Exception ex){
             Assert.fail(MessageFormat.format(TEST_CASE, TEST_CASE_NAME, ex.getMessage()));
         }
@@ -488,15 +621,17 @@ public class UserRegister {
         try{
             AppSession session = appSession.updateSession(CLASS, TEST_CASE_NAME);
 
+            repository.executeScript(Scripts.CLEARING_ALL_TABLES);
+            repository.executeScript(Scripts.ROLE_LOOKUP);
+
             UserRegisterData validData = this.userData.clone();
-            dataGenerator.registerUser(validData, false);
+            dataGenerator.registerUser(validData);
 
             UserRegisterData invalidData = this.userData.clone();
             invalidData.setEmail("ahmedmotair@gmail.com");
 
-            Util.callRestForStringError(USER.RESOURCE, USER.REGISTER,
+            Util.postStringError(USER.RESOURCE, USER.REGISTER,
                     invalidData, MessageFormat.format(Error.USER.DUPLICATE_USER, invalidData.getUsername()));
-            repository.executeScript(Scripts.CLEARING_USER_TABLE);
         }catch (Exception ex){
             Assert.fail(MessageFormat.format(TEST_CASE, TEST_CASE_NAME, ex.getMessage()));
         }
@@ -507,11 +642,14 @@ public class UserRegister {
         String TEST_CASE_NAME = "user_register_Password_AllowChar";
         try{
             AppSession session = appSession.updateSession(CLASS, TEST_CASE_NAME);
-            UserRegisterData validData = this.userData.clone();
 
-            // Allow Chars
+            repository.executeScript(Scripts.CLEARING_ALL_TABLES);
+            repository.executeScript(Scripts.ROLE_LOOKUP);
+
+            UserRegisterData validData = this.userData.clone();
             validData.setPassword("AhmedMater");
-            callRestOk(session, validData);
+
+            dataGenerator.registerUser(validData);
         }catch (Exception ex){
             Assert.fail(MessageFormat.format(TEST_CASE, TEST_CASE_NAME, ex.getMessage()));
         }
@@ -522,10 +660,14 @@ public class UserRegister {
         String TEST_CASE_NAME = "user_register_Password_AllowNumber";
         try{
             AppSession session = appSession.updateSession(CLASS, TEST_CASE_NAME);
-            UserRegisterData validData = this.userData.clone();
 
+            repository.executeScript(Scripts.CLEARING_ALL_TABLES);
+            repository.executeScript(Scripts.ROLE_LOOKUP);
+
+            UserRegisterData validData = this.userData.clone();
             validData.setPassword("Ahmed123");
-            callRestOk(session, validData);
+
+            dataGenerator.registerUser(validData);
         }catch (Exception ex){
             Assert.fail(MessageFormat.format(TEST_CASE, TEST_CASE_NAME, ex.getMessage()));
         }
@@ -536,10 +678,14 @@ public class UserRegister {
         String TEST_CASE_NAME = "user_register_Password_AllowPeriod";
         try{
             AppSession session = appSession.updateSession(CLASS, TEST_CASE_NAME);
-            UserRegisterData validData = this.userData.clone();
 
+            repository.executeScript(Scripts.CLEARING_ALL_TABLES);
+            repository.executeScript(Scripts.ROLE_LOOKUP);
+
+            UserRegisterData validData = this.userData.clone();
             validData.setPassword("Ahmed.Mater");
-            callRestOk(session, validData);
+
+            dataGenerator.registerUser(validData);
         }catch (Exception ex){
             Assert.fail(MessageFormat.format(TEST_CASE, TEST_CASE_NAME, ex.getMessage()));
         }
@@ -550,10 +696,14 @@ public class UserRegister {
         String TEST_CASE_NAME = "user_register_Password_AllowHyphen";
         try{
             AppSession session = appSession.updateSession(CLASS, TEST_CASE_NAME);
-            UserRegisterData validData = this.userData.clone();
 
+            repository.executeScript(Scripts.CLEARING_ALL_TABLES);
+            repository.executeScript(Scripts.ROLE_LOOKUP);
+
+            UserRegisterData validData = this.userData.clone();
             validData.setPassword("Ahmed-Mater");
-            callRestOk(session, validData);
+
+            dataGenerator.registerUser(validData);
         }catch (Exception ex){
             Assert.fail(MessageFormat.format(TEST_CASE, TEST_CASE_NAME, ex.getMessage()));
         }
@@ -564,10 +714,14 @@ public class UserRegister {
         String TEST_CASE_NAME = "user_register_Password_AllowAmpersand";
         try{
             AppSession session = appSession.updateSession(CLASS, TEST_CASE_NAME);
-            UserRegisterData validData = this.userData.clone();
 
+            repository.executeScript(Scripts.CLEARING_ALL_TABLES);
+            repository.executeScript(Scripts.ROLE_LOOKUP);
+
+            UserRegisterData validData = this.userData.clone();
             validData.setPassword("Ahmed@Mater");
-            callRestOk(session, validData);
+
+            dataGenerator.registerUser(validData);
         }catch (Exception ex){
             Assert.fail(MessageFormat.format(TEST_CASE, TEST_CASE_NAME, ex.getMessage()));
         }
@@ -578,10 +732,14 @@ public class UserRegister {
         String TEST_CASE_NAME = "user_register_Password_AllowUnderscore";
         try{
             AppSession session = appSession.updateSession(CLASS, TEST_CASE_NAME);
-            UserRegisterData validData = this.userData.clone();
 
+            repository.executeScript(Scripts.CLEARING_ALL_TABLES);
+            repository.executeScript(Scripts.ROLE_LOOKUP);
+
+            UserRegisterData validData = this.userData.clone();
             validData.setPassword("Ahmed_Mater");
-            callRestOk(session, validData);
+
+            dataGenerator.registerUser(validData);
         }catch (Exception ex){
             Assert.fail(MessageFormat.format(TEST_CASE, TEST_CASE_NAME, ex.getMessage()));
         }
@@ -592,11 +750,18 @@ public class UserRegister {
         String TEST_CASE_NAME = "user_register_Password_InvalidValue";
         try{
             AppSession session = appSession.updateSession(CLASS, TEST_CASE_NAME);
-            UserRegisterData invalidData = this.userData.clone();
 
+            repository.executeScript(Scripts.CLEARING_ALL_TABLES);
+            repository.executeScript(Scripts.ROLE_LOOKUP);
+
+            UserRegisterData invalidData = this.userData.clone();
             invalidData.setPassword("Ah<med Mater");
+
             FormValidation expected = new FormValidation(REGISTER_VALIDATION_ERROR, INVALID_PASSWORD);
-            callRestForFormValidation(invalidData, expected);
+            Util.postFormValidation(USER.RESOURCE, USER.REGISTER, invalidData, expected);
+
+            Users user = repository.getUserByUsername(invalidData.getUsername());
+            Assert.assertNull("User is found in Database", user);
         }catch (Exception ex){
             Assert.fail(MessageFormat.format(TEST_CASE, TEST_CASE_NAME, ex.getMessage()));
         }
@@ -607,11 +772,18 @@ public class UserRegister {
         String TEST_CASE_NAME = "user_register_Password_EmptyString";
         try{
             AppSession session = appSession.updateSession(CLASS, TEST_CASE_NAME);
-            UserRegisterData invalidData = this.userData.clone();
 
+            repository.executeScript(Scripts.CLEARING_ALL_TABLES);
+            repository.executeScript(Scripts.ROLE_LOOKUP);
+
+            UserRegisterData invalidData = this.userData.clone();
             invalidData.setPassword("");
+
             FormValidation expected = new FormValidation(REGISTER_VALIDATION_ERROR, EMPTY_STR_PASSWORD);
-            callRestForFormValidation(invalidData, expected);
+            Util.postFormValidation(USER.RESOURCE, USER.REGISTER, invalidData, expected);
+
+            Users user = repository.getUserByUsername(invalidData.getUsername());
+            Assert.assertNull("User is found in Database", user);
         }catch (Exception ex){
             Assert.fail(MessageFormat.format(TEST_CASE, TEST_CASE_NAME, ex.getMessage()));
         }
@@ -622,11 +794,18 @@ public class UserRegister {
         String TEST_CASE_NAME = "user_register_Password_MinLength";
         try{
             AppSession session = appSession.updateSession(CLASS, TEST_CASE_NAME);
-            UserRegisterData invalidData = this.userData.clone();
 
+            repository.executeScript(Scripts.CLEARING_ALL_TABLES);
+            repository.executeScript(Scripts.ROLE_LOOKUP);
+
+            UserRegisterData invalidData = this.userData.clone();
             invalidData.setPassword(Util.generateString(2));
+
             FormValidation expected = new FormValidation(REGISTER_VALIDATION_ERROR, LENGTH_PASSWORD);
-            callRestForFormValidation(invalidData, expected);
+            Util.postFormValidation(USER.RESOURCE, USER.REGISTER, invalidData, expected);
+
+            Users user = repository.getUserByUsername(invalidData.getUsername());
+            Assert.assertNull("User is found in Database", user);
         }catch (Exception ex){
             Assert.fail(MessageFormat.format(TEST_CASE, TEST_CASE_NAME, ex.getMessage()));
         }
@@ -637,11 +816,18 @@ public class UserRegister {
         String TEST_CASE_NAME = "user_register_Password_MaxLength";
         try{
             AppSession session = appSession.updateSession(CLASS, TEST_CASE_NAME);
-            UserRegisterData invalidData = this.userData.clone();
 
+            repository.executeScript(Scripts.CLEARING_ALL_TABLES);
+            repository.executeScript(Scripts.ROLE_LOOKUP);
+
+            UserRegisterData invalidData = this.userData.clone();
             invalidData.setPassword(Util.generateString(35));
+
             FormValidation expected = new FormValidation(REGISTER_VALIDATION_ERROR, LENGTH_PASSWORD);
-            callRestForFormValidation(invalidData, expected);
+            Util.postFormValidation(USER.RESOURCE, USER.REGISTER, invalidData, expected);
+
+            Users user = repository.getUserByUsername(invalidData.getUsername());
+            Assert.assertNull("User is found in Database", user);
         }catch (Exception ex){
             Assert.fail(MessageFormat.format(TEST_CASE, TEST_CASE_NAME, ex.getMessage()));
         }
@@ -652,11 +838,18 @@ public class UserRegister {
         String TEST_CASE_NAME = "user_register_Password_Required";
         try{
             AppSession session = appSession.updateSession(CLASS, TEST_CASE_NAME);
-            UserRegisterData invalidData = this.userData.clone();
 
+            repository.executeScript(Scripts.CLEARING_ALL_TABLES);
+            repository.executeScript(Scripts.ROLE_LOOKUP);
+
+            UserRegisterData invalidData = this.userData.clone();
             invalidData.setPassword(null);
+
             FormValidation expected = new FormValidation(REGISTER_VALIDATION_ERROR, REQUIRED_PASSWORD);
-            callRestForFormValidation(invalidData, expected);
+            Util.postFormValidation(USER.RESOURCE, USER.REGISTER, invalidData, expected);
+
+            Users user = repository.getUserByUsername(invalidData.getUsername());
+            Assert.assertNull("User is found in Database", user);
         }catch (Exception ex){
             Assert.fail(MessageFormat.format(TEST_CASE, TEST_CASE_NAME, ex.getMessage()));
         }
@@ -667,10 +860,14 @@ public class UserRegister {
         String TEST_CASE_NAME = "user_register_Email_AllowChar";
         try{
             AppSession session = appSession.updateSession(CLASS, TEST_CASE_NAME);
-            UserRegisterData validData = this.userData.clone();
 
+            repository.executeScript(Scripts.CLEARING_ALL_TABLES);
+            repository.executeScript(Scripts.ROLE_LOOKUP);
+
+            UserRegisterData validData = this.userData.clone();
             validData.setEmail("ahmedmotair@gmail.com");
-            callRestOk(session, validData);
+
+            dataGenerator.registerUser(validData);
         }catch (Exception ex){
             Assert.fail(MessageFormat.format(TEST_CASE, TEST_CASE_NAME, ex.getMessage()));
         }
@@ -681,10 +878,14 @@ public class UserRegister {
         String TEST_CASE_NAME = "user_register_Email_AllowNumber";
         try{
             AppSession session = appSession.updateSession(CLASS, TEST_CASE_NAME);
-            UserRegisterData validData = this.userData.clone();
 
+            repository.executeScript(Scripts.CLEARING_ALL_TABLES);
+            repository.executeScript(Scripts.ROLE_LOOKUP);
+
+            UserRegisterData validData = this.userData.clone();
             validData.setEmail("ahmedmotair123@gmail.com");
-            callRestOk(session, validData);
+
+            dataGenerator.registerUser(validData);
         }catch (Exception ex){
             Assert.fail(MessageFormat.format(TEST_CASE, TEST_CASE_NAME, ex.getMessage()));
         }
@@ -695,10 +896,14 @@ public class UserRegister {
         String TEST_CASE_NAME = "user_register_Email_AllowPeriod";
         try{
             AppSession session = appSession.updateSession(CLASS, TEST_CASE_NAME);
-            UserRegisterData validData = this.userData.clone();
 
+            repository.executeScript(Scripts.CLEARING_ALL_TABLES);
+            repository.executeScript(Scripts.ROLE_LOOKUP);
+
+            UserRegisterData validData = this.userData.clone();
             validData.setEmail("ahmed.motair@gizasystem.com");
-            callRestOk(session, validData);
+
+            dataGenerator.registerUser(validData);
         }catch (Exception ex){
             Assert.fail(MessageFormat.format(TEST_CASE, TEST_CASE_NAME, ex.getMessage()));
         }
@@ -709,10 +914,14 @@ public class UserRegister {
         String TEST_CASE_NAME = "user_register_Email_AllowHyphen";
         try{
             AppSession session = appSession.updateSession(CLASS, TEST_CASE_NAME);
-            UserRegisterData validData = this.userData.clone();
 
+            repository.executeScript(Scripts.CLEARING_ALL_TABLES);
+            repository.executeScript(Scripts.ROLE_LOOKUP);
+
+            UserRegisterData validData = this.userData.clone();
             validData.setEmail("ahmed-motair@gizasystems.com");
-            callRestOk(session, validData);
+
+            dataGenerator.registerUser(validData);
         }catch (Exception ex){
             Assert.fail(MessageFormat.format(TEST_CASE, TEST_CASE_NAME, ex.getMessage()));
         }
@@ -723,10 +932,14 @@ public class UserRegister {
         String TEST_CASE_NAME = "user_register_Email_AllowHyphenInDomain";
         try{
             AppSession session = appSession.updateSession(CLASS, TEST_CASE_NAME);
-            UserRegisterData validData = this.userData.clone();
 
+            repository.executeScript(Scripts.CLEARING_ALL_TABLES);
+            repository.executeScript(Scripts.ROLE_LOOKUP);
+
+            UserRegisterData validData = this.userData.clone();
             validData.setEmail("ahmedmotair@giza-systems.com");
-            callRestOk(session, validData);
+
+            dataGenerator.registerUser(validData);
         }catch (Exception ex){
             Assert.fail(MessageFormat.format(TEST_CASE, TEST_CASE_NAME, ex.getMessage()));
         }
@@ -737,11 +950,18 @@ public class UserRegister {
         String TEST_CASE_NAME = "user_register_Email_Invalid";
         try{
             AppSession session = appSession.updateSession(CLASS, TEST_CASE_NAME);
-            UserRegisterData invalidData = this.userData.clone();
 
+            repository.executeScript(Scripts.CLEARING_ALL_TABLES);
+            repository.executeScript(Scripts.ROLE_LOOKUP);
+
+            UserRegisterData invalidData = this.userData.clone();
             invalidData.setEmail("Ahmed Mater");
+
             FormValidation expected = new FormValidation(REGISTER_VALIDATION_ERROR, INVALID_EMAIL);
-            callRestForFormValidation(invalidData, expected);
+            Util.postFormValidation(USER.RESOURCE, USER.REGISTER, invalidData, expected);
+
+            Users user = repository.getUserByUsername(invalidData.getUsername());
+            Assert.assertNull("User is found in Database", user);
         }catch (Exception ex){
             Assert.fail(MessageFormat.format(TEST_CASE, TEST_CASE_NAME, ex.getMessage()));
         }
@@ -752,11 +972,18 @@ public class UserRegister {
         String TEST_CASE_NAME = "user_register_Email_EmptyString";
         try{
             AppSession session = appSession.updateSession(CLASS, TEST_CASE_NAME);
-            UserRegisterData invalidData = this.userData.clone();
 
+            repository.executeScript(Scripts.CLEARING_ALL_TABLES);
+            repository.executeScript(Scripts.ROLE_LOOKUP);
+
+            UserRegisterData invalidData = this.userData.clone();
             invalidData.setEmail("");
+
             FormValidation expected = new FormValidation(REGISTER_VALIDATION_ERROR, EMPTY_STR_EMAIL);
-            callRestForFormValidation(invalidData, expected);
+            Util.postFormValidation(USER.RESOURCE, USER.REGISTER, invalidData, expected);
+
+            Users user = repository.getUserByUsername(invalidData.getUsername());
+            Assert.assertNull("User is found in Database", user);
         }catch (Exception ex){
             Assert.fail(MessageFormat.format(TEST_CASE, TEST_CASE_NAME, ex.getMessage()));
         }
@@ -767,11 +994,18 @@ public class UserRegister {
         String TEST_CASE_NAME = "user_register_Email_MinLength";
         try{
             AppSession session = appSession.updateSession(CLASS, TEST_CASE_NAME);
-            UserRegisterData invalidData = this.userData.clone();
 
+            repository.executeScript(Scripts.CLEARING_ALL_TABLES);
+            repository.executeScript(Scripts.ROLE_LOOKUP);
+
+            UserRegisterData invalidData = this.userData.clone();
             invalidData.setEmail(Util.generateString(2));
+
             FormValidation expected = new FormValidation(REGISTER_VALIDATION_ERROR, LENGTH_EMAIL);
-            callRestForFormValidation(invalidData, expected);
+            Util.postFormValidation(USER.RESOURCE, USER.REGISTER, invalidData, expected);
+
+            Users user = repository.getUserByUsername(invalidData.getUsername());
+            Assert.assertNull("User is found in Database", user);
         }catch (Exception ex){
             Assert.fail(MessageFormat.format(TEST_CASE, TEST_CASE_NAME, ex.getMessage()));
         }
@@ -782,11 +1016,18 @@ public class UserRegister {
         String TEST_CASE_NAME = "user_register_Email_MaxLength";
         try{
             AppSession session = appSession.updateSession(CLASS, TEST_CASE_NAME);
-            UserRegisterData invalidData = this.userData.clone();
 
+            repository.executeScript(Scripts.CLEARING_ALL_TABLES);
+            repository.executeScript(Scripts.ROLE_LOOKUP);
+
+            UserRegisterData invalidData = this.userData.clone();
             invalidData.setEmail(Util.generateString(105));
+
             FormValidation expected = new FormValidation(REGISTER_VALIDATION_ERROR, LENGTH_EMAIL);
-            callRestForFormValidation(invalidData, expected);
+            Util.postFormValidation(USER.RESOURCE, USER.REGISTER, invalidData, expected);
+
+            Users user = repository.getUserByUsername(invalidData.getUsername());
+            Assert.assertNull("User is found in Database", user);
         }catch (Exception ex){
             Assert.fail(MessageFormat.format(TEST_CASE, TEST_CASE_NAME, ex.getMessage()));
         }
@@ -797,11 +1038,18 @@ public class UserRegister {
         String TEST_CASE_NAME = "user_register_Email_Required";
         try{
             AppSession session = appSession.updateSession(CLASS, TEST_CASE_NAME);
-            UserRegisterData invalidData = this.userData.clone();
 
+            repository.executeScript(Scripts.CLEARING_ALL_TABLES);
+            repository.executeScript(Scripts.ROLE_LOOKUP);
+
+            UserRegisterData invalidData = this.userData.clone();
             invalidData.setEmail(null);
+
             FormValidation expected = new FormValidation(REGISTER_VALIDATION_ERROR, REQUIRED_EMAIL);
-            callRestForFormValidation(invalidData, expected);
+            Util.postFormValidation(USER.RESOURCE, USER.REGISTER, invalidData, expected);
+
+            Users user = repository.getUserByUsername(invalidData.getUsername());
+            Assert.assertNull("User is found in Database", user);
         }catch (Exception ex){
             Assert.fail(MessageFormat.format(TEST_CASE, TEST_CASE_NAME, ex.getMessage()));
         }
@@ -813,18 +1061,24 @@ public class UserRegister {
         try{
             AppSession session = appSession.updateSession(CLASS, TEST_CASE_NAME);
 
+            repository.executeScript(Scripts.CLEARING_ALL_TABLES);
+            repository.executeScript(Scripts.ROLE_LOOKUP);
+
             UserRegisterData validData = this.userData.clone();
-            dataGenerator.registerUser(validData, false);
+            dataGenerator.registerUser(validData);
 
             UserRegisterData invalidData = this.userData.clone();
             invalidData.setUsername("ahmed_Ali");
 
-            Util.callRestForStringError(USER.RESOURCE, USER.REGISTER,
+            Util.postStringError(USER.RESOURCE, USER.REGISTER,
                     invalidData, MessageFormat.format(Error.USER.DUPLICATE_EMAIL, invalidData.getEmail()));
-
-            repository.executeScript(Scripts.CLEARING_USER_TABLE);
         }catch (Exception ex){
             Assert.fail(MessageFormat.format(TEST_CASE, TEST_CASE_NAME, ex.getMessage()));
         }
+    }
+    
+    @Test @InSequence(53)
+    public void endClearingAllDBTables() throws Exception{
+        repository.executeScript(Scripts.CLEARING_ALL_TABLES);
     }
 }

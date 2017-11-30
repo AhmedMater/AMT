@@ -11,6 +11,7 @@ import am.main.data.enums.Source;
 import am.shared.enums.IC;
 import am.shared.session.Phase;
 
+import javax.annotation.Priority;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -24,6 +25,7 @@ import java.io.IOException;
  * Created by mohamed.elewa on 8/3/2016.
  */
 @PreMatching
+@Priority(900)
 public class LoggingFilter implements ContainerRequestFilter {
     private final String CLASS = "LoggingFilter";
     @Inject private HttpSession httpSession;

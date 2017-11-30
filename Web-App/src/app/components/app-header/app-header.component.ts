@@ -12,10 +12,13 @@ export class AppHeader implements OnInit{
 
     fullName:string;
     isLoggedIn:boolean;
+    userID: number;
 
     HOME_URL: string = FullRoutes.HOME_URL;
     LOGIN_URL: string = FullRoutes.LOGIN_URL;
     REGISTER_URL: string = FullRoutes.REGISTER_URL;
+    USER_PROFILE_URL: string = FullRoutes.USER_PROFILE_URL;
+
     NEW_COURSE_URL: string = FullRoutes.NEW_COURSE_URL;
     COURSE_LIST_URL: string = FullRoutes.COURSE_LIST_URL;
 
@@ -38,13 +41,16 @@ export class AppHeader implements OnInit{
 
   ngOnInit(): void {
       this.isLoggedIn = this.authService.isUserLoginIn();
-      if(this.isLoggedIn)
+      if(this.isLoggedIn) {
           this.fullName = this.authService.getUserFullName();
+          this.userID = this.authService.getUserID();
+      }
   }
 
   logout(){
       this.authService.logOutUser();
       this.isLoggedIn = false;
       this.fullName = null;
+      this.userID = null;
   }
 }

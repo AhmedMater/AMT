@@ -1,8 +1,6 @@
 package am.application;
 
-import am.infrastructure.data.dto.user.ChangeRoleData;
 import am.infrastructure.data.dto.user.LoginData;
-import am.infrastructure.data.view.UserProfileData;
 import am.infrastructure.data.dto.user.UserRegisterData;
 import am.infrastructure.data.enums.Roles;
 import am.infrastructure.data.hibernate.model.lookup.Role;
@@ -11,6 +9,7 @@ import am.infrastructure.data.hibernate.model.user.UserIPFailure;
 import am.infrastructure.data.hibernate.model.user.UserLoginLog;
 import am.infrastructure.data.hibernate.model.user.Users;
 import am.infrastructure.data.view.AuthenticatedUser;
+import am.infrastructure.data.view.UserProfileData;
 import am.main.api.AMSecurityManager;
 import am.main.api.AppConfigManager;
 import am.main.api.AppLogger;
@@ -183,27 +182,31 @@ public class UserService {
         return authenticatedUser;
     }
 
-    public void changeRole(AppSession appSession, ChangeRoleData changeRoleData) throws Exception{
+    public void changeRole(AppSession appSession, String newRole, String ownerUserID) throws Exception{
         String FN_NAME = "changeRole";
         AppSession session = appSession.updateSession(CLASS, FN_NAME);
-        logger.startDebug(session, changeRoleData);
+        logger.startDebug(session, newRole, ownerUserID);
 
-        Role role = dbManager.find(session, Role.class, changeRoleData.getNewRole(), true);
-        if(role == null)
-            throw new BusinessException(session, EC.AMT_0026, changeRoleData.getNewRole());
-        else if(role.isAdmin())
+        Integer ownerID;
+        try {
+            ownerID = new Integer(ownerUserID);
+        }catch (Exception ex){
+            throw new BusinessException(session, EC.AMT_0023, ownerUserID);
+        }
+
+        Role role = dbManager.find(session, Role.class, newRole, true);
+        if(role == null) {
+            if(newRole == null)
+                newRole = "Null";
+            else if(newRole.isEmpty())
+                newRole = "Empty Value";
+            throw new BusinessException(session, EC.AMT_0026, newRole);
+        }else if(role.isAdmin())
             throw new BusinessException(session, EC.AMT_0027);
 
-        Users viewerUser = dbManager.find(session, Users.class, changeRoleData.getViewerUserID(), false);
-        if(viewerUser == null)
-            throw new BusinessException(session, EC.AMT_0023, changeRoleData.getViewerUserID());
-        else if(!viewerUser.getRole().isAdmin())
-            throw new BusinessException(session, EC.AMT_0029);
-
-        Users profileOwner = dbManager.find(session, Users.class, changeRoleData.getOwnerUserID(), false);
+        Users profileOwner = dbManager.find(session, Users.class, ownerID, false);
         if(profileOwner == null)
-            throw new BusinessException(session, EC.AMT_0023, changeRoleData.getOwnerUserID());
-
+            throw new BusinessException(session, EC.AMT_0023, ownerUserID);
 
         profileOwner.setRole(role);
         dbManager.merge(session, profileOwner, false);
@@ -211,34 +214,34 @@ public class UserService {
         logger.endDebug(session);
     }
 
-    public UserProfileData getProfileData(AppSession appSession, String ownerID, String viewerID) throws Exception{
+    public UserProfileData getProfileData(AppSession appSession, String ownerUserID, Users viewerUser) throws Exception{
         String FN_NAME = "getProfileData";
         AppSession session = appSession.updateSession(CLASS, FN_NAME);
-        logger.startDebug(session, ownerID, viewerID);
-        Users viewerUser = null;
+        logger.startDebug(session, ownerUserID, viewerUser);
 
-        if(viewerID != null) {
-            viewerUser = dbManager.find(session, Users.class, new Integer(viewerID), false);
-            if (viewerUser == null)
-                throw new BusinessException(session, EC.AMT_0023, viewerID);
+        Integer ownerID;
+        try {
+            ownerID = new Integer(ownerUserID);
+        }catch (Exception ex){
+            throw new BusinessException(session, EC.AMT_0023, ownerUserID);
         }
 
-        Users profileOwner = dbManager.find(session, Users.class, new Integer(ownerID), false);
+        Users profileOwner = dbManager.find(session, Users.class, ownerID, false);
         if(profileOwner == null)
             throw new BusinessException(session, EC.AMT_0023, ownerID);
 
         UserProfileData profileData = new UserProfileData(profileOwner);
 
-        if(viewerUser == null) {
-            profileData.setCanEdit(false);
-            profileData.setCanUpgradeRole(false);
-        }else if(ownerID.equals(viewerID)){
+        if(ownerID.equals(viewerUser.getUserID())){
             profileData.setCanEdit(true);
             profileData.setCanUpgradeRole(false);
         }else if(viewerUser.getRole().isAdmin()){
             profileData.setCanEdit(false);
             profileData.setCanUpgradeRole(true);
             profileData.setRoleList(lookupRepository.getAllNonAdminRoles(session));
+        }else {
+            profileData.setCanEdit(false);
+            profileData.setCanUpgradeRole(false);
         }
 
         logger.endDebug(session, profileData);

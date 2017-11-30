@@ -9,7 +9,7 @@ import {Router, ActivatedRoute, Params} from "@angular/router";
 
 import {RESTClient} from "../../services/RESTClient";
 import {CourseService} from "../../services/CourseService";
-import {CourseData} from "../../util/dto/course/CourseData";
+import {CourseData} from "../../util/vto/course/CourseData";
 
 @Component({
     selector: 'course-detail',
@@ -43,7 +43,7 @@ export class CourseDetailComponent implements OnInit{
         this.activatedRoute.params.subscribe((params: Params) => {
             console.log(params);
             this.courseID = params['courseID'];
-            console.log(this.courseID);
+            // console.log(this.courseID);
 
             this.courseService.getCourseByID(this.courseID).subscribe(
                 response => {

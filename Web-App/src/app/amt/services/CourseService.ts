@@ -4,7 +4,7 @@
 
 import {RESTClient} from "./RESTClient";
 import {Injectable} from "@angular/core";
-import {CourseData} from "../util/dto/course/CourseData";
+import {CourseData} from "../util/vto/course/CourseData";
 
 @Injectable()
 export class CourseService {

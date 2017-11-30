@@ -17,6 +17,7 @@ export const routes: Routes = [
     {path: '', component: FullLayout, data: {title: 'Home'},
         children: [
             {path: 'course', loadChildren: './amt/course/course.module#CourseModule'},
+            {path: 'user', loadChildren: './amt/user/user.module#UserModule'},
 
             {path: 'home', loadChildren: './views/dashboard/dashboard.module#DashboardModule'},
             {path: 'components', loadChildren: './views/components/components.module#ComponentsModule'},

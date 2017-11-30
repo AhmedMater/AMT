@@ -2,24 +2,18 @@ package amt.common.generic;
 
 
 import am.infrastructure.data.dto.user.LoginData;
-import am.infrastructure.data.view.AuthenticatedUser;
 import am.main.common.validation.FormValidation;
-import am.rest.filters.LoggingFilter;
-import amt.common.constants.Rest;
-import amt.common.enums.Method;
-import org.glassfish.jersey.client.ClientConfig;
+import am.main.exception.AMError;
 import org.junit.Assert;
 import org.unitils.thirdparty.org.apache.commons.io.IOUtils;
 
-import javax.ws.rs.client.*;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.InputStream;
-import java.text.MessageFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
+
+import static amt.common.constants.Error.NOT_AUTHORIZED;
 
 /**
  * Created by ahmed.motair on 11/19/2017.
@@ -32,96 +26,48 @@ public class Util {
         return data;
     }
 
-    public static Response restGETClient(String resource, String path, Map<String, Object> queryParams) throws Exception{
-        return restClient(resource, path, false, null, Method.GET, queryParams, null, null);
-    }
-    public static Response restGETClient(String resource, String path, List<String> pathParams) throws Exception{
-        return restClient(resource, path, false, null, Method.GET, null, pathParams, null);
-    }
-    public static Response restGETClient(String resource, String path, Map<String, Object> queryParams, List<String> pathParams) throws Exception{
-        return restClient(resource, path, false, null, Method.GET, queryParams, pathParams, null);
-    }
+    public static void postSecuredFormValidation(String rest, String path, LoginData loginData, Object data, FormValidation expected) throws Exception{
+        Response response;
 
-    public static Response restPOSTClient(String resource, String path, Object payload) throws Exception{
-        return restClient(resource, path, false, null, Method.POST, null, null, payload);
-    }
-
-    public static Response restGETSecuredClient(String resource, String path, LoginData loginData, Map<String, Object> queryParams, List<String> pathParams) throws Exception{
-        Response response = restClient(Rest.USER.RESOURCE, Rest.USER.LOGIN, false, null, Method.POST, null, null, loginData);
-        String token = response.readEntity(AuthenticatedUser.class).getToken();
-
-        return restClient(resource, path, true, token, Method.GET, queryParams, pathParams, null);
-    }
-    public static Response restGETSecuredClient(String resource, String path, LoginData loginData, List<String> pathParams) throws Exception{
-        Response response = restClient(Rest.USER.RESOURCE, Rest.USER.LOGIN, false, null, Method.POST, null, null, loginData);
-        String token = response.readEntity(AuthenticatedUser.class).getToken();
-
-        return restGETSecuredClient(resource, path, loginData, null, pathParams);
-    }
-    public static Response restGETSecuredClient(String resource, String path, LoginData loginData, Map<String, Object> queryParams) throws Exception{
-        Response response = restClient(Rest.USER.RESOURCE, Rest.USER.REGISTER, false, null, Method.POST, null, null, loginData);
-        String token = response.readEntity(AuthenticatedUser.class).getToken();
-
-        return restGETSecuredClient(resource, path, loginData, queryParams, null);
-    }
-
-    public static Response restPOSTSecuredClient(String resource, String path, Object payload, LoginData loginData) throws Exception{
-        Response response = restClient(Rest.USER.RESOURCE, Rest.USER.LOGIN, false, null, Method.POST, null, null, loginData);
-        String token = response.readEntity(AuthenticatedUser.class).getToken();
-
-        return restClient(resource, path, true, token, Method.POST, null, null, payload);
-    }
-
-    private static Response restClient(String resource, String path, boolean secured, String token,
-               Method method, Map<String, Object> queryParams, List<String> pathParams, Object payload) throws Exception{
-        Invocation.Builder invocationBuilder;
-        Response response = null;
-
-        Client client = ClientBuilder.newClient(new ClientConfig().register(LoggingFilter.class));
-
-        if(pathParams != null)
-            path = MessageFormat.format(path, pathParams.toArray());
-
-        WebTarget webTarget = client.target(resource).path(path);
-
-        if (queryParams != null)
-            for (String key : queryParams.keySet())
-                webTarget = webTarget.queryParam(key, queryParams.get(key));
-
-        if (secured)
-            invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON).header("Authorization", "Bearer " + token);
+        if(loginData != null)
+            response = RestUtil.postSecured(rest, path, data, loginData);
         else
-            invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
+            response = RestUtil.post(rest, path, data);
 
-        if (method.equals(Method.PUT))
-            response = invocationBuilder.put(Entity.entity(payload, MediaType.APPLICATION_JSON + ";charset=utf-8"));
-        else if (method.equals(Method.POST))
-            response = invocationBuilder.post(Entity.entity(payload, MediaType.APPLICATION_JSON + ";charset=utf-8"));
-        else if (method.equals(Method.GET))
-            response = invocationBuilder.get();
-        else
-            throw new Exception("Invalid REST Method");
-
-        if (response != null && response.getStatus() == 404)
-            throw new Exception("Backend System is Down!!!");
-
-
-        return response;
-    }
-
-    public static void callRestForFormValidation(String rest, String path, Object data, FormValidation expected) throws Exception{
-        Response response = restPOSTClient(rest, path, data);
         Assert.assertEquals("Response Status failed", Response.Status.BAD_REQUEST.getStatusCode(), response.getStatus());
 
-        FormValidation actual = response.readEntity(FormValidation.class);
+        FormValidation actual = response.readEntity(AMError.class).getValidation();
         Util.validateInvalidFormField(actual, expected);
     }
-    public static void callRestForStringError(String rest, String path, Object data, String expectedError) throws Exception{
-        Response response = restPOSTClient(rest, path, data);
-        Assert.assertEquals("Response Status failed", Response.Status.BAD_REQUEST.getStatusCode(), response.getStatus());
+    public static void postFormValidation(String rest, String path, Object data, FormValidation expected) throws Exception{
+        postSecuredFormValidation(rest, path, null, data, expected);
+    }
 
-        String actualError = response.readEntity(String.class);
-        Assert.assertEquals("Error returned doesn't match", expectedError, actualError);
+    public static void postSecuredStringError(String rest, String path, LoginData loginData, Object data, String expectedError) throws Exception{
+        postSecuredStringError(rest, path, loginData, null, data, expectedError);
+    }
+    public static void postSecuredStringError(String rest, String path, LoginData loginData, List<String> pathParams, Object data, String expectedError) throws Exception{
+        Response response;
+
+        if(loginData != null)
+            response = RestUtil.postSecured(rest, path, data, pathParams, loginData);
+        else
+            response = RestUtil.post(rest, path, data, pathParams);
+
+        if(expectedError.equals(NOT_AUTHORIZED))
+            Assert.assertEquals("Response Status failed", Response.Status.UNAUTHORIZED.getStatusCode(), response.getStatus());
+        else
+            Assert.assertEquals("Response Status failed", Response.Status.BAD_REQUEST.getStatusCode(), response.getStatus());
+
+        String actualErrorStr;
+        if(expectedError.equals(NOT_AUTHORIZED))
+            actualErrorStr = response.readEntity(String.class);
+        else
+            actualErrorStr = response.readEntity(AMError.class).getMessage();
+        Assert.assertEquals("Error returned doesn't match", expectedError, actualErrorStr);
+    }
+    public static void postStringError(String rest, String path, Object data, String expectedError) throws Exception{
+        postSecuredStringError(rest, path, null, data, expectedError);
     }
 
     public static Boolean isEqualDates(Date expected, Date actual){

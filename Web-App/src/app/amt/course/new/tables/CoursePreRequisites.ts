@@ -3,10 +3,10 @@
  * Created by ahmed.motair on 11/8/2017.
  */
 
-import {GenericTable} from "../../../util/generic/GenericTable";
 import {FormBuilder} from "@angular/forms";
-import {CoursePRData} from "../../../util/dto/course/CoursePRData";
 import {Injectable} from "@angular/core";
+import {CoursePRData} from "../../../util/vto/course/CoursePRData";
+import {GenericTable} from "../../../util/generic/GenericTable";
 
 @Injectable()
 export class CoursePreRequisites extends GenericTable{

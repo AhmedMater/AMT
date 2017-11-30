@@ -1,10 +1,10 @@
 package am.rest.resources;
 
 import am.application.UserService;
-import am.infrastructure.data.dto.user.ChangeRoleData;
 import am.infrastructure.data.dto.user.LoginData;
 import am.infrastructure.data.dto.user.UserRegisterData;
 import am.infrastructure.data.enums.Roles;
+import am.infrastructure.data.hibernate.model.user.Users;
 import am.infrastructure.data.view.AuthenticatedUser;
 import am.infrastructure.data.view.UserProfileData;
 import am.main.api.AppLogger;
@@ -15,7 +15,7 @@ import am.main.data.enums.Interface;
 import am.main.data.enums.Source;
 import am.main.exception.BusinessException;
 import am.main.session.AppSession;
-import am.rest.annotations.Secured;
+import am.rest.annotations.Authorized;
 import am.shared.enums.EC;
 import am.shared.enums.Forms;
 import am.shared.enums.IC;
@@ -25,6 +25,7 @@ import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.ws.rs.*;
+import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -48,8 +49,6 @@ public class UserResource {
 
     @Path("/register")
     @POST
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
     public Response register(UserRegisterData userRegisterData) throws BusinessException {
         String FN_NAME = "register";
         AppSession session = new AppSession(Source.APP_SERVICES, Interface.REST, Phase.REGISTRATION,
@@ -68,8 +67,6 @@ public class UserResource {
 
     @Path("/login")
     @POST
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
     public Response login(LoginData loginData) throws BusinessException {
         String FN_NAME = "login";
         AppSession session = new AppSession(Source.APP_SERVICES, Interface.REST, Phase.LOGIN,
@@ -87,39 +84,35 @@ public class UserResource {
         }
     }
 
-    @Path("/profile/changeRole")
+    @Path("/profile/changeRole/{ownerID}")
     @POST
-    @Secured({Roles.ADMIN})
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response changeUserRole(ChangeRoleData changeRoleData) throws BusinessException {
+    @Authorized({Roles.ADMIN})
+    public Response changeUserRole(
+            @PathParam("ownerID") String ownerID,
+            String newRole) throws BusinessException {
         String FN_NAME = "changeUserRole";
         AppSession session = new AppSession(Source.APP_SERVICES, Interface.REST, Phase.USER_UPDATE,
                 httpSession.getId(), CLASS, FN_NAME, errorHandler, infoHandler, httpServletRequest.getRemoteAddr());
         try{
-            // Validating the Form Data
-            new FormValidation<ChangeRoleData>(session, changeRoleData, EC.AMT_0001, Forms.CHANGE_ROLE);
-            logger.info(session, IC.AMT_0001, Forms.CHANGE_ROLE);
-
-            userService.changeRole(session, changeRoleData);
+            userService.changeRole(session, newRole, ownerID);
             return Response.ok().build();
         }catch (Exception ex){
-            throw businessException(logger, session, ex, EC.AMT_0025, changeRoleData.getOwnerUserID());
+            throw businessException(logger, session, ex, EC.AMT_0025, ownerID);
         }
     }
 
     @Path("/profile/{ownerID}/")
     @GET
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
+    @Authorized()
     public Response getUserProfileData(
             @PathParam("ownerID") String ownerID,
-            @QueryParam("viewerID") String viewerID) throws BusinessException {
+            @Context ContainerRequestContext crc) throws BusinessException {
         String FN_NAME = "getUserProfileData";
         AppSession session = new AppSession(Source.APP_SERVICES, Interface.REST, Phase.USER_VIEW,
                 httpSession.getId(), CLASS, FN_NAME, errorHandler, infoHandler, httpServletRequest.getRemoteAddr());
         try{
-            UserProfileData userProfileData = userService.getProfileData(session, ownerID, viewerID);
+            Users viewer = (Users) crc.getProperty("Authenticated-User");
+            UserProfileData userProfileData = userService.getProfileData(session, ownerID, viewer);
             return Response.ok().entity(userProfileData).build();
         }catch (Exception ex){
             throw businessException(logger, session, ex, EC.AMT_0024, ownerID);

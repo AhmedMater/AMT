@@ -9,15 +9,13 @@ import {Router} from "@angular/router";
 
 import {RESTClient} from "../../services/RESTClient";
 import {CourseService} from "../../services/CourseService";
-import {LoginData} from "../../util/dto/user/LoginData";
-import {CourseData} from "../../util/dto/course/CourseData";
-import {CourseType} from "../../util/dto/lookup/CourseType";
 import {CourseLevel} from "../../util/dto/lookup/CourseLevel";
 import {MaterialType} from "../../util/dto/lookup/MaterialType";
-import {NewCourseLookup} from "../../util/dto/course/NewCourseLookup";
-import {CourseRefData} from "../../util/dto/course/CourseRefData";
+import {CourseType} from "../../util/dto/lookup/CourseType";
+import {CourseData} from "../../util/vto/course/CourseData";
 import {CourseReferences} from "./tables/CourseReferences";
 import {CoursePreRequisites} from "./tables/CoursePreRequisites";
+import {NewCourseLookup} from "../../util/vto/course/NewCourseLookup";
 
 @Component({
     selector: 'new-course',

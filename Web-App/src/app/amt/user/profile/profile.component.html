@@ -1,0 +1,105 @@
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          <strong>{{userProfileData.fullName}}</strong>
+          <button class="btn btn-primary btn-sm pull-right" *ngIf="userProfileData.canEdit" (click)="editUserData()">Edit</button>
+          <button class="btn btn-primary btn-sm pull-right" *ngIf="userProfileData.canUpgradeRole" (click)="changeRole()">Change Role</button>
+        </div>
+
+        <div class="card-body">
+          <div class="row">
+
+            <!--<div class="col-2">-->
+              <!--<div class="card">-->
+                <!--<img class="card-img-top" src="../../../../assets/img/java1.png"-->
+                     <!--alt="Card image cap">-->
+                <!--<div class="card-body">-->
+                  <!--<p class="card-text" style="text-align: center;">{{userProfileData.fullName}}</p>-->
+                <!--</div>-->
+              <!--</div>-->
+            <!--</div>-->
+
+            <div class="col-12">
+              <!--<dl class="row">-->
+            <dl class="row">
+                <dt class="col-2">Full Name:</dt>
+                <dd class="col-4">{{userProfileData.fullName}}</dd>
+            </dl>
+            <dl class="row">
+                <dt class="col-2">Email:</dt>
+                <dd class="col-4">{{userProfileData.email}}</dd>
+            </dl>
+            <dl class="row">
+                <dt class="col-2">User Role</dt>
+                <dd class="col-4">{{userProfileData.role}}</dd>
+            </dl>
+              <!--</dl>-->
+
+              <!--<dl class="row">-->
+                <!--<dt class="col-2">Created By:</dt>-->
+                <!--<dd class="col-4">{{userProfileData.createdBy}}</dd>-->
+                <!---->
+                <!--<dt class="col-2">Creation Date:</dt>-->
+                <!--<dd class="col-4">{{userProfileData.creationDate}}</dd>-->
+              <!--</dl>-->
+
+              <!--<dl class="row">-->
+
+                <!--<dt class="col-2">Created On:</dt>-->
+                <!--<dd class="col-4">{{courseData.createdOn}}</dd>-->
+              <!--</dl>-->
+
+              <!--<dl class="row">-->
+                <!--<dt class="col-2">Course Type:</dt>-->
+                <!--<dd class="col-4">{{courseData.courseType}}</dd>-->
+
+                <!--<dt class="col-2">Completed:</dt>-->
+                <!--<dd class="col-4">{{courseData.isCompleted ? "Yes" : "No"}}</dd>-->
+              <!--</dl>-->
+
+              <!--<dl class="row">-->
+                <!--<dt class="col-3">Course Description:</dt>-->
+                <!--<dd class="col-9">{{courseData.description}}</dd>-->
+              <!--</dl>-->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row" *ngIf="editRole">
+    <div class="col-12">
+      <form novalidate [formGroup]="changeRoleForm" (ngSubmit)="submitNewRole()">
+        <div class="card">
+          <div class="card-header">
+            <strong>Change User Role</strong>
+          </div>
+
+          <div class="card-body">
+              <div class="form-group">
+                <div class="row">
+                  <label class="col-form-label col-sm-2" for="newRole">New Role:</label>
+                  <select id="newRole" class="form-control col-sm-3" formControlName="newRole">
+                    <option *ngFor="let item of userProfileData.roleList" value="{{item.role}}">{{item.description}}</option>
+                  </select>
+                </div>
+              </div>
+          </div>
+
+          <div class="card-footer">
+            <div class="row">
+              <div class="col-2">
+                <button class="btn btn-block btn-success" type="submit">
+                  <strong>Submit</strong>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>

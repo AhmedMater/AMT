@@ -6,9 +6,10 @@ import {FormGroup, FormBuilder} from "@angular/forms";
 import {UserRegisterData} from "../../util/dto/user/UserRegisterData";
 import {ToastsManager, Toast} from "ng2-toastr";
 import {FullRoutes} from "../../util/constants/FullRoutes";
-import {FormValidation} from "../../util/dto/exception/FormValidation";
+import {FormValidation} from "../../util/vto/error/FormValidation";
 import {HttpErrorResponse} from "@angular/common/http";
 import {Router} from "@angular/router";
+import {AMError} from "../../util/vto/error/AMError";
 
 @Component({
     selector: 'register',
@@ -19,8 +20,9 @@ export class RegisterComponent implements OnInit{
     registerForm: FormGroup;
     userRegisterData: UserRegisterData;
 
+    registerError: AMError;
     formInvalid: boolean;
-    formValidationErrors: FormValidation;
+    // formValidationErrors: FormValidation;
 
     HOME_URL: string = FullRoutes.HOME_URL;
     LOGIN_URL: string = FullRoutes.LOGIN_URL;
@@ -48,7 +50,7 @@ export class RegisterComponent implements OnInit{
             email: ''
         });
         this.formInvalid = false;
-        this.formValidationErrors = new FormValidation();
+        // this.formValidationErrors = new FormValidation();
     }
 
     register(){
@@ -60,7 +62,7 @@ export class RegisterComponent implements OnInit{
         this.userRegisterData.email = this.registerForm.value.email;
 
         this.formInvalid = false;
-        this.formValidationErrors = new FormValidation();
+        // this.formValidationErrors = new FormValidation();
 
         this.userService.register(this.userRegisterData).subscribe(
             res => {
@@ -68,12 +70,12 @@ export class RegisterComponent implements OnInit{
                 this.router.navigate([this.LOGIN_URL]);
             },
             err => {
-                this.formValidationErrors = err.error;
+                this.registerError = err.error;
 
-                if(this.formValidationErrors.mainError != null)
+                if(this.registerError.validation != null)
                     this.formInvalid = true;
                 else
-                    this.toastr.error(this.formValidationErrors.message, this.TOASTR_TITLE);
+                    this.toastr.error(this.registerError.message, this.TOASTR_TITLE);
             }
         );
     }

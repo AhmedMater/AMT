@@ -11,7 +11,7 @@ import am.main.common.validation.FormValidation;
 import am.main.data.enums.Interface;
 import am.main.data.enums.Source;
 import am.main.session.AppSession;
-import am.rest.annotations.Secured;
+import am.rest.annotations.Authorized;
 import am.shared.enums.EC;
 import am.shared.enums.Forms;
 import am.shared.enums.IC;
@@ -45,9 +45,7 @@ public class CourseResource {
 
     @Path("/new")
     @POST
-    @Secured({Roles.TUTOR})
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
+    @Authorized({Roles.TUTOR})
     public Response addNewCourse(CourseData courseData) throws Exception {
         String FN_NAME = "addNewCourse";
         AppSession session = new AppSession(Source.APP_SERVICES, Interface.REST, Phase.COURSE_CREATE,
@@ -66,10 +64,8 @@ public class CourseResource {
 
     @Path("/new/lookups")
     @GET
-    @Secured({Roles.TUTOR})
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getNewCourseLookups()  throws Exception{
+    @Authorized({Roles.TUTOR})
+    public Response getNewCourseLookups() throws Exception{
         String FN_NAME = "getNewCourseLookups";
         AppSession session = new AppSession(Source.APP_SERVICES, Interface.REST, Phase.COURSE_CREATE,
             httpSession.getId(), CLASS, FN_NAME, errorHandler, infoHandler, httpServletRequest.getRemoteAddr());
@@ -83,8 +79,6 @@ public class CourseResource {
 
     @Path("/{courseID}")
     @GET
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
     public Response getCourseByID(@PathParam("courseID") String courseID)  throws Exception{
         String FN_NAME = "getCourseByID";
         AppSession session = new AppSession(Source.APP_SERVICES, Interface.REST, Phase.COURSE_VIEW,

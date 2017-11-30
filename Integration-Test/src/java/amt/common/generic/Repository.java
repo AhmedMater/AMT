@@ -43,12 +43,9 @@ public class Repository {
         }
     }
 
-    public Users getUserByUsername(String username, boolean checkIsFound){
+    public Users getUserByUsername(String username){
         List<Users> list = em.createQuery("FROM Users WHERE username = :Username", Users.class)
                 .setParameter("Username", username).getResultList();
-
-        if(checkIsFound)
-            Assert.assertTrue("User: " + username + " isn't found in Database", list.size() == 1);
         return (list.size() > 0) ? list.get(0) : null;
     }
 

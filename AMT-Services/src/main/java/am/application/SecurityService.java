@@ -9,7 +9,7 @@ import am.infrastructure.data.enums.Roles;
 import am.infrastructure.data.hibernate.model.lookup.Role;
 import am.infrastructure.data.hibernate.model.user.Users;
 import am.repository.UserRepository;
-import am.rest.annotations.Secured;
+import am.rest.annotations.Authorized;
 import am.main.session.AppSession;
 
 import javax.inject.Inject;
@@ -68,11 +68,11 @@ public class SecurityService {
         if (annotatedElement == null)
             result = new ArrayList<Roles>();
         else {
-            Secured secured = annotatedElement.getAnnotation(Secured.class);
-            if (secured == null)
+            Authorized authorized = annotatedElement.getAnnotation(Authorized.class);
+            if (authorized == null)
                 result = new ArrayList<Roles>();
             else {
-                Roles[] allowedRoles = secured.value();
+                Roles[] allowedRoles = authorized.value();
                 result = Arrays.asList(allowedRoles);
             }
         }
