@@ -3,15 +3,21 @@ package am.infrastructure.data.hibernate.model.course;
 import am.infrastructure.data.dto.course.CourseData;
 import am.infrastructure.data.dto.course.CoursePRData;
 import am.infrastructure.data.dto.course.CourseRefData;
+import am.infrastructure.data.hibernate.model.lookup.ContentStatus;
 import am.infrastructure.data.hibernate.model.lookup.CourseLevel;
 import am.infrastructure.data.hibernate.model.lookup.CourseType;
 import am.infrastructure.data.hibernate.model.user.Users;
+import am.main.api.db.DBManager;
+import am.main.exception.BusinessException;
+import am.main.session.AppSession;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+
+import static am.shared.enums.EC.AMT_0002;
 
 /**
  * Created by ahmed.motair on 9/15/2017.
@@ -62,8 +68,20 @@ public class Course implements Serializable{
     private Date lastUpdateDate;
 
     @Basic
-    @Column(name = "is_Completed")
-    private Boolean completed;
+    @Column(name = "start_date")
+    private Date startDate;
+
+    @Basic
+    @Column(name = "min_per_day")
+    private Integer minPerDay;
+
+    @Basic
+    @Column(name = "due_date")
+    private Date dueDate;
+
+    @ManyToOne
+    @JoinColumn(name = "course_status", referencedColumnName = "status")
+    private ContentStatus courseStatus;
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "course_id", referencedColumnName = "course_id", insertable = true)
@@ -85,7 +103,7 @@ public class Course implements Serializable{
         this.createdBy = createdBy;
         this.creationDate = creationDate;
     }
-    public Course(String courseName, CourseType courseType, CourseLevel courseLevel, Integer estimatedDuration, Integer actualDuration, String description, Users createdBy, Date creationDate, Date lastUpdateDate, Boolean completed) {
+    public Course(String courseName, CourseType courseType, CourseLevel courseLevel, Integer estimatedDuration, Integer actualDuration, String description, Users createdBy, Date creationDate, Date lastUpdateDate, ContentStatus courseStatus) {
         this.courseName = courseName;
         this.courseType = courseType;
         this.courseLevel = courseLevel;
@@ -95,23 +113,34 @@ public class Course implements Serializable{
         this.createdBy = createdBy;
         this.creationDate = creationDate;
         this.lastUpdateDate = lastUpdateDate;
-        this.completed = completed;
+        this.courseStatus = courseStatus;
     }
 
-    public Course(CourseData courseData) {
-        this.courseName = courseData.getCourseName();
-        this.courseType = new CourseType(courseData.getCourseType());
-        this.courseLevel = new CourseLevel(courseData.getCourseLevel());
-        this.description = courseData.getDescription();
-        this.estimatedDuration = courseData.getEstimatedDuration();
+    public Course(AppSession session, DBManager dbManager, CourseData courseData) throws Exception{
+        CourseType courseType = dbManager.find(session, CourseType.class, courseData.getCourseType(), true);
+        if(courseType != null)
+            this.courseType = courseType;
+        else
+            throw new BusinessException(session, AMT_0002, CourseType.class.getSimpleName(), courseData.getCourseType());
+
+        CourseLevel courseLevel = dbManager.find(session, CourseLevel.class, courseData.getCourseLevel(), true);
+        if(courseLevel != null)
+            this.courseLevel = courseLevel;
+        else
+            throw new BusinessException(session, AMT_0002, CourseLevel.class.getSimpleName(), courseData.getCourseLevel());
 
         this.references = new HashSet<>();
         for (CourseRefData ref : courseData.getReferences())
-            this.references.add(new CourseReference(ref));
+            this.references.add(new CourseReference(session, dbManager, ref));
 
         this.preRequisites = new HashSet<>();
         for (CoursePRData preReq : courseData.getPreRequisites())
-            this.preRequisites.add(new CoursePreRequisite(preReq));
+            this.preRequisites.add(new CoursePreRequisite(session, dbManager, preReq));
+
+        this.courseName = courseData.getCourseName();
+        this.description = courseData.getDescription();
+        this.estimatedDuration = courseData.getEstimatedDuration();
+        this.minPerDay = courseData.getEstimatedMinPerDay();
     }
 
     @PrePersist
@@ -193,11 +222,32 @@ public class Course implements Serializable{
         this.lastUpdateDate = lastUpdateDate;
     }
 
-    public Boolean getCompleted() {
-        return completed;
+    public Integer getMinPerDay() {
+        return minPerDay;
     }
-    public void setCompleted(Boolean completed) {
-        this.completed = completed;
+    public void setMinPerDay(Integer minPerDay) {
+        this.minPerDay = minPerDay;
+    }
+
+    public Date getStartDate() {
+        return startDate;
+    }
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    public Date getDueDate() {
+        return dueDate;
+    }
+    public void setDueDate(Date dueDate) {
+        this.dueDate = dueDate;
+    }
+
+    public ContentStatus getCourseStatus() {
+        return courseStatus;
+    }
+    public void setCourseStatus(ContentStatus courseStatus) {
+        this.courseStatus = courseStatus;
     }
 
     public Set<CourseReference> getReferences() {
@@ -242,7 +292,7 @@ public class Course implements Serializable{
                 ", createdBy = " + createdBy +
                 ", creationDate = " + creationDate +
                 ", lastUpdateDate = " + lastUpdateDate +
-                ", completed = " + completed +
+                ", courseStatus = " + courseStatus +
                 "}\n";
     }
 }

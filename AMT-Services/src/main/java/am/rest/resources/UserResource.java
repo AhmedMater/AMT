@@ -13,7 +13,6 @@ import am.main.api.InfoHandler;
 import am.main.common.validation.FormValidation;
 import am.main.data.enums.Interface;
 import am.main.data.enums.Source;
-import am.main.exception.BusinessException;
 import am.main.session.AppSession;
 import am.rest.annotations.Authorized;
 import am.shared.enums.EC;
@@ -30,6 +29,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import static am.infrastructure.generic.ConfigParam.AUTH_USER;
 import static am.infrastructure.generic.ConfigUtils.businessException;
 
 /**
@@ -49,7 +49,7 @@ public class UserResource {
 
     @Path("/register")
     @POST
-    public Response register(UserRegisterData userRegisterData) throws BusinessException {
+    public Response register(UserRegisterData userRegisterData) {
         String FN_NAME = "register";
         AppSession session = new AppSession(Source.APP_SERVICES, Interface.REST, Phase.REGISTRATION,
                 httpSession.getId(), CLASS, FN_NAME, errorHandler, infoHandler, httpServletRequest.getRemoteAddr());
@@ -67,7 +67,7 @@ public class UserResource {
 
     @Path("/login")
     @POST
-    public Response login(LoginData loginData) throws BusinessException {
+    public Response login(LoginData loginData) {
         String FN_NAME = "login";
         AppSession session = new AppSession(Source.APP_SERVICES, Interface.REST, Phase.LOGIN,
                 httpSession.getId(), CLASS, FN_NAME, errorHandler, infoHandler, httpServletRequest.getRemoteAddr());
@@ -89,7 +89,7 @@ public class UserResource {
     @Authorized({Roles.ADMIN})
     public Response changeUserRole(
             @PathParam("ownerID") String ownerID,
-            String newRole) throws BusinessException {
+            String newRole) {
         String FN_NAME = "changeUserRole";
         AppSession session = new AppSession(Source.APP_SERVICES, Interface.REST, Phase.USER_UPDATE,
                 httpSession.getId(), CLASS, FN_NAME, errorHandler, infoHandler, httpServletRequest.getRemoteAddr());
@@ -106,12 +106,12 @@ public class UserResource {
     @Authorized()
     public Response getUserProfileData(
             @PathParam("ownerID") String ownerID,
-            @Context ContainerRequestContext crc) throws BusinessException {
+            @Context ContainerRequestContext crc) {
         String FN_NAME = "getUserProfileData";
         AppSession session = new AppSession(Source.APP_SERVICES, Interface.REST, Phase.USER_VIEW,
                 httpSession.getId(), CLASS, FN_NAME, errorHandler, infoHandler, httpServletRequest.getRemoteAddr());
         try{
-            Users viewer = (Users) crc.getProperty("Authenticated-User");
+            Users viewer = (Users) crc.getProperty(AUTH_USER);
             UserProfileData userProfileData = userService.getProfileData(session, ownerID, viewer);
             return Response.ok().entity(userProfileData).build();
         }catch (Exception ex){

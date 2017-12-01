@@ -65,6 +65,8 @@
     <orderEntry type="library" name="Maven: org.apache.logging.log4j:log4j-core:2.9.0" level="project" />
     <orderEntry type="library" name="Maven: org.apache.logging.log4j:log4j-api:2.9.0" level="project" />
     <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.25" level="project" />
+    <orderEntry type="library" name="Maven: net.objectlab.kit:datecalc-jdk8:1.4.0" level="project" />
+    <orderEntry type="library" name="Maven: net.objectlab.kit:datecalc-common:1.4.0" level="project" />
     <orderEntry type="library" name="Maven: org.jboss.arquillian.container:arquillian-container-spi:1.1.13.Final" level="project" />
     <orderEntry type="library" name="Maven: org.jboss.arquillian.core:arquillian-core-spi:1.1.13.Final" level="project" />
     <orderEntry type="library" name="Maven: org.jboss.arquillian.core:arquillian-core-api:1.1.13.Final" level="project" />

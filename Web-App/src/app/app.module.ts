@@ -39,5 +39,4 @@ const APP_DIRECTIVES = [AsideToggleDirective, NAV_DROPDOWN_DIRECTIVES, SIDEBAR_T
     bootstrap: [AppComponent]
 })
 export class AppModule {
-    asd: boolean = true;
 }

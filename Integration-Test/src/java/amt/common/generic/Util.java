@@ -36,7 +36,12 @@ public class Util {
 
         Assert.assertEquals("Response Status failed", Response.Status.BAD_REQUEST.getStatusCode(), response.getStatus());
 
-        FormValidation actual = response.readEntity(AMError.class).getValidation();
+        AMError amError = response.readEntity(AMError.class);
+
+        if(amError == null || amError.getValidation() == null)
+            Assert.fail("No Error Returned for this Rest Call");
+
+        FormValidation actual = amError.getValidation();
         Util.validateInvalidFormField(actual, expected);
     }
     public static void postFormValidation(String rest, String path, Object data, FormValidation expected) throws Exception{
@@ -58,6 +63,11 @@ public class Util {
             Assert.assertEquals("Response Status failed", Response.Status.UNAUTHORIZED.getStatusCode(), response.getStatus());
         else
             Assert.assertEquals("Response Status failed", Response.Status.BAD_REQUEST.getStatusCode(), response.getStatus());
+
+//        AMError amError = response.readEntity(AMError.class);
+//
+//        if(amError == null || amError.getValidation() == null)
+//            Assert.fail("No Error Returned for this Rest Call");
 
         String actualErrorStr;
         if(expectedError.equals(NOT_AUTHORIZED))

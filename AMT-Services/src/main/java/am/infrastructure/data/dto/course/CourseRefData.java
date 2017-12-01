@@ -1,17 +1,14 @@
 package am.infrastructure.data.dto.course;
 
-import am.main.common.validation.RegExp;
 import am.infrastructure.data.hibernate.model.course.CourseReference;
+import am.main.common.validation.RegExp;
 import am.main.common.validation.groups.BlankValidation;
 import am.main.common.validation.groups.InvalidValidation;
 import am.main.common.validation.groups.LengthValidation;
 import am.main.common.validation.groups.RequiredValidation;
 import org.hibernate.validator.constraints.Length;
 
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
+import javax.validation.constraints.*;
 import java.io.Serializable;
 
 import static am.shared.common.ValidationErrorMsg.COURSE_REFERENCE;
@@ -21,7 +18,8 @@ import static am.shared.common.ValidationErrorMsg.COURSE_REFERENCE;
  */
 public class CourseRefData implements Serializable {
     @NotNull(message = COURSE_REFERENCE.ORDER.REQUIRED, groups = RequiredValidation.class)
-    @Min(value = 1, message = COURSE_REFERENCE.ORDER.INVALID, groups = InvalidValidation.class)
+    @Positive(message = COURSE_REFERENCE.ORDER.INVALID, groups = InvalidValidation.class)
+    @Min(value = 1, message = COURSE_REFERENCE.ORDER.MIN_VALUE, groups = InvalidValidation.class)
     private Integer num;
 
     @NotNull(message = COURSE_REFERENCE.NAME.REQUIRED, groups = RequiredValidation.class)
@@ -33,6 +31,7 @@ public class CourseRefData implements Serializable {
     @NotNull(message = COURSE_REFERENCE.TYPE.REQUIRED, groups = RequiredValidation.class)
     @NotEmpty(message = COURSE_REFERENCE.TYPE.EMPTY_STR, groups = BlankValidation.class)
     @Length(min = 2, max = 2, message = COURSE_REFERENCE.TYPE.LENGTH, groups = LengthValidation.class)
+    @Pattern(regexp = RegExp.LOOKUP_CHAR, message = COURSE_REFERENCE.TYPE.INVALID, groups = InvalidValidation.class)
     private String type;
 
     @NotNull(message = COURSE_REFERENCE.URL.REQUIRED, groups = RequiredValidation.class)
@@ -50,6 +49,7 @@ public class CourseRefData implements Serializable {
         this.url = url;
     }
     public CourseRefData(CourseReference ref) {
+        this.num = ref.getNum();
         this.name = ref.getName();
         this.type = ref.getType().getDescription();
         this.url = ref.getUrl();
@@ -113,5 +113,15 @@ public class CourseRefData implements Serializable {
                 ", type = " + type +
                 ", url = " + url +
                 "}\n";
+    }
+
+    @Override
+    public CourseRefData clone() {
+        CourseRefData clone = new CourseRefData();
+        clone.setNum(this.num);
+        clone.setName(this.name);
+        clone.setType(this.type);
+        clone.setUrl(this.url);
+        return clone;
     }
 }

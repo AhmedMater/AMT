@@ -2,9 +2,14 @@ package am.infrastructure.data.hibernate.model.course;
 
 import am.infrastructure.data.dto.course.CoursePRData;
 import am.infrastructure.data.hibernate.model.lookup.MaterialType;
+import am.main.api.db.DBManager;
+import am.main.exception.BusinessException;
+import am.main.session.AppSession;
 
 import javax.persistence.*;
 import java.io.Serializable;
+
+import static am.shared.enums.EC.AMT_0002;
 
 /**
  * Created by ahmed.motair on 11/7/2017.
@@ -23,6 +28,10 @@ public class CoursePreRequisite implements Serializable {
     private String courseID;
 
     @Basic
+    @Column(name = "pre_requisite_num")
+    private Integer num;
+
+    @Basic
     @Column(name = "pre_requisite_name")
     private String name;
 
@@ -36,15 +45,22 @@ public class CoursePreRequisite implements Serializable {
 
     public CoursePreRequisite() {
     }
-    public CoursePreRequisite(String courseID, String name, MaterialType type, String url) {
+    public CoursePreRequisite(String courseID, Integer num, String name, MaterialType type, String url) {
         this.courseID = courseID;
+        this.num = num;
         this.name = name;
         this.type = type;
         this.url = url;
     }
-    public CoursePreRequisite(CoursePRData preReq) {
+    public CoursePreRequisite(AppSession session, DBManager dbManager, CoursePRData preReq) throws Exception{
+        MaterialType materialType = dbManager.find(session, MaterialType.class, preReq.getType(), true);
+        if(materialType != null)
+            this.type = materialType;
+        else
+            throw new BusinessException(session, AMT_0002, MaterialType.class.getSimpleName(), preReq.getType());
+
+        this.num = preReq.getNum();
         this.name = preReq.getName();
-        this.type = new MaterialType(preReq.getType());
         this.url = preReq.getUrl();
 
     }
@@ -61,6 +77,13 @@ public class CoursePreRequisite implements Serializable {
     }
     public void setCourseID(String courseID) {
         this.courseID = courseID;
+    }
+
+    public Integer getNum() {
+        return num;
+    }
+    public void setNum(Integer num) {
+        this.num = num;
     }
 
     public String getName() {
@@ -91,12 +114,15 @@ public class CoursePreRequisite implements Serializable {
 
         CoursePreRequisite that = (CoursePreRequisite) o;
 
-        return getPreRequisiteID() != null ? getPreRequisiteID().equals(that.getPreRequisiteID()) : that.getPreRequisiteID() == null;
+        if (getPreRequisiteID() != null ? !getPreRequisiteID().equals(that.getPreRequisiteID()) : that.getPreRequisiteID() != null) return false;
+        return getNum() != null ? getNum().equals(that.getNum()) : that.getNum() == null;
     }
 
     @Override
     public int hashCode() {
-        return getPreRequisiteID() != null ? getPreRequisiteID().hashCode() : 0;
+        int result = getPreRequisiteID() != null ? getPreRequisiteID().hashCode() : 0;
+        result = 31 * result + (getNum() != null ? getNum().hashCode() : 0);
+        return result;
     }
 
     @Override
@@ -104,6 +130,7 @@ public class CoursePreRequisite implements Serializable {
         return "CoursePreRequisite{" +
                 "preRequisiteID = " + preRequisiteID +
                 ", courseID = " + courseID +
+                ", num = " + num +
                 ", name = " + name +
                 ", type = " + type +
                 ", url = " + url +

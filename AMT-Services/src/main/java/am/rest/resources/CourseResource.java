@@ -3,28 +3,28 @@ package am.rest.resources;
 import am.application.CourseService;
 import am.infrastructure.data.dto.course.CourseData;
 import am.infrastructure.data.enums.Roles;
+import am.infrastructure.data.hibernate.model.user.Users;
 import am.infrastructure.data.view.NewCourseLookup;
 import am.main.api.AppLogger;
 import am.main.api.ErrorHandler;
 import am.main.api.InfoHandler;
-import am.main.common.validation.FormValidation;
 import am.main.data.enums.Interface;
 import am.main.data.enums.Source;
 import am.main.session.AppSession;
 import am.rest.annotations.Authorized;
 import am.shared.enums.EC;
-import am.shared.enums.Forms;
-import am.shared.enums.IC;
 import am.shared.session.Phase;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.ws.rs.*;
+import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import static am.infrastructure.generic.ConfigParam.AUTH_USER;
 import static am.infrastructure.generic.ConfigUtils.businessException;
 
 /**
@@ -46,17 +46,16 @@ public class CourseResource {
     @Path("/new")
     @POST
     @Authorized({Roles.TUTOR})
-    public Response addNewCourse(CourseData courseData) throws Exception {
+    public Response addNewCourse(CourseData courseData, @Context ContainerRequestContext crc) {
         String FN_NAME = "addNewCourse";
         AppSession session = new AppSession(Source.APP_SERVICES, Interface.REST, Phase.COURSE_CREATE,
                 httpSession.getId(), CLASS, FN_NAME, errorHandler, infoHandler, httpServletRequest.getRemoteAddr());
         try {
-            // Validating the Form Data
-            new FormValidation<CourseData>(session, courseData, EC.AMT_0001, Forms.NEW_COURSE);
-            logger.info(session, IC.AMT_0001, Forms.NEW_COURSE);
+            courseService.validatedNewCourseData(session, courseData);
 
-            courseService.addNewCourse(session, courseData);
-            return Response.ok().build();
+            Users tutorUser = (Users) crc.getProperty(AUTH_USER);
+            String courseID = courseService.addNewCourse(session, courseData, tutorUser);
+            return Response.ok().entity(courseID).build();
         }catch (Exception ex){
             throw businessException(logger, session, ex, EC.AMT_0018);
         }
@@ -65,7 +64,7 @@ public class CourseResource {
     @Path("/new/lookups")
     @GET
     @Authorized({Roles.TUTOR})
-    public Response getNewCourseLookups() throws Exception{
+    public Response getNewCourseLookups() {
         String FN_NAME = "getNewCourseLookups";
         AppSession session = new AppSession(Source.APP_SERVICES, Interface.REST, Phase.COURSE_CREATE,
             httpSession.getId(), CLASS, FN_NAME, errorHandler, infoHandler, httpServletRequest.getRemoteAddr());
@@ -79,7 +78,7 @@ public class CourseResource {
 
     @Path("/{courseID}")
     @GET
-    public Response getCourseByID(@PathParam("courseID") String courseID)  throws Exception{
+    public Response getCourseByID(@PathParam("courseID") String courseID)  {
         String FN_NAME = "getCourseByID";
         AppSession session = new AppSession(Source.APP_SERVICES, Interface.REST, Phase.COURSE_VIEW,
             httpSession.getId(), CLASS, FN_NAME, errorHandler, infoHandler, httpServletRequest.getRemoteAddr());

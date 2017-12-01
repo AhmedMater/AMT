@@ -1,23 +1,31 @@
 package am.application;
 
-import am.main.api.AMSecurityManager;
-import am.main.api.AppConfigManager;
-import am.main.api.AppLogger;
-import am.main.api.db.DBManager;
 import am.infrastructure.data.dto.course.CourseData;
+import am.infrastructure.data.dto.course.CoursePRData;
+import am.infrastructure.data.dto.course.CourseRefData;
 import am.infrastructure.data.hibernate.model.course.Course;
+import am.infrastructure.data.hibernate.model.lookup.ContentStatus;
 import am.infrastructure.data.hibernate.model.lookup.CourseLevel;
 import am.infrastructure.data.hibernate.model.lookup.CourseType;
 import am.infrastructure.data.hibernate.model.lookup.MaterialType;
 import am.infrastructure.data.hibernate.model.user.Users;
 import am.infrastructure.data.view.NewCourseLookup;
-import am.repository.CourseRepository;
+import am.main.api.AMSecurityManager;
+import am.main.api.AppConfigManager;
+import am.main.api.AppLogger;
+import am.main.api.db.DBManager;
+import am.main.common.validation.FormValidation;
 import am.main.session.AppSession;
+import am.repository.CourseRepository;
+import am.shared.enums.EC;
+import am.shared.enums.Forms;
+import am.shared.enums.IC;
 
 import javax.inject.Inject;
-import javax.transaction.Transactional;
 import java.util.Date;
 import java.util.List;
+
+import static am.infrastructure.data.enums.ContentStatus.FUTURE;
 
 /**
  * Created by ahmed.motair on 11/6/2017.
@@ -31,16 +39,41 @@ public class CourseService {
     @Inject private AppConfigManager appConfigManager;
     @Inject private DBManager dbManager;
 
-    @Transactional
-    public String addNewCourse(AppSession appSession, CourseData courseData) throws Exception{
+    public void validatedNewCourseData(AppSession appSession, CourseData courseData){
+        String FN_NAME = "validatedNewCourseData";
+        AppSession session = appSession.updateSession(CLASS, FN_NAME);
+        logger.startDebug(session, courseData);
+
+        // Validating the Form Data
+        new FormValidation<CourseData>(session, courseData, EC.AMT_0001, Forms.NEW_COURSE);
+
+        List<CoursePRData> coursePRDataList = courseData.getPreRequisites();
+        for (CoursePRData coursePRData :coursePRDataList)
+            new FormValidation<CoursePRData>(session, coursePRData, EC.AMT_0001, Forms.NEW_COURSE);
+
+        List<CourseRefData> courseRefDataList = courseData.getReferences();
+        for (CourseRefData courseRefData :courseRefDataList)
+            new FormValidation<CourseRefData>(session, courseRefData, EC.AMT_0001, Forms.NEW_COURSE);
+
+        logger.info(session, IC.AMT_0001, Forms.NEW_COURSE);
+        logger.endDebug(session);
+    }
+
+    public String addNewCourse(AppSession appSession, CourseData courseData, Users tutorUser) throws Exception{
         String FN_NAME = "addNewCourse";
         AppSession session = appSession.updateSession(CLASS, FN_NAME);
         logger.startDebug(session, courseData);
 
-        Course course = new Course(courseData);
+        Course course = new Course(session, dbManager, courseData);
         course.setCreationDate(new Date());
-        course.setCreatedBy(new Users(1));
-        course.setCompleted(false);
+        course.setCreatedBy(tutorUser);
+        course.setActualDuration(0);
+        course.setCourseStatus(new ContentStatus(FUTURE.status()));
+
+//        Integer numOfDays = (int) Math.ceil((courseData.getEstimatedDuration() * 60) / courseData.getEstimatedMinPerDay());
+//        LocalDateTime dueDateTime = LocalDateTime.ofInstant(courseData.getStartDate().toInstant(), ZoneId.systemDefault())
+//                .plusDays(numOfDays);
+//        course.setDueDate(Date.from(dueDateTime.atZone(ZoneId.systemDefault()).toInstant()));
 
         String courseID = courseRepository.generateCourseID(session, course);
         course.setCourseID(courseID);

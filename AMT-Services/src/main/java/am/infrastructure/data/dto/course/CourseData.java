@@ -10,10 +10,7 @@ import am.main.common.validation.groups.LengthValidation;
 import am.main.common.validation.groups.RequiredValidation;
 import org.hibernate.validator.constraints.Length;
 
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
+import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -26,42 +23,51 @@ import static am.shared.common.ValidationErrorMsg.*;
  */
 public class CourseData implements Serializable{
     @NotNull(message = COURSE_NAME.REQUIRED, groups = RequiredValidation.class)
-    @NotEmpty(message = COURSE_NAME.EMPTY_STR, groups = BlankValidation.class)
     @Length(min = 5, max = 100, message = COURSE_NAME.LENGTH, groups = LengthValidation.class)
     @Pattern(regexp = RegExp.CONTENT_NAME, message = COURSE_NAME.INVALID, groups = InvalidValidation.class)
+    @NotEmpty(message = COURSE_NAME.EMPTY_STR, groups = BlankValidation.class)
     private String courseName;
 
     @NotNull(message = COURSE_LEVEL.REQUIRED, groups = RequiredValidation.class)
-    @NotEmpty(message = COURSE_LEVEL.EMPTY_STR, groups = BlankValidation.class)
     @Length(min = 2, max = 2, message = COURSE_LEVEL.LENGTH, groups = LengthValidation.class)
+    @NotEmpty(message = COURSE_LEVEL.EMPTY_STR, groups = BlankValidation.class)
+    @Pattern(regexp = RegExp.LOOKUP_CHAR, message = COURSE_LEVEL.INVALID, groups = InvalidValidation.class)
     private String courseLevel;
 
     @NotNull(message = COURSE_TYPE.REQUIRED, groups = RequiredValidation.class)
-    @NotEmpty(message = COURSE_TYPE.EMPTY_STR, groups = BlankValidation.class)
     @Length(min = 2, max = 2, message = COURSE_TYPE.LENGTH, groups = LengthValidation.class)
+    @NotEmpty(message = COURSE_TYPE.EMPTY_STR, groups = BlankValidation.class)
+    @Pattern(regexp = RegExp.LOOKUP_CHAR, message = COURSE_TYPE.INVALID, groups = InvalidValidation.class)
     private String courseType;
 
-    @NotEmpty(message = COURSE_DESCRIPTION.EMPTY_STR, groups = BlankValidation.class)
     @Length(max = 200, message = COURSE_DESCRIPTION.LENGTH, groups = LengthValidation.class)
+    @NotEmpty(message = COURSE_DESCRIPTION.EMPTY_STR, groups = BlankValidation.class)
     private String description;
 
     @NotNull(message = COURSE_DURATION.REQUIRED, groups = RequiredValidation.class)
-    @Min(value = 1, message = COURSE_DURATION.INVALID, groups = InvalidValidation.class)
+    @Positive(message = COURSE_DURATION.INVALID, groups = InvalidValidation.class)
+    @Min(value = 5, message = COURSE_DURATION.MIN_VALUE, groups = InvalidValidation.class)
     private Integer estimatedDuration;
 
-    @Min(value = 1, message = COURSE_DURATION.INVALID, groups = InvalidValidation.class)
-    private Integer actualDuration;
+    @NotNull(message = MIN_PER_DAY.REQUIRED, groups = RequiredValidation.class)
+    @Positive(message = MIN_PER_DAY.INVALID, groups = InvalidValidation.class)
+    @Min(value = 10, message = MIN_PER_DAY.MIN_VALUE, groups = InvalidValidation.class)
+    private Integer estimatedMinPerDay;
 
+    private Date startDate;
+    private Integer actualDuration;
     private Date createdOn;
     private String createdBy;
-    private Boolean isCompleted;
+    private String courseStatus;
+    private Date dueDate;
 
     private List<CoursePRData> preRequisites;
     private List<CourseRefData> references;
 
     public CourseData() {
     }
-    public CourseData(String courseName, String courseLevel, String courseType, Integer estimatedDuration, String description, List<CoursePRData> preRequisites, List<CourseRefData> references) {
+    public CourseData(String courseName, String courseLevel, String courseType, Integer estimatedDuration,
+              String courseStatus, String description, List<CoursePRData> preRequisites, List<CourseRefData> references) {
         this.courseName = courseName;
         this.courseLevel = courseLevel;
         this.courseType = courseType;
@@ -69,6 +75,7 @@ public class CourseData implements Serializable{
         this.description = description;
         this.preRequisites = preRequisites;
         this.references = references;
+        this.courseStatus = courseStatus;
     }
     public CourseData(Course course) {
         this.courseName = course.getCourseName();
@@ -81,7 +88,7 @@ public class CourseData implements Serializable{
 
         this.createdBy = course.getCreatedBy().getFullName();
         this.createdOn = course.getCreationDate();
-        this.isCompleted = course.getCompleted();
+        this.courseStatus = course.getCourseStatus().getDescription();
 
         this.preRequisites = new ArrayList<>();
         for (CoursePreRequisite preReq : course.getPreRequisites())
@@ -127,6 +134,27 @@ public class CourseData implements Serializable{
         this.estimatedDuration = estimatedDuration;
     }
 
+    public Integer getEstimatedMinPerDay() {
+        return estimatedMinPerDay;
+    }
+    public void setEstimatedMinPerDay(Integer estimatedMinPerDay) {
+        this.estimatedMinPerDay = estimatedMinPerDay;
+    }
+
+    public Date getStartDate() {
+        return startDate;
+    }
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    public Date getDueDate() {
+        return dueDate;
+    }
+    public void setDueDate(Date dueDate) {
+        this.dueDate = dueDate;
+    }
+
     public List<CoursePRData> getPreRequisites() {
         return preRequisites;
     }
@@ -162,11 +190,11 @@ public class CourseData implements Serializable{
         this.createdBy = createdBy;
     }
 
-    public Boolean getCompleted() {
-        return isCompleted;
+    public String getCourseStatus() {
+        return courseStatus;
     }
-    public void setCompleted(Boolean completed) {
-        isCompleted = completed;
+    public void setCourseStatus(String courseStatus) {
+        this.courseStatus = courseStatus;
     }
 
     @Override
@@ -195,5 +223,39 @@ public class CourseData implements Serializable{
                 ", preRequisites = " + preRequisites +
                 ", references = " + references +
                 "}\n";
+    }
+
+    @Override
+    public CourseData clone(){
+        CourseData clone = new CourseData();
+        clone.setCourseName(this.courseName);
+        clone.setCourseType(this.courseType);
+        clone.setCourseLevel(this.courseLevel);
+        clone.setEstimatedDuration(this.estimatedDuration);
+        clone.setEstimatedMinPerDay(this.estimatedMinPerDay);
+        clone.setCourseStatus(this.courseStatus);
+        clone.setDescription(this.description);
+        clone.setActualDuration(this.actualDuration);
+        clone.setCreatedBy(this.createdBy);
+        clone.setCreatedOn(this.createdOn);
+        clone.setStartDate(this.startDate);
+        clone.setDueDate(this.dueDate);
+
+        List<CourseRefData> courseRefDataList = new ArrayList<>();
+        if(this.references != null){
+            for (CourseRefData reference : this.references) {
+                courseRefDataList.add(reference.clone());
+            }
+        }
+        clone.setReferences(courseRefDataList);
+
+        List<CoursePRData> coursePRDataList = new ArrayList<>();
+        if(this.preRequisites != null){
+            for (CoursePRData preRequisite : this.preRequisites) {
+                coursePRDataList.add(preRequisite.clone());
+            }
+        }
+        clone.setPreRequisites(coursePRDataList);
+        return clone;
     }
 }

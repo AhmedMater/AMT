@@ -37,6 +37,9 @@ public class Repository {
 
         String[] queries = script.split(";");
         for (String query :queries) {
+            if(query.trim().isEmpty())
+                continue;
+
             Query q = em.createNativeQuery(query);
             q.executeUpdate();
             System.out.println(MessageFormat.format("Query: {0} is executed successfully", query));

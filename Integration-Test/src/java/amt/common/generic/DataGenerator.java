@@ -100,10 +100,14 @@ public class DataGenerator {
 
     public LoginData getAdminLoginData() throws Exception{
         repository.executeScript(Scripts.ADMIN_USER_LOOKUP);
-        Users adminUser = dbManager.find(appSession, Users.class, 1, false);
+        Users adminUser = dbManager.find(appSession, Users.class, 2, false);
+        return new LoginData(adminUser.getUsername(), "123456");
+    }
 
-        LoginData loginData = new LoginData(adminUser.getUsername(), "123456");
-        return loginData;
+    public LoginData getOwnerLoginData() throws Exception{
+        repository.executeScript(Scripts.ADMIN_USER_LOOKUP);
+        Users adminUser = dbManager.find(appSession, Users.class, 1, false);
+        return new LoginData(adminUser.getUsername(), "123456");
     }
 
     public void upgradeUserRole_ToTutor(Integer studentUserID) throws Exception{

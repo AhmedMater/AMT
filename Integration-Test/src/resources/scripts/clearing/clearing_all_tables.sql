@@ -1,7 +1,7 @@
 SET SQL_SAFE_UPDATES=0;
 DELETE FROM amt.course_reference;
 DELETE FROM amt.course_pre_requisite;
-DELETE FROM amt.chapter;
+DELETE FROM amt.section;
 DELETE FROM amt.course;
 DELETE FROM amt.content_status;
 DELETE FROM amt.course_level;

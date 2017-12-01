@@ -6,6 +6,12 @@ package amt.common.constants;
 public class Rest {
     public static final String BASE_URL = "http://localhost/AMT-Services/api";
 
+    public static final class COURSE {
+        public static final String RESOURCE = BASE_URL + "/course";
+
+        public static final String NEW = "/new";
+    }
+
     public static final class USER {
         public static final String RESOURCE = BASE_URL + "/user";
 

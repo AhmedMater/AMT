@@ -3,9 +3,14 @@ package am.infrastructure.data.hibernate.model.course;
 
 import am.infrastructure.data.dto.course.CourseRefData;
 import am.infrastructure.data.hibernate.model.lookup.MaterialType;
+import am.main.api.db.DBManager;
+import am.main.exception.BusinessException;
+import am.main.session.AppSession;
 
 import javax.persistence.*;
 import java.io.Serializable;
+
+import static am.shared.enums.EC.AMT_0002;
 
 /**
  * Created by ahmed.motair on 11/7/2017.
@@ -24,6 +29,10 @@ public class CourseReference implements Serializable {
     private String courseID;
 
     @Basic
+    @Column(name = "reference_num")
+    private Integer num;
+
+    @Basic
     @Column(name = "reference_name")
     private String name;
 
@@ -37,15 +46,22 @@ public class CourseReference implements Serializable {
 
     public CourseReference() {
     }
-    public CourseReference(String courseID, String name, MaterialType type, String url) {
+    public CourseReference(String courseID, Integer num,  String name, MaterialType type, String url) {
         this.courseID = courseID;
+        this.num = num;
         this.name = name;
         this.type = type;
         this.url = url;
     }
-    public CourseReference(CourseRefData ref) {
+    public CourseReference(AppSession session, DBManager dbManager, CourseRefData ref) throws Exception{
+        MaterialType materialType = dbManager.find(session, MaterialType.class, ref.getType(), true);
+        if(materialType != null)
+            this.type = materialType;
+        else
+            throw new BusinessException(session, AMT_0002, MaterialType.class.getSimpleName(), ref.getType());
+
+        this.num = ref.getNum();
         this.name = ref.getName();
-        this.type = new MaterialType(ref.getType());
         this.url = ref.getUrl();
     }
 
@@ -61,6 +77,13 @@ public class CourseReference implements Serializable {
     }
     public void setCourseID(String courseID) {
         this.courseID = courseID;
+    }
+
+    public Integer getNum() {
+        return num;
+    }
+    public void setNum(Integer num) {
+        this.num = num;
     }
 
     public String getName() {
@@ -91,12 +114,16 @@ public class CourseReference implements Serializable {
 
         CourseReference that = (CourseReference) o;
 
-        return getReferenceID() != null ? getReferenceID().equals(that.getReferenceID()) : that.getReferenceID() == null;
+        if (getReferenceID() != null ? !getReferenceID().equals(that.getReferenceID()) : that.getReferenceID() != null)
+            return false;
+        return getNum() != null ? getNum().equals(that.getNum()) : that.getNum() == null;
     }
 
     @Override
     public int hashCode() {
-        return getReferenceID() != null ? getReferenceID().hashCode() : 0;
+        int result = getReferenceID() != null ? getReferenceID().hashCode() : 0;
+        result = 31 * result + (getNum() != null ? getNum().hashCode() : 0);
+        return result;
     }
 
     @Override
@@ -104,6 +131,7 @@ public class CourseReference implements Serializable {
         return "CourseReference{" +
                 "referenceID = " + referenceID +
                 ", courseID = " + courseID +
+                ", num = " + num +
                 ", name = " + name +
                 ", type = " + type +
                 ", url = " + url +

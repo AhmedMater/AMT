@@ -9,4 +9,5 @@ public class ConfigParam {
     public static final String EH_CACHE_READ_WRITE_REGION = "AMTReadWriteRegion";
 
     public static final String COURSE_NUM_PARAM = "Total Course Number";
+    public static final String AUTH_USER = "Authenticated-User";
 }

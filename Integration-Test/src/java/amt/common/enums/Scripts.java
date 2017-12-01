@@ -30,7 +30,7 @@ public enum Scripts {
     COURSE_TYPE_LOOKUP(LOOKUP_PATH + "/course_type.sql"),
     COURSE_LEVEL_LOOKUP(LOOKUP_PATH + "/course_level.sql"),
     MATERIAL_TYPE_LOOKUP(LOOKUP_PATH + "/material_type.sql"),
-    COURSE_CONTENT_LOOKUP(LOOKUP_PATH + "/course_content.sql"),
+    CONTENT_STATUS_LOOKUP(LOOKUP_PATH + "/content_status.sql"),
     DATA_TYPE_LOOKUP(LOOKUP_PATH + "/data_type.sql"),
     SYSTEM_PARAMETER_LOOKUP(LOOKUP_PATH + "/system_parameter.sql"),
     ADMIN_USER_LOOKUP(LOOKUP_PATH + "/admin_user.sql")

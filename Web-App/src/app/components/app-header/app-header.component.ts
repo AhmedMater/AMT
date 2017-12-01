@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {ConfigParam} from "../../amt/util/constants/ConfigParam";
 import {AuthenticationService} from "../../amt/services/AuthenticationService";
 import {FullRoutes} from "../../amt/util/constants/FullRoutes";
+import {Lookups} from "../../amt/util/constants/Lookups";
 
 @Component({
   selector: 'app-header',
@@ -50,8 +51,8 @@ export class AppHeader implements OnInit{
           this.userID = this.authService.getUserID();
 
           let role: string = this.authService.getUserRole();
-          this.isAdmin = role == 'Ad';
-          this.isTutor = role == 'Tu';
+          this.isAdmin = role == Lookups.ADMIN_ROLE;
+          this.isTutor = role == Lookups.TUTOR_ROLE;
       }
   }
 

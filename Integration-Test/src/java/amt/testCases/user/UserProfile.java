@@ -65,14 +65,12 @@ public class UserProfile {
         return DeploymentManger.createDeployment(Scripts.getAllScripts());
     }
 
-    @Test
-    @InSequence(1)
+    @Test @InSequence(1)
     public void startClearingAllDBTables() throws Exception {
         repository.executeScript(Scripts.CLEARING_ALL_TABLES);
     }
 
-    @Test
-    @InSequence(2)
+    @Test @InSequence(2)
     public void viewUserProfile_AsOwner() {
         String TEST_CASE_NAME = "viewUserProfile_AsOwner";
         try {
@@ -106,8 +104,7 @@ public class UserProfile {
         }
     }
 
-    @Test
-    @InSequence(3)
+    @Test @InSequence(3)
     public void viewUserProfile_AsAdmin() {
         String TEST_CASE_NAME = "viewUserProfile_AsAdmin";
         try {
@@ -141,8 +138,7 @@ public class UserProfile {
         }
     }
 
-    @Test
-    @InSequence(4)
+    @Test @InSequence(4)
     public void viewUserProfile_AsAnotherUser() {
         String TEST_CASE_NAME = "viewUserProfile_AsAnotherUser";
         try {
@@ -181,8 +177,7 @@ public class UserProfile {
         }
     }
 
-    @Test
-    @InSequence(5)
+    @Test @InSequence(5)
     public void viewUserProfile_WithoutLogin() {
         String TEST_CASE_NAME = "viewUserProfile_WithoutLogin";
         try {
@@ -198,8 +193,7 @@ public class UserProfile {
         }
     }
 
-    @Test
-    @InSequence(6)
+    @Test @InSequence(6)
     public void upgradeRole_To_Tutor_AsAdmin() {
         String TEST_CASE_NAME = "upgradeRole_To_Tutor_AsAdmin";
         try {
@@ -225,8 +219,7 @@ public class UserProfile {
         }
     }
 
-    @Test
-    @InSequence(7)
+    @Test @InSequence(7)
     public void upgradeRole_To_Admin_AsAdmin() {
         String TEST_CASE_NAME = "upgradeRole_To_Admin_AsAdmin";
         try {
@@ -249,7 +242,6 @@ public class UserProfile {
             Assert.fail(MessageFormat.format(TEST_CASE, TEST_CASE_NAME, ex.getMessage()));
         }
     }
-
 
     @Test @InSequence(8)
     public void upgradeRole_To_InvalidRole_AsAdmin(){
