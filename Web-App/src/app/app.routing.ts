@@ -9,7 +9,7 @@ import {CourseDetailComponent} from "./amt/course/details/course-details.compone
 import {P404Component} from "./views/pages/404.component";
 
 export const routes: Routes = [
-    {path: '', redirectTo: 'register', pathMatch: 'full'},
+    {path: '', redirectTo: 'login', pathMatch: 'full'},
     {path: '', component: SimpleLayout,
         children: [
             {path: '', loadChildren: './amt/security/security.module#SecurityModule'}

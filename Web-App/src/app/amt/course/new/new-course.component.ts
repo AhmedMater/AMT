@@ -16,6 +16,8 @@ import {CourseData} from "../../util/vto/course/CourseData";
 import {CourseReferences} from "./tables/CourseReferences";
 import {CoursePreRequisites} from "./tables/CoursePreRequisites";
 import {NewCourseLookup} from "../../util/vto/course/NewCourseLookup";
+import {FullRoutes} from "../../util/constants/FullRoutes";
+import {AMError} from "../../util/vto/error/AMError";
 
 @Component({
     selector: 'new-course',
@@ -29,6 +31,11 @@ export class NewCourseComponent implements OnInit{
     courseLevels: CourseLevel[];
     courseTypes: CourseType[];
     materialTypes: MaterialType[];
+
+    amError: AMError;
+    formInvalid: boolean;
+
+    TOASTR_TITLE :string = "Create New Course";
 
     constructor(
         private courseService:CourseService,
@@ -48,21 +55,29 @@ export class NewCourseComponent implements OnInit{
         this.courseData = new CourseData();
 
         this.courseService.getNewCourseLookups().subscribe(
-            response => {
-                let lookups: NewCourseLookup = JSON.parse(response['_body']);
+            res => {
+                let lookups: NewCourseLookup = res;
 
                 this.courseLevels = lookups.courseLevelList;
                 this.courseTypes = lookups.courseTypeList;
                 this.materialTypes = lookups.materialTypeList;
             },
-            error => this.toastr.error("Failed while loading Course Types, Course Levels and Material Types" + error['_body'], "Error")
+            err => {
+                this.amError = err.error;
+
+                if(this.amError.validation != null)
+                    this.formInvalid = true;
+                else
+                    this.toastr.error(this.amError.message, this.TOASTR_TITLE);
+            }
         );
 
         this.newCourseForm = this.formBuilder.group({
             courseName: '',
             courseType: '',
             courseLevel: '',
-            estimatedDuration: '',
+            estimatedDuration: 0,
+            estimatedMinPerDay: 0,
             description: ''
         });
     }
@@ -73,13 +88,25 @@ export class NewCourseComponent implements OnInit{
         this.courseData.courseLevel = this.newCourseForm.value.courseLevel;
         this.courseData.estimatedDuration = this.newCourseForm.value.estimatedDuration;
         this.courseData.description = this.newCourseForm.value.description;
+        this.courseData.estimatedMinPerDay = this.newCourseForm.value.estimatedMinPerDay;
 
         this.courseData.references = this.corRefs.dataArray;
         this.courseData.preRequisites = this.corPreReqs.dataArray;
 
         this.courseService.addNewCourse(this.courseData).subscribe(
-            res => this.toastr.success("Course is created successfully"),
-            err => this.toastr.error("Failed while adding new Course" + err['_body'], "Error")
+            res => {
+                this.toastr.success("Course is created successfully");
+                this.courseData = res;
+                this.router.navigate([FullRoutes.COURSE_DETAILS_URL + this.courseData.courseID]);
+            },
+            err => {
+                this.amError = err.error;
+
+                if(this.amError.validation != null)
+                    this.formInvalid = true;
+                else
+                    this.toastr.error(this.amError.message, this.TOASTR_TITLE);
+            }
         );
     }
 }

@@ -6,6 +6,7 @@ import {CoursePRData} from "./CoursePRData";
 import {CourseRefData} from "./CourseRefData";
 
 export class CourseData{
+    courseID: string;
     courseName: string;
     courseLevel: string;
     courseType: string;
@@ -14,10 +15,14 @@ export class CourseData{
     estimatedDuration: number;
     actualDuration: number;
 
+    estimatedMinPerDay: number;
+    startDate: Date;
+    dueDate: Date;
+
     createdOn: Date;
     createdBy: string;
-    isCompleted:boolean;
+    courseStatus:string;
 
-    preRequisites: CoursePRData[];
-    references: CourseRefData[];
+    preRequisites: CoursePRData[] = [];
+    references: CourseRefData[] = [];
 }

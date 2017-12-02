@@ -60,6 +60,14 @@
                   <input type="number" class="form-control" id="courseDuration" formControlName="estimatedDuration">
                 </div>
               </div>
+              <div class="col-sm-4">
+                <div class="form-group">
+                  <label for="courseMinPerDay">Minutes-Per-Day
+                    <small>(Estimated in Min)</small>
+                  </label>
+                  <input type="number" class="form-control" id="courseMinPerDay" formControlName="estimatedMinPerDay">
+                </div>
+              </div>
             </div>
 
             <!-- Course Description -->
@@ -295,6 +303,23 @@
           <div class="card-footer">
             <button type="submit" class="btn btn-sm btn-primary"><i class="fa fa-dot-circle-o"></i> Submit</button>
             <button type="reset" class="btn btn-sm btn-danger"><i class="fa fa-ban"></i> Reset</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row" *ngIf="formInvalid">
+      <div class="col-sm-1">
+      </div>
+      <div class="col-sm-10">
+        <div class="card">
+          <div class="card-header">
+            <strong>{{amError.validation.formName}} Form Errors</strong>
+          </div>
+          <div class="card-body">
+            <h6><strong>{{amError.validation.mainError}}</strong></h6>
+            <ul *ngFor="let item of amError.validation.formErrors">
+              <li>{{item}}</li>
+            </ul>
           </div>
         </div>
       </div>

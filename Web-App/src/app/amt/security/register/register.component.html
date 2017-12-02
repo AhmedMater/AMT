@@ -79,11 +79,11 @@
       <div class="col-md-6">
         <div class="card mx-4">
           <div class="card-header p-4">
-            <strong>{{registerError.validation.formName}} Form Errors</strong>
+            <strong>{{amError.validation.formName}} Form Errors</strong>
           </div>
           <div class="card-body p-4">
-            <h6><strong>{{registerError.validation.mainError}}</strong></h6>
-            <ul *ngFor="let item of registerError.validation.formErrors">
+            <h6><strong>{{amError.validation.mainError}}</strong></h6>
+            <ul *ngFor="let item of amError.validation.formErrors">
               <li>{{item}}</li>
             </ul>
           </div>

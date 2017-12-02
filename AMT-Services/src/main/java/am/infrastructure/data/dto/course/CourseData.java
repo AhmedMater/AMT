@@ -22,6 +22,8 @@ import static am.shared.common.ValidationErrorMsg.*;
  * Created by ahmed.motair on 11/6/2017.
  */
 public class CourseData implements Serializable{
+    private String courseID;
+
     @NotNull(message = COURSE_NAME.REQUIRED, groups = RequiredValidation.class)
     @Length(min = 5, max = 100, message = COURSE_NAME.LENGTH, groups = LengthValidation.class)
     @Pattern(regexp = RegExp.CONTENT_NAME, message = COURSE_NAME.INVALID, groups = InvalidValidation.class)
@@ -97,6 +99,13 @@ public class CourseData implements Serializable{
         this.references = new ArrayList<>();
         for (CourseReference ref : course.getReferences())
             this.references.add(new CourseRefData(ref));
+    }
+
+    public String getCourseID() {
+        return courseID;
+    }
+    public void setCourseID(String courseID) {
+        this.courseID = courseID;
     }
 
     public String getCourseName() {

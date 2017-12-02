@@ -11,11 +11,12 @@ import {FormValidation} from "../../util/vto/error/FormValidation";
 import {FullRoutes} from "../../util/constants/FullRoutes";
 import {ToastsManager} from "ng2-toastr";
 import {Router, ActivatedRoute} from "@angular/router";
-import {ChangeRoleData} from "../../util/dto/user/ChangeRoleData";
 import {LoginData} from "../../util/dto/user/LoginData";
 import {AuthenticationService} from "../../services/AuthenticationService";
 import {UserProfileData} from "../../util/vto/user/UserProfileData";
 import {Role} from "../../util/dto/lookup/Role";
+import {ConfigUtils} from "../../util/generic/ConfigUtils";
+import {AMError} from "../../util/vto/error/AMError";
 
 @Component({
     selector: 'profile',
@@ -26,6 +27,9 @@ export class ProfileComponent implements OnInit{
     userID: number;
     userProfileData: UserProfileData = new UserProfileData();
     fullRoleList: Role[];
+
+    amError: AMError;
+    formInvalid: boolean;
 
     editRole: boolean = false;
     changeRoleForm: FormGroup;
@@ -49,13 +53,13 @@ export class ProfileComponent implements OnInit{
                     this.userProfileData = res;
                     this.fullRoleList = this.userProfileData.roleList;
                     this.userProfileData.roleList = this.fullRoleList.filter(role => role.description != this.userProfileData.role);
-                    console.log(this.fullRoleList);
-                    console.log(this.userProfileData.roleList);
                 },
-                err => {console.log(err);}
+                err => {
+                    this.amError = err.error;
+                    this.formInvalid = ConfigUtils.handleError(err, this.toastr, this.TOASTR_TITLE);
+                }
             );
         });
-
 
         this.changeRoleForm = this.formBuilder.group({newRole: ''});
     }
@@ -74,7 +78,10 @@ export class ProfileComponent implements OnInit{
                 setTimeout(()=> window.location.reload(), 500);
 
             },
-            err => {console.log(err);}
+            err => {
+                this.amError = err.error;
+                this.formInvalid = ConfigUtils.handleError(err, this.toastr, this.TOASTR_TITLE);
+            }
         );
     }
 }

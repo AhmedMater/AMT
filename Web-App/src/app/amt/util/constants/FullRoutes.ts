@@ -11,5 +11,6 @@ export class FullRoutes{
     static USER_LIST_URL: string = "/user/list";
 
     static NEW_COURSE_URL: string = "/course/new";
+    static COURSE_DETAILS_URL: string = "/course/";
     static COURSE_LIST_URL: string = "/course/list";
 }

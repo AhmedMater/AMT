@@ -52,11 +52,11 @@
       <div class="col-md-6">
         <div class="card mx-4">
           <div class="card-header p-4">
-            <strong>{{loginError.validation.formName}} Form Errors</strong>
+            <strong>{{amError.validation.formName}} Form Errors</strong>
           </div>
           <div class="card-body p-4">
-            <h6><strong>{{loginError.validation.mainError}}</strong></h6>
-            <ul *ngFor="let item of loginError.validation.formErrors">
+            <h6><strong>{{amError.validation.mainError}}</strong></h6>
+            <ul *ngFor="let item of amError.validation.formErrors">
               <li>{{item}}</li>
             </ul>
           </div>

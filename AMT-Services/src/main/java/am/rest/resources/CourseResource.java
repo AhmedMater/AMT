@@ -46,6 +46,8 @@ public class CourseResource {
     @Path("/new")
     @POST
     @Authorized({Roles.TUTOR})
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
     public Response addNewCourse(CourseData courseData, @Context ContainerRequestContext crc) {
         String FN_NAME = "addNewCourse";
         AppSession session = new AppSession(Source.APP_SERVICES, Interface.REST, Phase.COURSE_CREATE,
@@ -55,7 +57,9 @@ public class CourseResource {
 
             Users tutorUser = (Users) crc.getProperty(AUTH_USER);
             String courseID = courseService.addNewCourse(session, courseData, tutorUser);
-            return Response.ok().entity(courseID).build();
+
+            courseData.setCourseID(courseID);
+            return Response.ok().entity(courseData).build();
         }catch (Exception ex){
             throw businessException(logger, session, ex, EC.AMT_0018);
         }
