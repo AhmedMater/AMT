@@ -1,24 +1,29 @@
 package amt.testCases.user;
 
+import am.application.SecurityService;
 import am.infrastructure.data.dto.user.LoginData;
-import am.infrastructure.data.dto.user.UserRegisterData;
 import am.infrastructure.data.hibernate.model.user.UserIPDeActive;
 import am.infrastructure.data.hibernate.model.user.UserIPFailure;
 import am.infrastructure.data.hibernate.model.user.UserLoginLog;
 import am.infrastructure.data.hibernate.model.user.Users;
+import am.infrastructure.data.view.AuthenticatedUser;
 import am.main.api.AppConfigManager;
 import am.main.api.ErrorHandler;
 import am.main.api.InfoHandler;
 import am.main.common.validation.FormValidation;
+import am.main.common.validation.RegExp;
 import am.main.session.AppSession;
 import am.shared.enums.App_CC;
 import am.shared.enums.EC;
 import am.shared.session.Phase;
 import amt.common.DeploymentManger;
+import amt.common.constants.Error;
+import amt.common.constants.Rest;
 import amt.common.constants.Rest.USER;
 import amt.common.enums.Scripts;
 import amt.common.generic.DataGenerator;
 import amt.common.generic.Repository;
+import amt.common.generic.RestUtil;
 import amt.common.generic.Util;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
@@ -29,6 +34,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import javax.inject.Inject;
+import javax.ws.rs.core.Response;
 import java.text.MessageFormat;
 import java.util.Date;
 import java.util.List;
@@ -44,14 +50,15 @@ import static amt.common.constants.Error.USER.*;
 @RunWith(Arquillian.class)
 public class UserLogin {
     @Inject private Repository repository;
+    @Inject private SecurityService securityService;
     @Inject private AppConfigManager appConfigManager;
     @Inject private DataGenerator dataGenerator;
     @Inject private ErrorHandler errorHandler;
     @Inject private InfoHandler infoHandler;
 
-    private LoginData loginData = new LoginData("Ahmed_Mater", "123456");
-    private UserRegisterData userData = new UserRegisterData("Ahmed", "Mater",
-            "Ahmed_Mater", "123456", "ahmed.motair@gizasystems.com");
+    private static final Integer USER_ID = 3;
+    private static final String USERNAME = "Ahmed_Mater";
+    private static final String PASSWORD = "123456";
 
     private static final String CLASS = "UserLogin";
 
@@ -75,18 +82,29 @@ public class UserLogin {
 
             repository.executeScript(Scripts.CLEARING_ALL_TABLES);
             repository.executeScript(Scripts.ROLE_LOOKUP);
+            repository.executeScript(Scripts.LOGIN_USER);
 
-            UserRegisterData registerData = userData.clone();
-            Users user = dataGenerator.registerUser(registerData);
+            LoginData loginData = new LoginData(USERNAME, PASSWORD);
 
-            LoginData validData = this.loginData.clone();
-            dataGenerator.login(validData);
+            Response response = RestUtil.post(Rest.USER.RESOURCE, Rest.USER.LOGIN, loginData);
+            Assert.assertEquals("Register New User failed", Response.Status.OK.getStatusCode(), response.getStatus());
+
+            AuthenticatedUser actual = response.readEntity(AuthenticatedUser.class);
+            Assert.assertNotNull("Authenticated User isn't returned", actual);
+
+            Users user = repository.getUserByUsername(loginData.getUsername());
+
+            Assert.assertEquals("Full Name isn't correct", user.getFullName(), actual.getFullName());
+            Assert.assertEquals("User ID isn't correct", user.getUserID(), actual.getUserID());
+            Assert.assertEquals("User Role isn't correct", user.getRole().getRole(), actual.getRole());
+            Assert.assertNotNull("User Token isn't generated", actual.getToken());
+            Assert.assertNotNull("User Token isn't valid", securityService.validateToken(session, actual.getToken()));
 
             List<UserLoginLog> loginLogList = repository.getUserLoginLog(user.getUserID());
             Assert.assertEquals("Number of LoginLog isn't correct", 1, loginLogList.size());
             UserLoginLog loginLog = loginLogList.get(loginLogList.size()-1);
 
-            Assert.assertEquals("Username isn't correct", validData.getUsername(), loginLog.getUser().getUsername());
+            Assert.assertEquals("Username isn't correct", loginData.getUsername(), loginLog.getUser().getUsername());
             Assert.assertTrue("Success isn't correct", loginLog.getSuccess());
             Assert.assertNull("Error Code isn't null", loginLog.getErrorCode());
             Assert.assertNull("Error Message isn't null", loginLog.getErrorMsg());
@@ -105,12 +123,9 @@ public class UserLogin {
 
             repository.executeScript(Scripts.CLEARING_ALL_TABLES);
             repository.executeScript(Scripts.ROLE_LOOKUP);
+            repository.executeScript(Scripts.LOGIN_USER);
 
-            UserRegisterData registerData = userData.clone();
-            Users user = dataGenerator.registerUser(registerData);
-
-            LoginData invalidData = this.loginData.clone();
-            invalidData.setUsername("Ahmed_Ali");
+            LoginData invalidData = new LoginData("Ahmed_Ali", PASSWORD);
 
             Util.postStringError(USER.RESOURCE, USER.LOGIN,
                     invalidData, MessageFormat.format(USER_IS_NOT_FOUND, invalidData.getUsername()));
@@ -131,17 +146,13 @@ public class UserLogin {
 
             repository.executeScript(Scripts.CLEARING_ALL_TABLES);
             repository.executeScript(Scripts.ROLE_LOOKUP);
+            repository.executeScript(Scripts.LOGIN_USER);
 
-            UserRegisterData registerData = userData.clone();
-            Users user = dataGenerator.registerUser(registerData);
+            LoginData invalidData = new LoginData(USERNAME, "12advf34");
 
-            LoginData invalidData = this.loginData.clone();
-            invalidData.setPassword("12advf34");
+            Util.postStringError(USER.RESOURCE, USER.LOGIN, invalidData, WRONG_PASSWORD);
 
-            Util.postStringError(USER.RESOURCE, USER.LOGIN,
-                    invalidData, WRONG_PASSWORD);
-
-            List<UserLoginLog> loginLogList = repository.getUserLoginLog(user.getUserID());
+            List<UserLoginLog> loginLogList = repository.getUserLoginLog(USER_ID);
             Assert.assertEquals("Number of LoginLog isn't correct", 1, loginLogList.size());
             UserLoginLog loginLog = loginLogList.get(loginLogList.size()-1);
 
@@ -152,7 +163,7 @@ public class UserLogin {
             Assert.assertNotNull("IP isn't null", loginLog.getIp());
             Util.isEqualDates(new Date(), loginLog.getLoginDate());
 
-            UserIPDeActive userIPDeActive = repository.getUserIPDeActive(user.getUserID());
+            UserIPDeActive userIPDeActive = repository.getUserIPDeActive(USER_ID);
             Assert.assertEquals("Username isn't correct", invalidData.getUsername(), userIPDeActive.getUser().getUsername());
             Assert.assertNotNull("IP isn't null", userIPDeActive.getIp());
             Assert.assertEquals("Num Of Trails isn't correct", new Integer(1), userIPDeActive.getTrailNum());
@@ -171,21 +182,17 @@ public class UserLogin {
 
             repository.executeScript(Scripts.CLEARING_ALL_TABLES);
             repository.executeScript(Scripts.ROLE_LOOKUP);
+            repository.executeScript(Scripts.LOGIN_USER);
 
-            UserRegisterData registerData = userData.clone();
-            Users user = dataGenerator.registerUser(registerData);
-
-            LoginData invalidData = this.loginData.clone();
-            invalidData.setPassword("12advf34");
+            LoginData invalidData = new LoginData(USERNAME, "12advf34");
 
             Integer MAX_TRAILS = appConfigManager.getConfigValue(session, App_CC.MAX_LOGIN_TRAILS, Integer.class);
             int numOfTrails = MAX_TRAILS-1;
 
-            for (int i = 0; i <numOfTrails; i++) {
+            for (int i = 0; i <numOfTrails; i++)
                 Util.postStringError(USER.RESOURCE, USER.LOGIN, invalidData, WRONG_PASSWORD);
-            }
 
-            List<UserLoginLog> loginLogList = repository.getUserLoginLog(user.getUserID());
+            List<UserLoginLog> loginLogList = repository.getUserLoginLog(USER_ID);
             Assert.assertEquals("Number of LoginLog isn't correct", numOfTrails, loginLogList.size());
             UserLoginLog loginLog = loginLogList.get(loginLogList.size()-1);
 
@@ -196,7 +203,7 @@ public class UserLogin {
             Assert.assertNotNull("IP isn't null", loginLog.getIp());
             Util.isEqualDates(new Date(), loginLog.getLoginDate());
 
-            UserIPDeActive userIPDeActive = repository.getUserIPDeActive(user.getUserID());
+            UserIPDeActive userIPDeActive = repository.getUserIPDeActive(USER_ID);
             Assert.assertEquals("Username isn't correct", invalidData.getUsername(), userIPDeActive.getUser().getUsername());
             Assert.assertNotNull("IP isn't null", userIPDeActive.getIp());
             Assert.assertEquals("Num Of Trails isn't correct", new Integer(numOfTrails), userIPDeActive.getTrailNum());
@@ -215,12 +222,9 @@ public class UserLogin {
 
             repository.executeScript(Scripts.CLEARING_ALL_TABLES);
             repository.executeScript(Scripts.ROLE_LOOKUP);
+            repository.executeScript(Scripts.LOGIN_USER);
 
-            UserRegisterData registerData = userData.clone();
-            Users user = dataGenerator.registerUser(registerData);
-
-            LoginData invalidData = this.loginData.clone();
-            invalidData.setPassword("12advf34");
+            LoginData invalidData = new LoginData(USERNAME, "12advf34");
 
             Integer MAX_TRAILS = appConfigManager.getConfigValue(session, App_CC.MAX_LOGIN_TRAILS, Integer.class);
             Integer LOGIN_DEACTIVATION_DURATION = appConfigManager.getConfigValue(session, App_CC.LOGIN_ACTIVATE_MINUTES, Integer.class);
@@ -232,7 +236,7 @@ public class UserLogin {
                     MAX_TRAILS, LOGIN_DEACTIVATION_DURATION);
             Util.postStringError(USER.RESOURCE, USER.LOGIN, invalidData, expectedErrorMsg);
 
-            List<UserLoginLog> loginLogList = repository.getUserLoginLog(user.getUserID());
+            List<UserLoginLog> loginLogList = repository.getUserLoginLog(USER_ID);
             Assert.assertEquals("Number of LoginLog isn't correct", MAX_TRAILS.intValue(), loginLogList.size());
             UserLoginLog loginLog = loginLogList.get(loginLogList.size()-1);
 
@@ -243,7 +247,7 @@ public class UserLogin {
             Assert.assertNotNull("IP isn't null", loginLog.getIp());
             Util.isEqualDates(new Date(), loginLog.getLoginDate());
 
-            UserIPDeActive userIPDeActive = repository.getUserIPDeActive(user.getUserID());
+            UserIPDeActive userIPDeActive = repository.getUserIPDeActive(USER_ID);
             Assert.assertEquals("Username isn't correct", invalidData.getUsername(), userIPDeActive.getUser().getUsername());
             Assert.assertNotNull("IP isn't null", userIPDeActive.getIp());
             Assert.assertEquals("Num Of Trails isn't correct", MAX_TRAILS, userIPDeActive.getTrailNum());
@@ -262,12 +266,9 @@ public class UserLogin {
 
             repository.executeScript(Scripts.CLEARING_ALL_TABLES);
             repository.executeScript(Scripts.ROLE_LOOKUP);
+            repository.executeScript(Scripts.LOGIN_USER);
 
-            UserRegisterData registerData = userData.clone();
-            Users user = dataGenerator.registerUser(registerData);
-
-            LoginData invalidData = this.loginData.clone();
-            invalidData.setPassword("12advf34");
+            LoginData invalidData = new LoginData(USERNAME, "12advf34");
 
             Integer MAX_TRAILS = appConfigManager.getConfigValue(session, App_CC.MAX_LOGIN_TRAILS, Integer.class);
             Integer LOGIN_DEACTIVATION_DURATION = appConfigManager.getConfigValue(session, App_CC.LOGIN_ACTIVATE_MINUTES, Integer.class);
@@ -285,7 +286,7 @@ public class UserLogin {
                     MAX_TRAILS + 1, LOGIN_DEACTIVATION_DURATION);
             Util.postStringError(USER.RESOURCE, USER.LOGIN, invalidData, expectedErrorMsg);
 
-            List<UserLoginLog> loginLogList = repository.getUserLoginLog(user.getUserID());
+            List<UserLoginLog> loginLogList = repository.getUserLoginLog(USER_ID);
             Assert.assertEquals("Number of LoginLog isn't correct", numOfTrails, loginLogList.size());
             UserLoginLog loginLog = loginLogList.get(loginLogList.size()-1);
 
@@ -296,7 +297,7 @@ public class UserLogin {
             Assert.assertNotNull("IP isn't null", loginLog.getIp());
             Util.isEqualDates(new Date(), loginLog.getLoginDate());
 
-            UserIPDeActive userIPDeActive = repository.getUserIPDeActive(user.getUserID());
+            UserIPDeActive userIPDeActive = repository.getUserIPDeActive(USER_ID);
             Assert.assertEquals("Username isn't correct", invalidData.getUsername(), userIPDeActive.getUser().getUsername());
             Assert.assertNotNull("IP isn't null", userIPDeActive.getIp());
             Assert.assertEquals("Num Of Trails isn't correct", new Integer(numOfTrails), userIPDeActive.getTrailNum());
@@ -315,12 +316,9 @@ public class UserLogin {
 
             repository.executeScript(Scripts.CLEARING_ALL_TABLES);
             repository.executeScript(Scripts.ROLE_LOOKUP);
+            repository.executeScript(Scripts.LOGIN_USER);
 
-            UserRegisterData registerData = userData.clone();
-            Users user = dataGenerator.registerUser(registerData);
-
-            LoginData invalidData = this.loginData.clone();
-            invalidData.setPassword("12advf34");
+            LoginData invalidData = new LoginData(USERNAME, "12advf34");
 
             Integer LOGIN_DEACTIVATION_DURATION = 3;
 
@@ -337,15 +335,14 @@ public class UserLogin {
                     MAX_TRAILS, LOGIN_DEACTIVATION_DURATION);
             Util.postStringError(USER.RESOURCE, USER.LOGIN, invalidData, expectedErrorMsg);
 
-            LoginData validData = this.loginData.clone();
-            validData.setPassword("123456");
+            LoginData validData = new LoginData(USERNAME, PASSWORD);
 
             Thread.sleep(65 * 1000);
 
             Util.postStringError(USER.RESOURCE, USER.LOGIN, validData,
                     MessageFormat.format(WRONG_PASSWORD_LT_LOGIN_DEACTIVATION_DURATION, LOGIN_DEACTIVATION_DURATION-1));
 
-            List<UserLoginLog> loginLogList = repository.getUserLoginLog(user.getUserID());
+            List<UserLoginLog> loginLogList = repository.getUserLoginLog(USER_ID);
             Assert.assertEquals("Number of LoginLog isn't correct", MAX_TRAILS + 1, loginLogList.size());
             UserLoginLog loginLog = loginLogList.get(loginLogList.size()-1);
 
@@ -371,12 +368,9 @@ public class UserLogin {
 
             repository.executeScript(Scripts.CLEARING_ALL_TABLES);
             repository.executeScript(Scripts.ROLE_LOOKUP);
+            repository.executeScript(Scripts.LOGIN_USER);
 
-            UserRegisterData registerData = userData.clone();
-            Users user = dataGenerator.registerUser(registerData);
-
-            LoginData invalidData = this.loginData.clone();
-            invalidData.setPassword("12advf34");
+            LoginData invalidData = new LoginData(USERNAME, "12advf34");
 
             Integer LOGIN_DEACTIVATION_DURATION = 1;
 
@@ -393,13 +387,12 @@ public class UserLogin {
                     MAX_TRAILS, LOGIN_DEACTIVATION_DURATION);
             Util.postStringError(USER.RESOURCE, USER.LOGIN, invalidData, expectedErrorMsg);
 
-            LoginData validData = this.loginData.clone();
-            validData.setPassword("123456");
+            LoginData validData = new LoginData(USERNAME, PASSWORD);
 
             Thread.sleep(60 * 1000);
             dataGenerator.login(validData);
 
-            List<UserLoginLog> loginLogList = repository.getUserLoginLog(user.getUserID());
+            List<UserLoginLog> loginLogList = repository.getUserLoginLog(USER_ID);
             Assert.assertEquals("Number of LoginLog isn't correct", MAX_TRAILS + 1, loginLogList.size());
             UserLoginLog loginLog = loginLogList.get(loginLogList.size()-1);
 
@@ -410,7 +403,7 @@ public class UserLogin {
             Assert.assertNotNull("IP isn't null", loginLog.getIp());
             Util.isEqualDates(new Date(), loginLog.getLoginDate());
 
-            UserIPDeActive userIPDeActive = repository.getUserIPDeActive(user.getUserID());
+            UserIPDeActive userIPDeActive = repository.getUserIPDeActive(USER_ID);
             Assert.assertEquals("Username isn't correct", invalidData.getUsername(), userIPDeActive.getUser().getUsername());
             Assert.assertNotNull("IP isn't null", userIPDeActive.getIp());
             Assert.assertEquals("Num Of Trails isn't correct", new Integer(1), userIPDeActive.getTrailNum());
@@ -424,392 +417,325 @@ public class UserLogin {
     }
 
     @Test @InSequence(10)
-    public void user_login_Username_AllowChar(){
-        String TEST_CASE_NAME = "user_login_Username_AllowChar";
+    public void user_login_ValidLoginData(){
+        String TEST_CASE_NAME = "user_login_ValidLoginData";
         try{
             AppSession session = appSession.updateSession(CLASS, TEST_CASE_NAME);
 
             repository.executeScript(Scripts.CLEARING_ALL_TABLES);
             repository.executeScript(Scripts.ROLE_LOOKUP);
+            repository.executeScript(Scripts.LOGIN_DATA_VALID);
 
-            UserRegisterData validUserData = userData.clone();
-            validUserData.setUsername("AhmedMater");
-            Users user = dataGenerator.registerUser(validUserData);
+            LoginData loginData = new LoginData("amr.123-Mater_Ali_amr.123-Mater_Ali_amr.123-Mater5",
+                    "ahmed@amr.ali-moh123@Mater_Ali");
 
-            LoginData validData = this.loginData.clone();
-            validData.setUsername("AhmedMater");
+            Response response = RestUtil.post(Rest.USER.RESOURCE, Rest.USER.LOGIN, loginData);
+            Assert.assertEquals("Register New User failed", Response.Status.OK.getStatusCode(), response.getStatus());
 
-            dataGenerator.login(validData);
-        }catch (Exception ex){
-            Assert.fail(MessageFormat.format(TEST_CASE, TEST_CASE_NAME, ex.getMessage()));
-        }
-    }
+            AuthenticatedUser actual = response.readEntity(AuthenticatedUser.class);
+            Assert.assertNotNull("Authenticated User isn't returned", actual);
 
-    @Test @InSequence(11)
-    public void user_login_Username_AllowUnderscore(){
-        String TEST_CASE_NAME = "user_login_Username_AllowUnderscore";
-        try{
-            AppSession session = appSession.updateSession(CLASS, TEST_CASE_NAME);
+            Users user = repository.getUserByUsername(loginData.getUsername());
 
-            repository.executeScript(Scripts.CLEARING_ALL_TABLES);
-            repository.executeScript(Scripts.ROLE_LOOKUP);
+            Assert.assertEquals("Full Name isn't correct", user.getFullName(), actual.getFullName());
+            Assert.assertEquals("User ID isn't correct", user.getUserID(), actual.getUserID());
+            Assert.assertEquals("User Role isn't correct", user.getRole().getRole(), actual.getRole());
+            Assert.assertNotNull("User Token isn't generated", actual.getToken());
+            Assert.assertNotNull("User Token isn't valid", securityService.validateToken(session, actual.getToken()));
 
-            UserRegisterData validUserData = userData.clone();
-            validUserData.setUsername("Ahmed_Mater");
-            Users user = dataGenerator.registerUser(validUserData);
-
-            LoginData validData = this.loginData.clone();
-            validData.setUsername("Ahmed_Mater");
-            dataGenerator.login(validData);
-        }catch (Exception ex){
-            Assert.fail(MessageFormat.format(TEST_CASE, TEST_CASE_NAME, ex.getMessage()));
-        }
-    }
-
-    @Test @InSequence(12)
-    public void user_login_Username_AllowPeriod(){
-        String TEST_CASE_NAME = "user_login_Username_AllowPeriod";
-        try{
-            AppSession session = appSession.updateSession(CLASS, TEST_CASE_NAME);
-
-            repository.executeScript(Scripts.CLEARING_ALL_TABLES);
-            repository.executeScript(Scripts.ROLE_LOOKUP);
-
-            UserRegisterData validUserData = userData.clone();
-            validUserData.setUsername("Ahmed.Mater");
-            Users user = dataGenerator.registerUser(validUserData);
-
-            LoginData validData = this.loginData.clone();
-            validData.setUsername("Ahmed.Mater");
-            dataGenerator.login(validData);
-        }catch (Exception ex){
-            Assert.fail(MessageFormat.format(TEST_CASE, TEST_CASE_NAME, ex.getMessage()));
-        }
-    }
-
-    @Test @InSequence(13)
-    public void user_login_Username_AllowHyphen(){
-        String TEST_CASE_NAME = "user_login_Username_AllowHyphen";
-        try{
-            AppSession session = appSession.updateSession(CLASS, TEST_CASE_NAME);
-
-            repository.executeScript(Scripts.CLEARING_ALL_TABLES);
-            repository.executeScript(Scripts.ROLE_LOOKUP);
-
-            UserRegisterData validUserData = userData.clone();
-            validUserData.setUsername("Ahmed-Mater");
-            Users user = dataGenerator.registerUser(validUserData);
-
-            LoginData validData = this.loginData.clone();
-            validData.setUsername("Ahmed-Mater");
-            dataGenerator.login(validData);
-        }catch (Exception ex){
-            Assert.fail(MessageFormat.format(TEST_CASE, TEST_CASE_NAME, ex.getMessage()));
-        }
-    }
-
-    @Test @InSequence(14)
-    public void user_login_Username_AllowNumber(){
-        String TEST_CASE_NAME = "user_login_Username_AllowNumber";
-        try{
-            AppSession session = appSession.updateSession(CLASS, TEST_CASE_NAME);
-
-            repository.executeScript(Scripts.CLEARING_ALL_TABLES);
-            repository.executeScript(Scripts.ROLE_LOOKUP);
-
-            UserRegisterData validUserData = userData.clone();
-            validUserData.setUsername("AhmedMater123");
-            Users user = dataGenerator.registerUser(validUserData);
-
-            LoginData validData = this.loginData.clone();
-            validData.setUsername("AhmedMater123");
-            dataGenerator.login(validData);
-        }catch (Exception ex){
-            Assert.fail(MessageFormat.format(TEST_CASE, TEST_CASE_NAME, ex.getMessage()));
-        }
-    }
-
-    @Test @InSequence(15)
-    public void user_login_Username_InvalidValue(){
-        String TEST_CASE_NAME = "user_login_Username_InvalidValue";
-        try{
-            AppSession session = appSession.updateSession(CLASS, TEST_CASE_NAME);
-
-            LoginData invalidData = this.loginData.clone();
-            invalidData.setUsername("AhmedMat<>er123");
-
-            FormValidation expected = new FormValidation(LOGIN_VALIDATION_ERROR, INVALID_USERNAME);
-            Util.postFormValidation(USER.RESOURCE, USER.LOGIN, invalidData, expected);
-        }catch (Exception ex){
-            Assert.fail(MessageFormat.format(TEST_CASE, TEST_CASE_NAME, ex.getMessage()));
-        }
-    }
-
-    @Test @InSequence(16)
-    public void user_login_Username_EmptyString(){
-        String TEST_CASE_NAME = "user_login_Username_EmptyString";
-        try{
-            AppSession session = appSession.updateSession(CLASS, TEST_CASE_NAME);
-
-            LoginData invalidData = this.loginData.clone();
-            invalidData.setUsername("");
-
-            FormValidation expected = new FormValidation(LOGIN_VALIDATION_ERROR, EMPTY_STR_USERNAME);
-            Util.postFormValidation(USER.RESOURCE, USER.LOGIN, invalidData, expected);
-        }catch (Exception ex){
-            Assert.fail(MessageFormat.format(TEST_CASE, TEST_CASE_NAME, ex.getMessage()));
-        }
-    }
-
-    @Test @InSequence(17)
-    public void user_login_Username_MinLength(){
-        String TEST_CASE_NAME = "user_login_Username_MinLength";
-        try{
-            AppSession session = appSession.updateSession(CLASS, TEST_CASE_NAME);
-
-            LoginData invalidData = this.loginData.clone();
-            invalidData.setUsername(Util.generateString(2));
-
-            FormValidation expected = new FormValidation(LOGIN_VALIDATION_ERROR, LENGTH_USERNAME);
-            Util.postFormValidation(USER.RESOURCE, USER.LOGIN, invalidData, expected);
-        }catch (Exception ex){
-            Assert.fail(MessageFormat.format(TEST_CASE, TEST_CASE_NAME, ex.getMessage()));
-        }
-    }
-
-    @Test @InSequence(18)
-    public void user_login_Username_MaxLength(){
-        String TEST_CASE_NAME = "user_login_Username_MaxLength";
-        try{
-            AppSession session = appSession.updateSession(CLASS, TEST_CASE_NAME);
-
-            LoginData invalidData = this.loginData.clone();
-            invalidData.setUsername(Util.generateString(55));
-
-            FormValidation expected = new FormValidation(LOGIN_VALIDATION_ERROR, LENGTH_USERNAME);
-            Util.postFormValidation(USER.RESOURCE, USER.LOGIN, invalidData, expected);
-        }catch (Exception ex){
-            Assert.fail(MessageFormat.format(TEST_CASE, TEST_CASE_NAME, ex.getMessage()));
-        }
-    }
-
-    @Test @InSequence(19)
-    public void user_login_Username_Required(){
-        String TEST_CASE_NAME = "user_login_Username_Required";
-        try{
-            AppSession session = appSession.updateSession(CLASS, TEST_CASE_NAME);
-
-            LoginData invalidData = this.loginData.clone();
-            invalidData.setUsername(null);
-
-            FormValidation expected = new FormValidation(LOGIN_VALIDATION_ERROR, REQUIRED_USERNAME);
-            Util.postFormValidation(USER.RESOURCE, USER.LOGIN, invalidData, expected);
-        }catch (Exception ex){
-            Assert.fail(MessageFormat.format(TEST_CASE, TEST_CASE_NAME, ex.getMessage()));
-        }
-    }
-
-    @Test @InSequence(20)
-    public void user_login_Password_AllowChar(){
-        String TEST_CASE_NAME = "user_login_Password_AllowChar";
-        try{
-            AppSession session = appSession.updateSession(CLASS, TEST_CASE_NAME);
-
-            repository.executeScript(Scripts.CLEARING_ALL_TABLES);
-            repository.executeScript(Scripts.ROLE_LOOKUP);
-
-            UserRegisterData validUserData = userData.clone();
-            validUserData.setPassword("AhmedAli");
-            Users user = dataGenerator.registerUser(validUserData);
-
-            LoginData validData = this.loginData.clone();
-            validData.setPassword("AhmedAli");
-            dataGenerator.login(validData);
-        }catch (Exception ex){
-            Assert.fail(MessageFormat.format(TEST_CASE, TEST_CASE_NAME, ex.getMessage()));
-        }
-    }
-
-    @Test @InSequence(21)
-    public void user_login_Password_AllowNumber(){
-        String TEST_CASE_NAME = "user_login_Password_AllowNumber";
-        try{
-            AppSession session = appSession.updateSession(CLASS, TEST_CASE_NAME);
-
-            repository.executeScript(Scripts.CLEARING_ALL_TABLES);
-            repository.executeScript(Scripts.ROLE_LOOKUP);
-
-            UserRegisterData validUserData = userData.clone();
-            validUserData.setPassword("Ahmed123");
-            Users user = dataGenerator.registerUser(validUserData);
-
-            LoginData validData = this.loginData.clone();
-            validData.setPassword("Ahmed123");
-            dataGenerator.login(validData);
-        }catch (Exception ex){
-            Assert.fail(MessageFormat.format(TEST_CASE, TEST_CASE_NAME, ex.getMessage()));
-        }
-    }
-
-    @Test @InSequence(22)
-    public void user_login_Password_AllowPeriod(){
-        String TEST_CASE_NAME = "user_login_Password_AllowPeriod";
-        try{
-            AppSession session = appSession.updateSession(CLASS, TEST_CASE_NAME);
-
-            repository.executeScript(Scripts.CLEARING_ALL_TABLES);
-            repository.executeScript(Scripts.ROLE_LOOKUP);
-
-            UserRegisterData validUserData = userData.clone();
-            validUserData.setPassword("Ahmed.Ali");
-            Users user = dataGenerator.registerUser(validUserData);
-
-            LoginData validData = this.loginData.clone();
-            validData.setPassword("Ahmed.Ali");
-            dataGenerator.login(validData);
-        }catch (Exception ex){
-            Assert.fail(MessageFormat.format(TEST_CASE, TEST_CASE_NAME, ex.getMessage()));
-        }
-    }
-
-    @Test @InSequence(23)
-    public void user_login_Password_AllowHyphen(){
-        String TEST_CASE_NAME = "user_login_Password_AllowHyphen";
-        try{
-            AppSession session = appSession.updateSession(CLASS, TEST_CASE_NAME);
-
-            repository.executeScript(Scripts.CLEARING_ALL_TABLES);
-            repository.executeScript(Scripts.ROLE_LOOKUP);
-
-            UserRegisterData validUserData = userData.clone();
-            validUserData.setPassword("Ahmed-Ali");
-            Users user = dataGenerator.registerUser(validUserData);
-
-            LoginData validData = this.loginData.clone();
-            validData.setPassword("Ahmed-Ali");
-            dataGenerator.login(validData);
-        }catch (Exception ex){
-            Assert.fail(MessageFormat.format(TEST_CASE, TEST_CASE_NAME, ex.getMessage()));
-        }
-    }
-
-    @Test @InSequence(24)
-    public void user_login_Password_AllowAmpersand(){
-        String TEST_CASE_NAME = "user_login_Password_AllowAmpersand";
-        try{
-            AppSession session = appSession.updateSession(CLASS, TEST_CASE_NAME);
-
-            repository.executeScript(Scripts.CLEARING_ALL_TABLES);
-            repository.executeScript(Scripts.ROLE_LOOKUP);
-
-            UserRegisterData validUserData = userData.clone();
-            validUserData.setPassword("Ahmed@Ali");
-            Users user = dataGenerator.registerUser(validUserData);
-
-            LoginData validData = this.loginData.clone();
-            validData.setPassword("Ahmed@Ali");
-            dataGenerator.login(validData);
         }catch (Exception ex){
             Assert.fail(MessageFormat.format(TEST_CASE, TEST_CASE_NAME, ex.getMessage()));
         }
     }
 
     @Test @InSequence(25)
-    public void user_login_Password_AllowUnderscore(){
-        String TEST_CASE_NAME = "user_login_Password_AllowUnderscore";
+    public void user_login_Username_InvalidValue(){
+        String TEST_CASE_NAME = "user_login_Username_InvalidValue";
         try{
             AppSession session = appSession.updateSession(CLASS, TEST_CASE_NAME);
+            
+            LoginData invalidData = new LoginData("Ahmed Mater", "123456");
 
-            repository.executeScript(Scripts.CLEARING_ALL_TABLES);
-            repository.executeScript(Scripts.ROLE_LOOKUP);
+            String expectErrorMsg = MessageFormat.format(Error.FV.REGEX, "Ahmed Mater",
+                    LoginData.FIELDS.get("username"), RegExp.MESSAGES.get(RegExp.USERNAME));
 
-            UserRegisterData validUserData = userData.clone();
-            validUserData.setPassword("Ahmed_Ali");
-            Users user = dataGenerator.registerUser(validUserData);
+            FormValidation expected = new FormValidation(LOGIN_VALIDATION_ERROR, expectErrorMsg);
+            Util.postFormValidation(USER.RESOURCE, USER.LOGIN, invalidData, expected);
 
-            LoginData validData = this.loginData.clone();
-            validData.setPassword("Ahmed_Ali");
-            dataGenerator.login(validData);
+            Users user = repository.getUserByUsername(invalidData.getUsername());
+            Assert.assertNull("User is found in Database", user);
         }catch (Exception ex){
             Assert.fail(MessageFormat.format(TEST_CASE, TEST_CASE_NAME, ex.getMessage()));
         }
     }
 
     @Test @InSequence(26)
-    public void user_login_Password_InvalidValue(){
-        String TEST_CASE_NAME = "user_login_Password_InvalidValue";
+    public void user_login_Username_EmptyString(){
+        String TEST_CASE_NAME = "user_login_Username_EmptyString";
         try{
             AppSession session = appSession.updateSession(CLASS, TEST_CASE_NAME);
-            LoginData invalidData = this.loginData.clone();
-            invalidData.setPassword("Ah<med Mater");
 
-            FormValidation expected = new FormValidation(LOGIN_VALIDATION_ERROR, INVALID_PASSWORD);
+            LoginData invalidData = new LoginData("", "123456");
+
+            String expectErrorMsg = MessageFormat.format(Error.FV.EMPTY_STR, LoginData.FIELDS.get("username"));
+            FormValidation expected = new FormValidation(LOGIN_VALIDATION_ERROR, expectErrorMsg);
             Util.postFormValidation(USER.RESOURCE, USER.LOGIN, invalidData, expected);
+
+            Users user = repository.getUserByUsername(invalidData.getUsername());
+            Assert.assertNull("User is found in Database", user);
         }catch (Exception ex){
             Assert.fail(MessageFormat.format(TEST_CASE, TEST_CASE_NAME, ex.getMessage()));
         }
     }
 
     @Test @InSequence(27)
-    public void user_login_Password_EmptyString(){
-        String TEST_CASE_NAME = "user_login_Password_EmptyString";
+    public void user_login_Username_MinLength(){
+        String TEST_CASE_NAME = "user_login_Username_MinLength";
         try{
             AppSession session = appSession.updateSession(CLASS, TEST_CASE_NAME);
-            LoginData invalidData = this.loginData.clone();
-            invalidData.setPassword("");
 
-            FormValidation expected = new FormValidation(LOGIN_VALIDATION_ERROR, EMPTY_STR_PASSWORD);
+            String invalidValue = Util.generateString(2);
+            LoginData invalidData = new LoginData(invalidValue, "123456");
+
+            String expectErrorMsg = MessageFormat.format(Error.FV.MIN_MAX_LENGTH, invalidValue,
+                    LoginData.FIELDS.get("username"), 5, 50);
+
+            FormValidation expected = new FormValidation(LOGIN_VALIDATION_ERROR, expectErrorMsg);
             Util.postFormValidation(USER.RESOURCE, USER.LOGIN, invalidData, expected);
+
+            Users user = repository.getUserByUsername(invalidData.getUsername());
+            Assert.assertNull("User is found in Database", user);
         }catch (Exception ex){
             Assert.fail(MessageFormat.format(TEST_CASE, TEST_CASE_NAME, ex.getMessage()));
         }
     }
 
     @Test @InSequence(28)
-    public void user_login_Password_MinLength(){
-        String TEST_CASE_NAME = "user_login_Password_MinLength";
+    public void user_login_Username_MaxLength(){
+        String TEST_CASE_NAME = "user_login_Username_MaxLength";
         try{
             AppSession session = appSession.updateSession(CLASS, TEST_CASE_NAME);
-            LoginData invalidData = this.loginData.clone();
-            invalidData.setPassword(Util.generateString(2));
 
-            FormValidation expected = new FormValidation(LOGIN_VALIDATION_ERROR, LENGTH_PASSWORD);
+            String invalidValue = Util.generateString(55);
+            LoginData invalidData =  new LoginData(invalidValue, "123456");
+
+            String expectErrorMsg = MessageFormat.format(Error.FV.MIN_MAX_LENGTH, invalidValue,
+                    LoginData.FIELDS.get("username"), 5, 50);
+
+            FormValidation expected = new FormValidation(LOGIN_VALIDATION_ERROR, expectErrorMsg);
             Util.postFormValidation(USER.RESOURCE, USER.LOGIN, invalidData, expected);
+
+            Users user = repository.getUserByUsername(invalidData.getUsername());
+            Assert.assertNull("User is found in Database", user);
         }catch (Exception ex){
             Assert.fail(MessageFormat.format(TEST_CASE, TEST_CASE_NAME, ex.getMessage()));
         }
     }
 
     @Test @InSequence(29)
+    public void user_login_Username_Required(){
+        String TEST_CASE_NAME = "user_login_Username_Required";
+        try{
+            AppSession session = appSession.updateSession(CLASS, TEST_CASE_NAME);
+
+            repository.executeScript(Scripts.CLEARING_ALL_TABLES);
+            repository.executeScript(Scripts.ROLE_LOOKUP);
+
+            LoginData invalidData = new LoginData(null, "123456");
+
+            String expectErrorMsg = MessageFormat.format(Error.FV.REQUIRED, LoginData.FIELDS.get("username"));
+
+            FormValidation expected = new FormValidation(LOGIN_VALIDATION_ERROR, expectErrorMsg);
+            Util.postFormValidation(USER.RESOURCE, USER.LOGIN, invalidData, expected);
+
+            Users user = repository.getUserByUsername(invalidData.getUsername());
+            Assert.assertNull("User is found in Database", user);
+        }catch (Exception ex){
+            Assert.fail(MessageFormat.format(TEST_CASE, TEST_CASE_NAME, ex.getMessage()));
+        }
+    }
+
+//    @Test @InSequence(26)
+//    public void user_login_Password_InvalidValue(){
+//        String TEST_CASE_NAME = "user_login_Password_InvalidValue";
+//        try{
+//            AppSession session = appSession.updateSession(CLASS, TEST_CASE_NAME);
+//            LoginData invalidData = this.loginData.clone();
+//            invalidData.setPassword("Ah<med Mater");
+//
+//            FormValidation expected = new FormValidation(LOGIN_VALIDATION_ERROR, INVALID_PASSWORD);
+//            Util.postFormValidation(USER.RESOURCE, USER.LOGIN, invalidData, expected);
+//        }catch (Exception ex){
+//            Assert.fail(MessageFormat.format(TEST_CASE, TEST_CASE_NAME, ex.getMessage()));
+//        }
+//    }
+//
+//    @Test @InSequence(27)
+//    public void user_login_Password_EmptyString(){
+//        String TEST_CASE_NAME = "user_login_Password_EmptyString";
+//        try{
+//            AppSession session = appSession.updateSession(CLASS, TEST_CASE_NAME);
+//            LoginData invalidData = this.loginData.clone();
+//            invalidData.setPassword("");
+//
+//            FormValidation expected = new FormValidation(LOGIN_VALIDATION_ERROR, EMPTY_STR_PASSWORD);
+//            Util.postFormValidation(USER.RESOURCE, USER.LOGIN, invalidData, expected);
+//        }catch (Exception ex){
+//            Assert.fail(MessageFormat.format(TEST_CASE, TEST_CASE_NAME, ex.getMessage()));
+//        }
+//    }
+//
+//    @Test @InSequence(28)
+//    public void user_login_Password_MinLength(){
+//        String TEST_CASE_NAME = "user_login_Password_MinLength";
+//        try{
+//            AppSession session = appSession.updateSession(CLASS, TEST_CASE_NAME);
+//            LoginData invalidData = this.loginData.clone();
+//            invalidData.setPassword(Util.generateString(2));
+//
+//            FormValidation expected = new FormValidation(LOGIN_VALIDATION_ERROR, LENGTH_PASSWORD);
+//            Util.postFormValidation(USER.RESOURCE, USER.LOGIN, invalidData, expected);
+//        }catch (Exception ex){
+//            Assert.fail(MessageFormat.format(TEST_CASE, TEST_CASE_NAME, ex.getMessage()));
+//        }
+//    }
+//
+//    @Test @InSequence(29)
+//    public void user_login_Password_MaxLength(){
+//        String TEST_CASE_NAME = "user_login_Password_MaxLength";
+//        try{
+//            AppSession session = appSession.updateSession(CLASS, TEST_CASE_NAME);
+//            LoginData invalidData = this.loginData.clone();
+//            invalidData.setPassword(Util.generateString(35));
+//
+//            FormValidation expected = new FormValidation(LOGIN_VALIDATION_ERROR, LENGTH_PASSWORD);
+//            Util.postFormValidation(USER.RESOURCE, USER.LOGIN, invalidData, expected);
+//        }catch (Exception ex){
+//            Assert.fail(MessageFormat.format(TEST_CASE, TEST_CASE_NAME, ex.getMessage()));
+//        }
+//    }
+//
+//    @Test @InSequence(30)
+//    public void user_login_Password_Required(){
+//        String TEST_CASE_NAME = "user_login_Password_Required";
+//        try{
+//            AppSession session = appSession.updateSession(CLASS, TEST_CASE_NAME);
+//            LoginData invalidData = this.loginData.clone();
+//            invalidData.setPassword(null);
+//
+//            FormValidation expected = new FormValidation(LOGIN_VALIDATION_ERROR, REQUIRED_PASSWORD);
+//            Util.postFormValidation(USER.RESOURCE, USER.LOGIN, invalidData, expected);
+//        }catch (Exception ex){
+//            Assert.fail(MessageFormat.format(TEST_CASE, TEST_CASE_NAME, ex.getMessage()));
+//        }
+//    }
+
+    @Test @InSequence(37)
+    public void user_login_Password_InvalidValue(){
+        String TEST_CASE_NAME = "user_login_Password_InvalidValue";
+        try{
+            AppSession session = appSession.updateSession(CLASS, TEST_CASE_NAME);
+
+            LoginData invalidData = new LoginData("Ahmed_Mater", "Ah<med Mater");
+
+            String expectErrorMsg = MessageFormat.format(Error.FV.REGEX, "Ah<med Mater",
+                    LoginData.FIELDS.get("password"), RegExp.MESSAGES.get(RegExp.PASSWORD));
+
+            FormValidation expected = new FormValidation(LOGIN_VALIDATION_ERROR, expectErrorMsg);
+            Util.postFormValidation(USER.RESOURCE, USER.LOGIN, invalidData, expected);
+
+            Users user = repository.getUserByUsername(invalidData.getUsername());
+            Assert.assertNull("User is found in Database", user);
+        }catch (Exception ex){
+            Assert.fail(MessageFormat.format(TEST_CASE, TEST_CASE_NAME, ex.getMessage()));
+        }
+    }
+
+    @Test @InSequence(38)
+    public void user_login_Password_EmptyString(){
+        String TEST_CASE_NAME = "user_login_Password_EmptyString";
+        try{
+            AppSession session = appSession.updateSession(CLASS, TEST_CASE_NAME);
+
+            LoginData invalidData = new LoginData("Ahmed_Mater", "");
+
+            String expectErrorMsg = MessageFormat.format(Error.FV.EMPTY_STR, LoginData.FIELDS.get("password"));
+            FormValidation expected = new FormValidation(LOGIN_VALIDATION_ERROR, expectErrorMsg);
+            Util.postFormValidation(USER.RESOURCE, USER.LOGIN, invalidData, expected);
+
+            Users user = repository.getUserByUsername(invalidData.getUsername());
+            Assert.assertNull("User is found in Database", user);
+        }catch (Exception ex){
+            Assert.fail(MessageFormat.format(TEST_CASE, TEST_CASE_NAME, ex.getMessage()));
+        }
+    }
+
+    @Test @InSequence(39)
+    public void user_login_Password_MinLength(){
+        String TEST_CASE_NAME = "user_login_Password_MinLength";
+        try{
+            AppSession session = appSession.updateSession(CLASS, TEST_CASE_NAME);
+
+            String invalidValue = Util.generateString(2);
+            LoginData invalidData = new LoginData("Ahmed_Mater", invalidValue);
+            invalidData.setPassword(invalidValue);
+
+            String expectErrorMsg = MessageFormat.format(Error.FV.MIN_MAX_LENGTH, invalidValue,
+                    LoginData.FIELDS.get("password"), 5, 30);
+
+            FormValidation expected = new FormValidation(LOGIN_VALIDATION_ERROR, expectErrorMsg);
+            Util.postFormValidation(USER.RESOURCE, USER.LOGIN, invalidData, expected);
+
+            Users user = repository.getUserByUsername(invalidData.getUsername());
+            Assert.assertNull("User is found in Database", user);
+        }catch (Exception ex){
+            Assert.fail(MessageFormat.format(TEST_CASE, TEST_CASE_NAME, ex.getMessage()));
+        }
+    }
+
+    @Test @InSequence(40)
     public void user_login_Password_MaxLength(){
         String TEST_CASE_NAME = "user_login_Password_MaxLength";
         try{
             AppSession session = appSession.updateSession(CLASS, TEST_CASE_NAME);
-            LoginData invalidData = this.loginData.clone();
-            invalidData.setPassword(Util.generateString(35));
 
-            FormValidation expected = new FormValidation(LOGIN_VALIDATION_ERROR, LENGTH_PASSWORD);
+            String invalidValue = Util.generateString(40);
+            LoginData invalidData = new LoginData("Ahmed_Mater", invalidValue);
+            invalidData.setPassword(invalidValue);
+
+            String expectErrorMsg = MessageFormat.format(Error.FV.MIN_MAX_LENGTH, invalidValue,
+                    LoginData.FIELDS.get("password"), 5, 30);
+
+            FormValidation expected = new FormValidation(LOGIN_VALIDATION_ERROR, expectErrorMsg);
             Util.postFormValidation(USER.RESOURCE, USER.LOGIN, invalidData, expected);
+
+            Users user = repository.getUserByUsername(invalidData.getUsername());
+            Assert.assertNull("User is found in Database", user);
         }catch (Exception ex){
             Assert.fail(MessageFormat.format(TEST_CASE, TEST_CASE_NAME, ex.getMessage()));
         }
     }
 
-    @Test @InSequence(30)
+    @Test @InSequence(41)
     public void user_login_Password_Required(){
         String TEST_CASE_NAME = "user_login_Password_Required";
         try{
             AppSession session = appSession.updateSession(CLASS, TEST_CASE_NAME);
-            LoginData invalidData = this.loginData.clone();
-            invalidData.setPassword(null);
 
-            FormValidation expected = new FormValidation(LOGIN_VALIDATION_ERROR, REQUIRED_PASSWORD);
+            LoginData invalidData = new LoginData("Ahmed_Mater", null);
+
+            String expectErrorMsg = MessageFormat.format(Error.FV.REQUIRED, LoginData.FIELDS.get("password"));
+
+            FormValidation expected = new FormValidation(LOGIN_VALIDATION_ERROR, expectErrorMsg);
             Util.postFormValidation(USER.RESOURCE, USER.LOGIN, invalidData, expected);
+
+            Users user = repository.getUserByUsername(invalidData.getUsername());
+            Assert.assertNull("User is found in Database", user);
         }catch (Exception ex){
             Assert.fail(MessageFormat.format(TEST_CASE, TEST_CASE_NAME, ex.getMessage()));
         }
     }
-
+    
     @Test @InSequence(31)
     public void endClearingAllDBTables() throws Exception{
         repository.executeScript(Scripts.CLEARING_ALL_TABLES);

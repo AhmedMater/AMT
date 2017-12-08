@@ -297,6 +297,8 @@ public class NewCourse {
 
             CourseData courseData = createValidCourseData().clone();
             courseData.setCourseName("Java$%#@^SE");
+            courseData.setCourseLevel("J");
+            courseData.setCourseType(null);
 
             FormValidation expected = new FormValidation(NEW_COURSE_VAL, INVALID_COURSE_NAME);
             Util.postSecuredFormValidation(Rest.COURSE.RESOURCE, Rest.COURSE.NEW, tutorLoginData, courseData, expected);

@@ -65,7 +65,7 @@ public class DataGenerator {
         Assert.assertEquals("Username failed", data.getUsername(), actual.getUsername());
         Assert.assertEquals("Password failed", securityManager.dm5Hash(session, data.getPassword()), actual.getPassword());
         Assert.assertEquals("Email failed", data.getEmail(), actual.getEmail());
-        Assert.assertEquals("Role failed", "St", actual.getRole().getRole());
+        Assert.assertEquals("Role failed", Roles.STUDENT.role(), actual.getRole().getRole());
 
         if(!Util.isEqualDates(new Date(), actual.getCreationDate()))
             Assert.fail("Creation Date failed");

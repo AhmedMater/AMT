@@ -4,6 +4,7 @@ package am.infrastructure.data.enums;
  * Created by mohamed.elewa on 5/18/2016.
  */
 public enum Roles {
+    OWNER("Ow", "Owner"),
     ADMIN("Ad", "Admin"),
     STUDENT("St", "Student"),
     TUTOR("Tu", "Tutor");

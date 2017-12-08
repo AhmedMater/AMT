@@ -8,5 +8,8 @@ public class ScriptPaths {
     public static final String CLEARING_PATH = BASE_PATH + "/clearing";
     public static final String LOOKUP_PATH = BASE_PATH + "/lookup";
 
+    private static final String USER_PATH = BASE_PATH + "/user";
+    public static final String LOGIN_PATH = USER_PATH + "/login";
+
     public static final Integer ADMIN_USER_ID = 1;
 }

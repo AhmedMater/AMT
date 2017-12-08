@@ -1,0 +1,2 @@
+INSERT INTO amt.users(user_id, user_name, password, email, first_name, last_name, role, creation_date) VALUES
+  (4, 'amr.123-Mater_Ali_amr.123-Mater_Ali_amr.123-Mater5', '53062dc16ff64833f4c3caa7dbe33db0', 'ahmed.mater@amt.com', 'Ahmed', 'Mater', 'St', NOW());

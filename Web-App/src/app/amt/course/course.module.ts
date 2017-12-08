@@ -15,9 +15,10 @@ import {CourseListComponent} from "./list/course-list.component";
 import {CourseDetailComponent} from "./details/course-details.component";
 import {CommonModule} from "@angular/common";
 import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
+import {NgxPaginationModule} from "ngx-pagination";
 
 @NgModule({
-    imports: [CourseRoutingModule, CommonModule, //HttpClientModule,
+    imports: [CourseRoutingModule, CommonModule, NgxPaginationModule,
         ToastModule.forRoot(), ReactiveFormsModule, HttpModule
     ],
     declarations: [NewCourseComponent, CourseListComponent, CourseDetailComponent]

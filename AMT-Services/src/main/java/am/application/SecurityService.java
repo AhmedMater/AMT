@@ -102,7 +102,7 @@ public class SecurityService {
                 authorized = true;
 
         if(!authorized)
-            throw new NotAuthorizedException(session, EC.AMT_0005, authenticatedUser.getFullName());
+            throw new NotAuthorizedException(session, EC.AMT_0031, authenticatedUser.getFullName());
 
         logger.endDebug(session);
     }
@@ -114,7 +114,7 @@ public class SecurityService {
 
         String authorizationHeader = requestContext.getHeaderString(HttpHeaders.AUTHORIZATION);
         if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer "))
-            throw new NotAuthorizedException(session, EC.AMT_0006, requestContext.getUriInfo().getAbsolutePath().toString());
+            throw new NotAuthorizedException(session, EC.AMT_0032, requestContext.getUriInfo().getAbsolutePath().toString());
 
         // Extract the token from the HTTP Authorization header
         String token = authorizationHeader.substring("Bearer".length()).trim();
@@ -146,28 +146,28 @@ public class SecurityService {
                 long diffMinutes = diff / (60 * 1000) % 60;
 
                 if(diffMinutes > EXPIRATION_MINUTES)
-                    throw new BusinessException(session, Response.Status.UNAUTHORIZED, EC.AMT_0007);
+                    throw new BusinessException(session, Response.Status.UNAUTHORIZED, EC.AMT_0033);
                 else {
                     Users userOfToken = userRepository.getUserByUserName(session, username);
                     if(userOfToken==null)
-                        throw new BusinessException(session, Response.Status.UNAUTHORIZED, EC.AMT_0008, userOfToken.getFullName());
+                        throw new BusinessException(session, Response.Status.UNAUTHORIZED, EC.AMT_0034, userOfToken.getFullName());
 
                     String password = userOfToken.getPassword();
                     String ComputedHash = securityManager.generateToken(session, username, password, ticks);
 
                     if(!token.equals(ComputedHash))
-                        throw new BusinessException(session, Response.Status.UNAUTHORIZED, EC.AMT_0010);
+                        throw new BusinessException(session, Response.Status.UNAUTHORIZED, EC.AMT_0035);
 
                     logger.endDebug(session, userOfToken);
                     return userOfToken;
                 }
             } else
-                throw new BusinessException(session, Response.Status.UNAUTHORIZED, EC.AMT_0010);
+                throw new BusinessException(session, Response.Status.UNAUTHORIZED, EC.AMT_0035);
         }catch (Exception ex){
             if(ex instanceof BusinessException)
                 throw (BusinessException)ex;
 
-            throw new BusinessException(session, ex, EC.AMT_0004);
+            throw new BusinessException(session, ex, EC.AMT_0030);
         }
     }
 

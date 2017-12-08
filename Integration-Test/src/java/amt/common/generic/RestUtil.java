@@ -6,6 +6,7 @@ import am.rest.filters.LoggingFilter;
 import amt.common.constants.Rest;
 import amt.common.enums.Method;
 import org.glassfish.jersey.client.ClientConfig;
+import org.junit.Assert;
 
 import javax.ws.rs.client.*;
 import javax.ws.rs.core.MediaType;
@@ -53,6 +54,7 @@ public class RestUtil {
     }
     public static Response postSecured(String resource, String path, Object payload, List<String> pathParams, LoginData loginData) throws Exception{
         Response response = restClient(Rest.USER.RESOURCE, Rest.USER.LOGIN, false, null, Method.POST, null, null, loginData);
+        Assert.assertEquals("Login failed", Response.Status.OK.getStatusCode(), response.getStatus());
         String token = response.readEntity(AuthenticatedUser.class).getToken();
 
         return restClient(resource, path, true, token, Method.POST, null, pathParams, payload);

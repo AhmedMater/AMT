@@ -4,56 +4,59 @@ import am.infrastructure.data.hibernate.model.course.Course;
 import am.infrastructure.data.hibernate.model.course.CoursePreRequisite;
 import am.infrastructure.data.hibernate.model.course.CourseReference;
 import am.main.common.validation.RegExp;
-import am.main.common.validation.groups.BlankValidation;
-import am.main.common.validation.groups.InvalidValidation;
-import am.main.common.validation.groups.LengthValidation;
-import am.main.common.validation.groups.RequiredValidation;
+import am.main.common.validation.groups.*;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.*;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import static am.shared.common.ValidationErrorMsg.*;
+import java.util.*;
 
 /**
  * Created by ahmed.motair on 11/6/2017.
  */
 public class CourseData implements Serializable{
+    public static final Map<String, String> FIELDS = Collections.unmodifiableMap(
+        new HashMap<String, String>(){{
+            put("courseName", "Course Name");
+            put("courseLevel", "Course Level");
+            put("courseType", "Course Type");
+            put("description", "Description");
+            put("estimatedDuration", "Estimated Duration");
+            put("estimatedMinPerDay", "Estimated Min-Per-Day");
+        }}
+    );
     private String courseID;
 
-    @NotNull(message = COURSE_NAME.REQUIRED, groups = RequiredValidation.class)
-    @Length(min = 5, max = 100, message = COURSE_NAME.LENGTH, groups = LengthValidation.class)
-    @Pattern(regexp = RegExp.CONTENT_NAME, message = COURSE_NAME.INVALID, groups = InvalidValidation.class)
-    @NotEmpty(message = COURSE_NAME.EMPTY_STR, groups = BlankValidation.class)
+    @NotNull(message = FormValidation.REQUIRED, groups = RequiredValidation.class)
+    @Length(min = 5, max = 100, message = FormValidation.MIN_MAX_LENGTH, groups = LengthValidation.class)
+    @Pattern(regexp = RegExp.CONTENT_NAME, message = FormValidation.REGEX, groups = InvalidValidation.class)
+    @NotEmpty(message = FormValidation.EMPTY_STR, groups = BlankValidation.class)
     private String courseName;
 
-    @NotNull(message = COURSE_LEVEL.REQUIRED, groups = RequiredValidation.class)
-    @Length(min = 2, max = 2, message = COURSE_LEVEL.LENGTH, groups = LengthValidation.class)
-    @NotEmpty(message = COURSE_LEVEL.EMPTY_STR, groups = BlankValidation.class)
-    @Pattern(regexp = RegExp.LOOKUP_CHAR, message = COURSE_LEVEL.INVALID, groups = InvalidValidation.class)
+    @NotNull(message = FormValidation.REQUIRED, groups = RequiredValidation.class)
+    @Length(min = 2, max = 2, message = FormValidation.MIN_MAX_LENGTH, groups = LengthValidation.class)
+    @Pattern(regexp = RegExp.LOOKUP, message = FormValidation.REGEX, groups = InvalidValidation.class)
+    @NotEmpty(message = FormValidation.EMPTY_STR, groups = BlankValidation.class)
     private String courseLevel;
 
-    @NotNull(message = COURSE_TYPE.REQUIRED, groups = RequiredValidation.class)
-    @Length(min = 2, max = 2, message = COURSE_TYPE.LENGTH, groups = LengthValidation.class)
-    @NotEmpty(message = COURSE_TYPE.EMPTY_STR, groups = BlankValidation.class)
-    @Pattern(regexp = RegExp.LOOKUP_CHAR, message = COURSE_TYPE.INVALID, groups = InvalidValidation.class)
+    @NotNull(message = FormValidation.REQUIRED, groups = RequiredValidation.class)
+    @Length(min = 2, max = 2, message = FormValidation.MIN_MAX_LENGTH, groups = LengthValidation.class)
+    @Pattern(regexp = RegExp.LOOKUP, message = FormValidation.REGEX, groups = InvalidValidation.class)
+    @NotEmpty(message = FormValidation.EMPTY_STR, groups = BlankValidation.class)
     private String courseType;
 
-    @Length(max = 200, message = COURSE_DESCRIPTION.LENGTH, groups = LengthValidation.class)
-    @NotEmpty(message = COURSE_DESCRIPTION.EMPTY_STR, groups = BlankValidation.class)
+    @Length(max = 200, message = FormValidation.MAX_LENGTH, groups = LengthValidation.class)
+    @NotEmpty(message = FormValidation.EMPTY_STR, groups = BlankValidation.class)
     private String description;
 
-    @NotNull(message = COURSE_DURATION.REQUIRED, groups = RequiredValidation.class)
-    @Positive(message = COURSE_DURATION.INVALID, groups = InvalidValidation.class)
-    @Min(value = 5, message = COURSE_DURATION.MIN_VALUE, groups = InvalidValidation.class)
+    @NotNull(message = FormValidation.REQUIRED, groups = RequiredValidation.class)
+    @Positive(message = FormValidation.POSITIVE_NUM, groups = InvalidValidation.class)
+    @Min(value = 5, message = FormValidation.MIN_VALUE, groups = InvalidValidation.class)
     private Integer estimatedDuration;
 
-    @NotNull(message = MIN_PER_DAY.REQUIRED, groups = RequiredValidation.class)
-    @Positive(message = MIN_PER_DAY.INVALID, groups = InvalidValidation.class)
-    @Min(value = 10, message = MIN_PER_DAY.MIN_VALUE, groups = InvalidValidation.class)
+    @NotNull(message = FormValidation.REQUIRED, groups = RequiredValidation.class)
+    @Positive(message = FormValidation.POSITIVE_NUM, groups = InvalidValidation.class)
+    @Min(value = 10, message = FormValidation.MIN_VALUE, groups = InvalidValidation.class)
     private Integer estimatedMinPerDay;
 
     private Date startDate;
@@ -204,6 +207,10 @@ public class CourseData implements Serializable{
     }
     public void setCourseStatus(String courseStatus) {
         this.courseStatus = courseStatus;
+    }
+
+    public static Map<String, String> getFIELDS() {
+        return FIELDS;
     }
 
     @Override

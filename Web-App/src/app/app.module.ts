@@ -21,6 +21,7 @@ import {ToastModule} from "ng2-toastr";
 import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import {RESTInterceptor} from "./amt/services/RESTInterceptor";
 import {P404Component} from "./views/pages/404.component";
+import {NgxPaginationModule} from "ngx-pagination";
 
 const APP_COMPONENTS = [AppAside, AppBreadcrumbs, AppFooter, AppHeader, AppSidebar];
 const APP_CONTAINERS = [FullLayout, SimpleLayout];
@@ -29,7 +30,7 @@ const APP_DIRECTIVES = [AsideToggleDirective, NAV_DROPDOWN_DIRECTIVES, SIDEBAR_T
 
 @NgModule({
     imports: [ HttpClientModule, BrowserModule, BrowserAnimationsModule, AppRoutingModule,
-        BsDropdownModule.forRoot(), CommonModule,
+        BsDropdownModule.forRoot(), CommonModule, NgxPaginationModule,
         TabsModule.forRoot(), ChartsModule, ToastModule.forRoot(), ReactiveFormsModule, HttpModule],
     declarations: [AppComponent, P404Component, APP_CONTAINERS, APP_COMPONENTS, APP_DIRECTIVES],
     providers: [

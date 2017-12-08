@@ -1,1 +1,62 @@
-<h1>Course List</h1>
+<div class="animated fadeIn">
+  <div class="row">
+
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-header">
+          <i class="fa fa-align-justify"></i> Course List
+        </div>
+        <div class="card-body">
+          <table class="table table-striped">
+            <thead>
+            <tr>
+              <th>Course Name</th>
+              <th>Level</th>
+              <th>Status</th>
+              <th>Est. Duration</th>
+              <th>Act. Duration</th>
+              <th>Tutor</th>
+              <th>Start Date</th>
+              <th>Progress</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let item of courseList.data | paginate: {
+                                                        id: 'foo',
+                                                        itemsPerPage: 10,
+                                                        currentPage: p,
+                                                        totalItems: 200
+                                                         }">
+              <td>Java SE</td>
+              <td>Beginner</td>
+              <td>
+                <span class="badge badge-success">In Progress</span>
+              </td>
+              <td>30 Hr</td>
+              <td>12 Hr</td>
+              <td>Ahmed Mater</td>
+              <td>12 Jan 2017</td>
+              <td>42 %</td>
+            </tr>
+            </tbody>
+            <tfoot>
+            <tr>
+              <pagination-controls id="foo" (pageChange)="p = $event"></pagination-controls>
+            </tr>
+            </tfoot>
+          </table>
+          <!--<ul class="pagination">-->
+            <!--<li class="page-item"><a class="page-link" href="#">Prev</a></li>-->
+            <!--<li class="page-item active">-->
+              <!--<a class="page-link" href="#">1</a>-->
+            <!--</li>-->
+            <!--<li class="page-item"><a class="page-link" href="#">2</a></li>-->
+            <!--<li class="page-item"><a class="page-link" href="#">3</a></li>-->
+            <!--<li class="page-item"><a class="page-link" href="#">4</a></li>-->
+            <!--<li class="page-item"><a class="page-link" href="#">Next</a></li>-->
+          <!--</ul>-->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

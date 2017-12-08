@@ -1,52 +1,59 @@
 package am.infrastructure.data.dto.user;
 
 import am.main.common.validation.RegExp;
-import am.main.common.validation.groups.BlankValidation;
-import am.main.common.validation.groups.InvalidValidation;
-import am.main.common.validation.groups.LengthValidation;
-import am.main.common.validation.groups.RequiredValidation;
+import am.main.common.validation.groups.*;
+import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
 import java.io.Serializable;
-
-import static am.shared.common.ValidationErrorMsg.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by ahmed.motair on 10/26/2017.
  */
 public class UserRegisterData implements Serializable, Cloneable{
+    public static final Map<String, String> FIELDS = Collections.unmodifiableMap(
+        new HashMap<String, String>(){{
+            put("firstName", "First Name");
+            put("lastName", "Last Name");
+            put("username", "Username");
+            put("password", "Password");
+            put("email", "Email");
+        }}
+    );
 
-    @NotNull(message = FIRST_NAME.REQUIRED, groups = RequiredValidation.class)
-    @NotEmpty(message = FIRST_NAME.EMPTY_STR, groups = BlankValidation.class)
-    @Size(min = 1, max = 15, message = FIRST_NAME.LENGTH, groups = LengthValidation.class)
-    @Pattern(regexp = RegExp.REAL_NAME, message = FIRST_NAME.INVALID, groups = InvalidValidation.class)
+    @NotNull(message = FormValidation.REQUIRED, groups = RequiredValidation.class)
+    @Length(max = 15, message = FormValidation.MAX_LENGTH, groups = LengthValidation.class)
+    @Pattern(regexp = RegExp.REAL_NAME, message = FormValidation.REGEX, groups = InvalidValidation.class)
+    @NotEmpty(message = FormValidation.EMPTY_STR, groups = BlankValidation.class)
     private String firstName;
 
-    @NotNull(message = LAST_NAME.REQUIRED, groups = RequiredValidation.class)
-    @NotEmpty(message = LAST_NAME.EMPTY_STR, groups = BlankValidation.class)
-    @Size(min = 1, max = 15, message = LAST_NAME.LENGTH, groups = LengthValidation.class)
-    @Pattern(regexp = RegExp.REAL_NAME, message = LAST_NAME.INVALID, groups = InvalidValidation.class)
+    @NotNull(message = FormValidation.REQUIRED, groups = RequiredValidation.class)
+    @Length(max = 15, message = FormValidation.MAX_LENGTH, groups = LengthValidation.class)
+    @Pattern(regexp = RegExp.REAL_NAME, message = FormValidation.REGEX, groups = InvalidValidation.class)
+    @NotEmpty(message = FormValidation.EMPTY_STR, groups = BlankValidation.class)
     private String lastName;
 
-    @NotNull(message = USERNAME.REQUIRED, groups = RequiredValidation.class)
-    @NotEmpty(message = USERNAME.EMPTY_STR, groups = BlankValidation.class)
-    @Size(min = 5, max = 50, message = USERNAME.LENGTH, groups = LengthValidation.class)
-    @Pattern(regexp = RegExp.USERNAME, message = USERNAME.INVALID, groups = InvalidValidation.class)
+    @NotNull(message = FormValidation.REQUIRED, groups = RequiredValidation.class)
+    @Length(min = 5, max = 50, message = FormValidation.MIN_MAX_LENGTH, groups = LengthValidation.class)
+    @Pattern(regexp = RegExp.USERNAME, message = FormValidation.REGEX, groups = InvalidValidation.class)
+    @NotEmpty(message = FormValidation.EMPTY_STR, groups = BlankValidation.class)
     private String username;
 
-    @NotNull(message = PASSWORD.REQUIRED, groups = RequiredValidation.class)
-    @NotEmpty(message = PASSWORD.EMPTY_STR, groups = BlankValidation.class)
-    @Size(min = 5, max = 30, message = PASSWORD.LENGTH, groups = LengthValidation.class)
-    @Pattern(regexp = RegExp.PASSWORD, message = PASSWORD.INVALID, groups = InvalidValidation.class)
+    @NotNull(message = FormValidation.REQUIRED, groups = RequiredValidation.class)
+    @Length(min = 5, max = 30, message = FormValidation.MIN_MAX_LENGTH, groups = LengthValidation.class)
+    @Pattern(regexp = RegExp.PASSWORD, message = FormValidation.REGEX, groups = InvalidValidation.class)
+    @NotEmpty(message = FormValidation.EMPTY_STR, groups = BlankValidation.class)
     private String password;
 
-    @NotNull(message = EMAIL.REQUIRED, groups = RequiredValidation.class)
-    @NotEmpty(message = EMAIL.EMPTY_STR, groups = BlankValidation.class)
-    @Size(min = 10, max = 100, message = EMAIL.LENGTH, groups = LengthValidation.class)
-    @Pattern(regexp = RegExp.EMAIL, message = EMAIL.INVALID, groups = InvalidValidation.class)
+    @NotNull(message = FormValidation.REQUIRED, groups = RequiredValidation.class)
+    @Length(min = 10, max = 60, message = FormValidation.MIN_MAX_LENGTH, groups = LengthValidation.class)
+    @Pattern(regexp = RegExp.EMAIL, message = FormValidation.REGEX, groups = InvalidValidation.class)
+    @NotEmpty(message = FormValidation.EMPTY_STR, groups = BlankValidation.class)
     private String email;
 
     public UserRegisterData() {
@@ -96,6 +103,10 @@ public class UserRegisterData implements Serializable, Cloneable{
 
     public String fullName(){
         return firstName + " " + lastName;
+    }
+
+    public static Map<String, String> getFIELDS() {
+        return FIELDS;
     }
 
     @Override

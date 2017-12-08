@@ -63,7 +63,7 @@ public class AuthorizationFilter implements ContainerRequestFilter {
                 );
             else
                 requestContext.abortWith(
-                    Response.status(Response.Status.UNAUTHORIZED).entity(errorHandler.getMsg(session, EC.AMT_0012)).build()
+                    Response.status(Response.Status.UNAUTHORIZED).entity(errorHandler.getMsg(session, EC.AMT_0036)).build()
                 );
         }
     }

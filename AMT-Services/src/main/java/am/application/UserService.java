@@ -40,7 +40,7 @@ public class UserService {
     @Inject private LookupRepository lookupRepository;
 
     @Transactional
-    public void register(AppSession appSession, UserRegisterData userData) throws Exception{
+    public void register(AppSession appSession, UserRegisterData userData, Roles role) throws Exception{
         String FN_NAME = "register";
         AppSession session = appSession.updateSession(CLASS, FN_NAME);
         logger.startDebug(session, userData);
@@ -61,7 +61,7 @@ public class UserService {
         user.setUsername(userData.getUsername());
         user.setPassword(securityManager.dm5Hash(session, userData.getPassword()));
         user.setEmail(userData.getEmail());
-        user.setRole(new Role(Roles.STUDENT));
+        user.setRole(new Role(role));
         user.setCreationDate(new Date());
 
         dbManager.persist(session, user, true);
@@ -85,7 +85,7 @@ public class UserService {
         if(user == null) {
             UserIPFailure userIPFailure = new UserIPFailure(username, loginUserIP);
             dbManager.persist(session, userIPFailure, false);
-            throw new BusinessException(session, EC.AMT_0008, username);
+            throw new BusinessException(session, EC.AMT_0034, username);
         }
 
         AuthenticatedUser authenticatedUser = null;
@@ -187,6 +187,13 @@ public class UserService {
         AppSession session = appSession.updateSession(CLASS, FN_NAME);
         logger.startDebug(session, newRole, ownerUserID);
 
+//        if(newRole == null)
+//            throw new BusinessException(session, EC.AMT_0003, "newRole");
+//        else if(newRole.isEmpty())
+//            throw new BusinessException(session, EC.AMT_0005, "newRole");
+//        else if(newRole.isEmpty())
+//            throw new BusinessException(session, EC.AMT_0005, "newRole");
+
         Integer ownerID;
         try {
             ownerID = new Integer(ownerUserID);
@@ -195,13 +202,9 @@ public class UserService {
         }
 
         Role role = dbManager.find(session, Role.class, newRole, true);
-        if(role == null) {
-            if(newRole == null)
-                newRole = "Null";
-            else if(newRole.isEmpty())
-                newRole = "Empty Value";
-            throw new BusinessException(session, EC.AMT_0026, newRole);
-        }else if(role.isAdmin())
+        if(role == null)
+            throw new BusinessException(session, EC.AMT_0002, Role.class.getSimpleName(), newRole);
+        else if(role.isAdmin())
             throw new BusinessException(session, EC.AMT_0027);
 
         Users profileOwner = dbManager.find(session, Users.class, ownerID, false);

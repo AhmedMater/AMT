@@ -64,11 +64,6 @@ public class Util {
         else
             Assert.assertEquals("Response Status failed", Response.Status.BAD_REQUEST.getStatusCode(), response.getStatus());
 
-//        AMError amError = response.readEntity(AMError.class);
-//
-//        if(amError == null || amError.getValidation() == null)
-//            Assert.fail("No Error Returned for this Rest Call");
-
         String actualErrorStr;
         if(expectedError.equals(NOT_AUTHORIZED))
             actualErrorStr = response.readEntity(String.class);

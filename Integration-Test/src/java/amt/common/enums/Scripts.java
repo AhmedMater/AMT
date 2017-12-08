@@ -33,8 +33,12 @@ public enum Scripts {
     CONTENT_STATUS_LOOKUP(LOOKUP_PATH + "/content_status.sql"),
     DATA_TYPE_LOOKUP(LOOKUP_PATH + "/data_type.sql"),
     SYSTEM_PARAMETER_LOOKUP(LOOKUP_PATH + "/system_parameter.sql"),
-    ADMIN_USER_LOOKUP(LOOKUP_PATH + "/admin_user.sql")
-    ;
+    OWNER_USER_LOOKUP(LOOKUP_PATH + "/owner_user.sql"),
+    ADMIN_USER_LOOKUP(LOOKUP_PATH + "/admin_user.sql"),
+    STUDENT_USER_LOOKUP(LOOKUP_PATH + "/student_user.sql"),
+
+    LOGIN_USER(LOGIN_PATH + "/login_user.sql"),
+    LOGIN_DATA_VALID(LOGIN_PATH + "/login_data_valid.sql");
 
     private String path;
 

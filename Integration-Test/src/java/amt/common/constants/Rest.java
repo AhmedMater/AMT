@@ -16,6 +16,7 @@ public class Rest {
         public static final String RESOURCE = BASE_URL + "/user";
 
         public static final String REGISTER = "/register";
+        public static final String ADMIN_REGISTER = "/admin/register";
         public static final String LOGIN = "/login";
         public static final String CHANGE_ROLE = "/profile/changeRole/{0}";
 

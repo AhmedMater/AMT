@@ -1,8 +1,6 @@
 package am.application;
 
 import am.infrastructure.data.dto.course.CourseData;
-import am.infrastructure.data.dto.course.CoursePRData;
-import am.infrastructure.data.dto.course.CourseRefData;
 import am.infrastructure.data.hibernate.model.course.Course;
 import am.infrastructure.data.hibernate.model.lookup.ContentStatus;
 import am.infrastructure.data.hibernate.model.lookup.CourseLevel;
@@ -47,13 +45,13 @@ public class CourseService {
         // Validating the Form Data
         new FormValidation<CourseData>(session, courseData, EC.AMT_0001, Forms.NEW_COURSE);
 
-        List<CoursePRData> coursePRDataList = courseData.getPreRequisites();
-        for (CoursePRData coursePRData :coursePRDataList)
-            new FormValidation<CoursePRData>(session, coursePRData, EC.AMT_0001, Forms.NEW_COURSE);
-
-        List<CourseRefData> courseRefDataList = courseData.getReferences();
-        for (CourseRefData courseRefData :courseRefDataList)
-            new FormValidation<CourseRefData>(session, courseRefData, EC.AMT_0001, Forms.NEW_COURSE);
+//        List<CoursePRData> coursePRDataList = courseData.getPreRequisites();
+//        for (CoursePRData coursePRData :coursePRDataList)
+//            new FormValidation<CoursePRData>(session, coursePRData, EC.AMT_0001, Forms.NEW_COURSE);
+//
+//        List<CourseRefData> courseRefDataList = courseData.getReferences();
+//        for (CourseRefData courseRefData :courseRefDataList)
+//            new FormValidation<CourseRefData>(session, courseRefData, EC.AMT_0001, Forms.NEW_COURSE);
 
         logger.info(session, IC.AMT_0001, Forms.NEW_COURSE);
         logger.endDebug(session);

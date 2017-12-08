@@ -82,6 +82,7 @@ public class CourseResource {
 
     @Path("/{courseID}")
     @GET
+    @Authorized
     public Response getCourseByID(@PathParam("courseID") String courseID)  {
         String FN_NAME = "getCourseByID";
         AppSession session = new AppSession(Source.APP_SERVICES, Interface.REST, Phase.COURSE_VIEW,

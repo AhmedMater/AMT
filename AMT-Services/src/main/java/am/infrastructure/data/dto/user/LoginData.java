@@ -1,34 +1,38 @@
 package am.infrastructure.data.dto.user;
 
 import am.main.common.validation.RegExp;
-import am.main.common.validation.groups.BlankValidation;
-import am.main.common.validation.groups.InvalidValidation;
-import am.main.common.validation.groups.LengthValidation;
-import am.main.common.validation.groups.RequiredValidation;
+import am.main.common.validation.groups.*;
+import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
 import java.io.Serializable;
-
-import static am.shared.common.ValidationErrorMsg.PASSWORD;
-import static am.shared.common.ValidationErrorMsg.USERNAME;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by ahmed.motair on 10/26/2017.
  */
 public class LoginData implements Serializable, Cloneable{
-    @NotNull(message = USERNAME.REQUIRED, groups = RequiredValidation.class)
-    @NotEmpty(message = USERNAME.EMPTY_STR, groups = BlankValidation.class)
-    @Size(min = 5, max = 50, message = USERNAME.LENGTH, groups = LengthValidation.class)
-    @Pattern(regexp = RegExp.USERNAME, message = USERNAME.INVALID, groups = InvalidValidation.class)
+    public static final Map<String, String> FIELDS = Collections.unmodifiableMap(
+        new HashMap<String, String>(){{
+            put("username", "Username");
+            put("password", "Password");
+        }}
+    );
+
+    @NotNull(message = FormValidation.REQUIRED, groups = RequiredValidation.class)
+    @Length(min = 5, max = 50, message = FormValidation.MIN_MAX_LENGTH, groups = LengthValidation.class)
+    @Pattern(regexp = RegExp.USERNAME, message = FormValidation.REGEX, groups = InvalidValidation.class)
+    @NotEmpty(message = FormValidation.EMPTY_STR, groups = BlankValidation.class)
     private String username;
 
-    @NotNull(message = PASSWORD.REQUIRED, groups = RequiredValidation.class)
-    @NotEmpty(message = PASSWORD.EMPTY_STR, groups = BlankValidation.class)
-    @Size(min = 5, max = 30, message = PASSWORD.LENGTH, groups = LengthValidation.class)
-    @Pattern(regexp = RegExp.PASSWORD, message = PASSWORD.INVALID, groups = InvalidValidation.class)
+    @NotNull(message = FormValidation.REQUIRED, groups = RequiredValidation.class)
+    @Length(min = 5, max = 30, message = FormValidation.MIN_MAX_LENGTH, groups = LengthValidation.class)
+    @Pattern(regexp = RegExp.PASSWORD, message = FormValidation.REGEX, groups = InvalidValidation.class)
+    @NotEmpty(message = FormValidation.EMPTY_STR, groups = BlankValidation.class)
     private String password;
 
     public LoginData() {
@@ -50,6 +54,10 @@ public class LoginData implements Serializable, Cloneable{
     }
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public static Map<String, String> getFIELDS() {
+        return FIELDS;
     }
 
     @Override
