@@ -27,8 +27,12 @@ public class Role implements Serializable{
     private String description;
 
     @Basic
-    @Column(name = "isAdmin")
+    @Column(name = "is_admin")
     private Boolean admin;
+
+    @Basic
+    @Column(name = "rank")
+    private Integer rank;
 
     public Role() {
     }
@@ -62,6 +66,13 @@ public class Role implements Serializable{
     }
     public void setAdmin(Boolean admin) {
         this.admin = admin;
+    }
+
+    public Integer getRank() {
+        return rank;
+    }
+    public void setRank(Integer rank) {
+        this.rank = rank;
     }
 
     @Override

@@ -27,6 +27,8 @@ import static am.shared.enums.EC.AMT_0002;
 @Cacheable(false)
 @Table(name = "course")
 public class Course implements Serializable{
+    public static final String COURSE_CREATOR_USER_ID = "createdBy." + Users.USER_ID;
+
     @Id
     @Column(name = "course_id")
     private String courseID;

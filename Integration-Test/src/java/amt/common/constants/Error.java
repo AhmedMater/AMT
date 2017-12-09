@@ -30,8 +30,11 @@ public class Error {
         public static final String CHANGE_ROLE_VALIDATION_ERROR = "AMT-0001: Change Role Form validation failed";
         public static final String DUPLICATE_USER = "AMT-0021: Username: ''{0}'' already exists in the System";
         public static final String DUPLICATE_EMAIL = "AMT-0022: Email: ''{0}'' already exists in the System";
-        public static final String INVALID_ROLE = "AMT-0026: Invalid Role: ''{0}''";
-        public static final String CANT_UPGRADE_TO_ADMIN = "AMT-0027: Owner Role only can assign Admin Roles to Users";
+
+        public static final String CANT_UP_DOWN_GRADE_TO_ADMIN = "AMT-0026: Can't downgrade or upgrade Admin Roles";
+        public static final String CANT_ASSIGN_ADMIN_ROLES = "AMT-0027: Can't assign Admin Roles to normal Users";
+        public static final String CANT_CHANGE_TUTOR_ROLE = "AMT-0029: Can't change Tutor role, as he created courses";
+
         public static final String USER_IS_NOT_FOUND = "AMT-0034: User: ''{0}'' isn't found in the System";
         public static final String WRONG_PASSWORD = "AMT-0014: Wrong Password, Please try again";
         public static final String WRONG_PASSWORD_GT_MAX_TRAILS = "AMT-0015: Wrong Password, You have tried {0} trails, Your Account will be deactivated for {1} Min";

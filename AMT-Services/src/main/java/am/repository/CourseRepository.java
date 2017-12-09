@@ -1,10 +1,10 @@
 package am.repository;
 
-import am.main.api.AppLogger;
-import am.main.api.db.DBManager;
 import am.infrastructure.data.hibernate.model.SystemParameter;
 import am.infrastructure.data.hibernate.model.course.Course;
 import am.infrastructure.generic.ConfigParam;
+import am.main.api.AppLogger;
+import am.main.api.db.DBManager;
 import am.main.session.AppSession;
 import org.apache.commons.lang.StringUtils;
 
@@ -12,6 +12,7 @@ import javax.inject.Inject;
 import javax.transaction.Transactional;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -51,5 +52,21 @@ public class CourseRepository {
 
         logger.endDebug(session, courseID);
         return courseID;
+    }
+
+    public Boolean userHasCourses(AppSession session, Integer userID) throws Exception{
+        String FN_NAME = "userHasCourses";
+        logger.startDebug(session, userID);
+
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put(Course.COURSE_CREATOR_USER_ID, userID);
+
+        List<Course> courses = dbManager.getList(session, true,
+                Course.class, parameters);
+
+        Boolean result = (courses.size() > 0);
+
+        logger.endDebug(session, result);
+        return result;
     }
 }

@@ -44,6 +44,24 @@ public class Util {
         FormValidation actual = amError.getValidation();
         Util.validateInvalidFormField(actual, expected);
     }
+    public static void postSecuredFormValidation(String rest, String path, LoginData loginData, Object data, List<String> pathParams, FormValidation expected) throws Exception{
+        Response response;
+
+        if(loginData != null)
+            response = RestUtil.postSecured(rest, path, data, pathParams, loginData);
+        else
+            response = RestUtil.post(rest, path, data, pathParams);
+
+        Assert.assertEquals("Response Status failed", Response.Status.BAD_REQUEST.getStatusCode(), response.getStatus());
+
+        AMError amError = response.readEntity(AMError.class);
+
+        if(amError == null || amError.getValidation() == null)
+            Assert.fail("No Error Returned for this Rest Call");
+
+        FormValidation actual = amError.getValidation();
+        Util.validateInvalidFormField(actual, expected);
+    }
     public static void postFormValidation(String rest, String path, Object data, FormValidation expected) throws Exception{
         postSecuredFormValidation(rest, path, null, data, expected);
     }
@@ -73,6 +91,58 @@ public class Util {
     }
     public static void postStringError(String rest, String path, Object data, String expectedError) throws Exception{
         postSecuredStringError(rest, path, null, data, expectedError);
+    }
+
+    public static void getSecuredFormValidation(String rest, String path, LoginData loginData, FormValidation expected) throws Exception{
+        Response response;
+
+        if(loginData != null)
+            response = RestUtil.getSecured(rest, path, loginData);
+        else
+            response = RestUtil.get(rest, path);
+
+        Assert.assertEquals("Response Status failed", Response.Status.BAD_REQUEST.getStatusCode(), response.getStatus());
+
+        AMError amError = response.readEntity(AMError.class);
+
+        if(amError == null || amError.getValidation() == null)
+            Assert.fail("No Error Returned for this Rest Call");
+
+        FormValidation actual = amError.getValidation();
+        Util.validateInvalidFormField(actual, expected);
+    }
+    public static void getFormValidation(String rest, String path, FormValidation expected) throws Exception{
+        getSecuredFormValidation(rest, path, null, expected);
+    }
+
+    public static void getSecuredStringError(String rest, String path, LoginData loginData, String expectedError) throws Exception{
+        getSecuredStringError(rest, path, loginData, null, expectedError);
+    }
+    public static void getSecuredStringError(String rest, String path, LoginData loginData, List<String> pathParams, String expectedError) throws Exception{
+        Response response;
+
+        if(loginData != null)
+            response = RestUtil.getSecured(rest, path, loginData, pathParams);
+        else
+            response = RestUtil.get(rest, path, pathParams);
+
+        if(expectedError.equals(NOT_AUTHORIZED))
+            Assert.assertEquals("Response Status failed", Response.Status.UNAUTHORIZED.getStatusCode(), response.getStatus());
+        else
+            Assert.assertEquals("Response Status failed", Response.Status.BAD_REQUEST.getStatusCode(), response.getStatus());
+
+        String actualErrorStr;
+        if(expectedError.equals(NOT_AUTHORIZED))
+            actualErrorStr = response.readEntity(String.class);
+        else
+            actualErrorStr = response.readEntity(AMError.class).getMessage();
+        Assert.assertEquals("Error returned doesn't match", expectedError, actualErrorStr);
+    }
+    public static void getStringError(String rest, String path, String expectedError) throws Exception{
+        getSecuredStringError(rest, path, null, expectedError);
+    }
+    public static void getStringError(String rest, String path, List<String> pathParams, String expectedError) throws Exception{
+        getSecuredStringError(rest, path, null, pathParams, expectedError);
     }
 
     public static Boolean isEqualDates(Date expected, Date actual){

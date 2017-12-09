@@ -28,6 +28,9 @@ public class RestUtil {
     public static Response get(String resource, String path, Map<String, Object> queryParams, List<String> pathParams) throws Exception{
         return restClient(resource, path, false, null, Method.GET, queryParams, pathParams, null);
     }
+    public static Response get(String resource, String path) throws Exception{
+        return restClient(resource, path, false, null, Method.GET, null, null, null);
+    }
 
     public static Response post(String resource, String path, Object payload) throws Exception{
         return restClient(resource, path, false, null, Method.POST, null, null, payload);
@@ -48,6 +51,9 @@ public class RestUtil {
     public static Response getSecured(String resource, String path, LoginData loginData, Map<String, Object> queryParams) throws Exception{
         return getSecured(resource, path, loginData, queryParams, null);
     }
+    public static Response getSecured(String resource, String path, LoginData loginData) throws Exception{
+        return getSecured(resource, path, loginData, null, null);
+    }
 
     public static Response postSecured(String resource, String path, Object payload, LoginData loginData) throws Exception{
         return postSecured(resource, path, payload, null, loginData);
@@ -63,7 +69,6 @@ public class RestUtil {
     private static Response restClient(String resource, String path, boolean secured, String token,
                                        Method method, Map<String, Object> queryParams, List<String> pathParams, Object payload) throws Exception{
         Invocation.Builder invocationBuilder;
-        Response response = null;
 
         Client client = ClientBuilder.newClient(new ClientConfig().register(LoggingFilter.class));
 
@@ -81,6 +86,7 @@ public class RestUtil {
         else
             invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
 
+        Response response = null;
         if (method.equals(Method.PUT))
             response = invocationBuilder.put(Entity.entity(payload, MediaType.APPLICATION_JSON + ";charset=utf-8"));
         else if (method.equals(Method.POST))

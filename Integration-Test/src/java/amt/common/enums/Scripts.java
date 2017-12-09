@@ -35,10 +35,17 @@ public enum Scripts {
     SYSTEM_PARAMETER_LOOKUP(LOOKUP_PATH + "/system_parameter.sql"),
     OWNER_USER_LOOKUP(LOOKUP_PATH + "/owner_user.sql"),
     ADMIN_USER_LOOKUP(LOOKUP_PATH + "/admin_user.sql"),
+    TUTOR_USER_LOOKUP(LOOKUP_PATH + "/tutor_user.sql"),
     STUDENT_USER_LOOKUP(LOOKUP_PATH + "/student_user.sql"),
 
     LOGIN_USER(LOGIN_PATH + "/login_user.sql"),
-    LOGIN_DATA_VALID(LOGIN_PATH + "/login_data_valid.sql");
+    LOGIN_DATA_VALID(LOGIN_PATH + "/login_data_valid.sql"),
+
+    OWNER_USER_FOR_ROLE_UPGRADE(PROFILE_PATH + "/owner_user_for_role_upgrade.sql"),
+    ADMIN_USER_FOR_ROLE_UPGRADE(PROFILE_PATH + "/admin_user_for_role_upgrade.sql"),
+    TUTOR_USER_FOR_ROLE_UPGRADE(PROFILE_PATH + "/tutor_user_for_role_upgrade.sql"),
+    STD_USER_FOR_ROLE_UPGRADE(PROFILE_PATH + "/student_user_for_role_upgrade.sql"),
+    TUTOR_HAS_COURSES(PROFILE_PATH + "/tutor_user_has_courses.sql");
 
     private String path;
 

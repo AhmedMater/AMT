@@ -1,5 +1,6 @@
 package amt.common;
 
+import amt.common.constants.Params;
 import amt.common.constants.Rest;
 import amt.common.constants.ScriptPaths;
 import amt.common.enums.Method;
@@ -23,7 +24,7 @@ public class DeploymentManger {
     private static final String BASE_URL = "http://localhost/AMT-Services/api";
 
     private static Class[] classes = {
-            Repository.class, DataGenerator.class, RestUtil.class,
+            Repository.class, DataGenerator.class, RestUtil.class, Params.class,
             Util.class, ScriptPaths.class, Scripts.class, Error.class, Method.class, Rest.class
     };
 
