@@ -9,8 +9,11 @@ import amt.generic.Gen;
 import amt.model.Course;
 import amt.model.User;
 
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
+
+import static amt.generic.Gen.FULL_SCRIPT_PATH;
 
 /**
  * Created by ahmed.motair on 12/11/2017.
@@ -18,6 +21,10 @@ import java.util.List;
 public class MainGenerator {
     public static void main(String[] args) {
         try {
+            // Clearing the Full Script File
+            PrintWriter out = new PrintWriter(FULL_SCRIPT_PATH);
+            out.write(""); out.flush(); out.close();
+
             String initialScript = "USE amt;\n" +
                     "DELETE FROM amt.course_pre_requisite WHERE pre_requisite_id > 0;\n" +
                     "DELETE FROM amt.course_reference WHERE reference_id > 0;\n" +
@@ -27,7 +34,7 @@ public class MainGenerator {
             Gen.writeToFullScript(initialScript);
 
             UserGenerator userGenerator = new UserGenerator();
-            List<User> userList = userGenerator.generate(5000, "2016-10-25", 20);
+            List<User> userList = userGenerator.generate(300, "2016-10-25", 20);
 
             List<User> students = new ArrayList<>();
             List<User> tutors = new ArrayList<>();
