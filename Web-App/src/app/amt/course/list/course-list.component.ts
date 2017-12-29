@@ -9,7 +9,6 @@ import {Router} from "@angular/router";
 
 import {RESTClient} from "../../services/RESTClient";
 import {CourseService} from "../../services/CourseService";
-import {CourseListRS} from "../../util/vto/resultset/CourseListRS";
 import {PaginationService, PaginatePipe, PaginationControlsDirective} from "ngx-pagination";
 import {NewCourseLookup} from "../../util/vto/lookup/NewCourseLookup";
 import {CourseType} from "../../util/dto/lookup/CourseType";
@@ -25,6 +24,9 @@ import {FullRoutes} from "../../util/constants/FullRoutes";
 import {PaginationInfo} from "../../util/vto/common/PaginationInfo";
 import {isNull} from "util";
 import {ConfigUtils} from "../../util/generic/ConfigUtils";
+import {ListResultSet} from "../../util/vto/ListResultSet";
+import {CourseListUI} from "../../util/vto/ui/CourseListUI";
+import {CourseListRS} from "../../util/vto/CourseListRS";
 
 @Component({
     selector: 'course-list',
@@ -49,7 +51,7 @@ export class CourseListComponent implements OnInit{
     CSConstants: CourseStatusConstants = CourseStatusConstants;
 
     paging: PaginationInfo = new PaginationInfo();
-    sorting: SortingInfo = new SortingInfo('courseName', 'asc');
+    sorting: SortingInfo = new SortingInfo('courseName', 'Asc');
     doPaging(pageNum): void {
         this.paging.pageNum = pageNum - 1;
         this.search();
@@ -59,14 +61,6 @@ export class CourseListComponent implements OnInit{
         this.sorting.by = order.sortColumn;
         this.sorting.direction = order.sortDirection;
         this.search();
-    }
-
-    clear(): void{
-        this.courseListForm = this.formBuilder.group({
-            courseName: '',
-            courseType: '',
-            courseLevel: ''
-        });
     }
 
     constructor(
@@ -108,19 +102,19 @@ export class CourseListComponent implements OnInit{
     }
 
     search(): void{
-        var values: any[] = this.courseListForm.value;
+        let values = this.courseListForm.value;
         this.filters.courseName = !ConfigUtils.isNull(values.courseName) ? values.courseName : null;
         this.filters.courseType = !ConfigUtils.isNull(values.courseType) ? values.courseType : null;
         this.filters.courseLevel = !ConfigUtils.isNull(values.courseLevel) ? values.courseLevel : null;
 
         this.filters.pageNum = this.paging.pageNum;
-        this.filters.sortingInfo = this.sorting;
+        this.filters.sorting = this.sorting;
 
         this.courseService.getCourseList(this.filters).subscribe(
             res=>{
                 this.courseList = res;
-                this.paging = res.paginationInfo;
-                this.paging.pageNum++;
+                this.paging = res.pagination;
+                // this.paging.pageNum = res.pagination.pageNum;
             },
             err=>{
                 this.amError = err.error;
@@ -133,4 +127,12 @@ export class CourseListComponent implements OnInit{
         )
     }
 
+    clear(): void{
+        this.courseListForm = this.formBuilder.group({
+            courseName: '',
+            courseType: '',
+            courseLevel: ''
+        });
+        this.search();
+    }
 }

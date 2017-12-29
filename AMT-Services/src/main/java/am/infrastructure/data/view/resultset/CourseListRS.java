@@ -1,6 +1,7 @@
 package am.infrastructure.data.view.resultset;
 
 import am.infrastructure.data.view.ui.CourseListUI;
+import am.main.data.dto.ListResultSet;
 import am.main.data.vto.PaginationInfo;
 
 import java.io.Serializable;
@@ -11,13 +12,13 @@ import java.util.List;
  */
 public class CourseListRS implements Serializable{
     private List<CourseListUI> data;
-    public PaginationInfo paginationInfo;
+    public PaginationInfo pagination;
 
     public CourseListRS() {
     }
-    public CourseListRS(List<CourseListUI> data, PaginationInfo paginationInfo) {
-        this.data = data;
-        this.paginationInfo = paginationInfo;
+    public CourseListRS(ListResultSet<CourseListUI> resultSet) {
+        this.data = resultSet.getData();
+        this.pagination = resultSet.getPagination();
     }
 
     public List<CourseListUI> getData() {
@@ -27,11 +28,11 @@ public class CourseListRS implements Serializable{
         this.data = data;
     }
 
-    public PaginationInfo getPaginationInfo() {
-        return paginationInfo;
+    public PaginationInfo getPagination() {
+        return pagination;
     }
-    public void setPaginationInfo(PaginationInfo paginationInfo) {
-        this.paginationInfo = paginationInfo;
+    public void setPagination(PaginationInfo pagination) {
+        this.pagination = pagination;
     }
 
     @Override
@@ -42,13 +43,13 @@ public class CourseListRS implements Serializable{
         CourseListRS that = (CourseListRS) o;
 
         if (getData() != null ? !getData().equals(that.getData()) : that.getData() != null) return false;
-        return getPaginationInfo() != null ? getPaginationInfo().equals(that.getPaginationInfo()) : that.getPaginationInfo() == null;
+        return getPagination() != null ? getPagination().equals(that.getPagination()) : that.getPagination() == null;
     }
 
     @Override
     public int hashCode() {
         int result = getData() != null ? getData().hashCode() : 0;
-        result = 31 * result + (getPaginationInfo() != null ? getPaginationInfo().hashCode() : 0);
+        result = 31 * result + (getPagination() != null ? getPagination().hashCode() : 0);
         return result;
     }
 
@@ -56,7 +57,7 @@ public class CourseListRS implements Serializable{
     public String toString() {
         return "CourseListRS{" +
                 "data = " + data +
-                ", paginationInfo = " + paginationInfo +
+                ", pagination = " + pagination +
                 "}\n";
     }
 }

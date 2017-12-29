@@ -15,7 +15,7 @@ import java.util.*;
  * Created by ahmed.motair on 11/6/2017.
  */
 public class CourseData implements Serializable{
-    public static final Map<String, String> FIELDS = Collections.unmodifiableMap(
+    private static final Map<String, String> FIELDS = Collections.unmodifiableMap(
         new HashMap<String, String>(){{
             put("courseName", "Course Name");
             put("courseLevel", "Course Level");

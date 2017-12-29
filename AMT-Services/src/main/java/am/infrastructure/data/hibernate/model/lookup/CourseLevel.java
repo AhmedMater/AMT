@@ -15,6 +15,7 @@ import java.io.Serializable;
 @Cache(usage = CacheConcurrencyStrategy.READ_ONLY, region = ConfigParam.EH_CACHE_LOOKUP_REGION)
 @Table(name = "course_level")
 public class CourseLevel implements Serializable{
+    public static final String LEVEL = "level";
     @Id
     @Column(name = "level")
     private String level;

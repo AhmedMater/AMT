@@ -29,6 +29,9 @@ import static am.shared.enums.EC.AMT_0002;
 public class Course implements Serializable{
     public static final String COURSE_CREATOR_USER_ID = "createdBy." + Users.USER_ID;
     public static final String CREATION_DATE = "creationDate";
+    public static final String COURSE_NAME = "courseName";
+    public static final String COURSE_TYPE = "courseType." + CourseType.TYPE;
+    public static final String COURSE_LEVEL = "courseLevel." + CourseLevel.LEVEL;
 
     @Id
     @Column(name = "course_id")

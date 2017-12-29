@@ -9,8 +9,10 @@ import {Response} from "@angular/http";
 import {NewCourseLookup} from "../util/vto/lookup/NewCourseLookup";
 import {ConfigParam} from "../util/constants/ConfigParam";
 import {CourseListFilter} from "../util/dto/filters/CourseListFilter";
-import {CourseListRS} from "../util/vto/resultset/CourseListRS";
 import {CourseListFilters} from "../util/vto/lookup/CourseListFilters";
+import {ListResultSet} from "../util/vto/ListResultSet";
+import {CourseListUI} from "../util/vto/ui/CourseListUI";
+import {CourseListRS} from "../util/vto/CourseListRS";
 
 @Injectable()
 export class CourseService {

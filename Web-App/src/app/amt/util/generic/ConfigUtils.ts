@@ -6,9 +6,11 @@ import {AMError} from "../vto/error/AMError";
 export class ConfigUtils{
 
     static handleError(err, toastr, TOASTR_TITLE) {
+        console.log(err);
         let amError: AMError = err.error;
 
         if (amError.validation == null) {
+            console.log(err);
             toastr.error(amError.message, TOASTR_TITLE);
             return false;
         }else

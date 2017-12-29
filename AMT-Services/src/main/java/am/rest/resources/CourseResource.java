@@ -8,9 +8,11 @@ import am.infrastructure.data.hibernate.model.user.Users;
 import am.infrastructure.data.view.lookup.list.CourseListFilters;
 import am.infrastructure.data.view.lookup.list.NewCourseLookup;
 import am.infrastructure.data.view.resultset.CourseListRS;
+import am.infrastructure.data.view.ui.CourseListUI;
 import am.main.api.AppLogger;
 import am.main.api.ErrorHandler;
 import am.main.api.InfoHandler;
+import am.main.data.dto.ListResultSet;
 import am.main.data.enums.Interface;
 import am.main.data.enums.Source;
 import am.main.session.AppSession;
@@ -79,8 +81,11 @@ public class CourseResource {
                 httpSession.getId(), CLASS, FN_NAME, errorHandler, infoHandler, httpServletRequest.getRemoteAddr());
         try {
             Users loggedInUser = (Users) crc.getProperty(AUTH_USER);
-            CourseListRS resultSet = courseService.getCourseList(session, courseListFilters, loggedInUser);
-            return Response.ok().entity(resultSet).build();
+            ListResultSet<CourseListUI> resultSet = courseService.getCourseList(session, courseListFilters, loggedInUser);
+//            GenericEntity<ListResultSet<CourseListUI>> genericEntity =
+//                    new GenericEntity<ListResultSet<CourseListUI>>(resultSet) {
+//            };//needs empty body to preserve generic type
+            return Response.ok().entity(new CourseListRS(resultSet)).build();
         }catch (Exception ex){
             throw businessException(logger, session, ex, EC.AMT_0018);
         }

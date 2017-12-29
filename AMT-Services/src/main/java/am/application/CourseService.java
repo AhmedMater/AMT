@@ -10,12 +10,13 @@ import am.infrastructure.data.hibernate.model.lookup.MaterialType;
 import am.infrastructure.data.hibernate.model.user.Users;
 import am.infrastructure.data.view.lookup.list.CourseListFilters;
 import am.infrastructure.data.view.lookup.list.NewCourseLookup;
-import am.infrastructure.data.view.resultset.CourseListRS;
+import am.infrastructure.data.view.ui.CourseListUI;
 import am.main.api.AMSecurityManager;
 import am.main.api.AppConfigManager;
 import am.main.api.AppLogger;
 import am.main.api.db.DBManager;
 import am.main.common.validation.FormValidation;
+import am.main.data.dto.ListResultSet;
 import am.main.session.AppSession;
 import am.repository.CourseRepository;
 import am.shared.enums.EC;
@@ -134,12 +135,12 @@ public class CourseService {
     }
 
 //    @Transactional
-    public CourseListRS getCourseList(AppSession appSession, CourseListFilter courseListFilters, Users loggedInUser) throws Exception{
+    public ListResultSet<CourseListUI> getCourseList(AppSession appSession, CourseListFilter courseListFilters, Users loggedInUser) throws Exception{
         String FN_NAME = "addNewCourse";
         AppSession session = appSession.updateSession(CLASS, FN_NAME);
         logger.startDebug(session, courseListFilters, loggedInUser);
 
-        CourseListRS resultSet = new CourseListRS();
+        ListResultSet<CourseListUI> resultSet = new ListResultSet<CourseListUI>();
         resultSet = courseRepository.getAllCourses(session, courseListFilters);
 
         logger.endDebug(session, resultSet);

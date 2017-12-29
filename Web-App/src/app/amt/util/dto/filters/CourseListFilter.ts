@@ -8,5 +8,5 @@ export class CourseListFilter{
     courseLevel:string;
     courseType:string;
     pageNum:number;
-    sortingInfo: SortingInfo;
+    sorting: SortingInfo;
 }
