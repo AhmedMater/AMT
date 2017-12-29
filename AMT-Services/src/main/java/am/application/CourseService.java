@@ -1,13 +1,16 @@
 package am.application;
 
 import am.infrastructure.data.dto.course.CourseData;
+import am.infrastructure.data.dto.filters.CourseListFilter;
 import am.infrastructure.data.hibernate.model.course.Course;
 import am.infrastructure.data.hibernate.model.lookup.ContentStatus;
 import am.infrastructure.data.hibernate.model.lookup.CourseLevel;
 import am.infrastructure.data.hibernate.model.lookup.CourseType;
 import am.infrastructure.data.hibernate.model.lookup.MaterialType;
 import am.infrastructure.data.hibernate.model.user.Users;
-import am.infrastructure.data.view.NewCourseLookup;
+import am.infrastructure.data.view.lookup.list.CourseListFilters;
+import am.infrastructure.data.view.lookup.list.NewCourseLookup;
+import am.infrastructure.data.view.resultset.CourseListRS;
 import am.main.api.AMSecurityManager;
 import am.main.api.AppConfigManager;
 import am.main.api.AppLogger;
@@ -101,6 +104,23 @@ public class CourseService {
         return result;
     }
 
+    public CourseListFilters getCourseListFilters(AppSession appSession) throws Exception{
+        String FN_NAME = "getCourseListFilters";
+        AppSession session = appSession.updateSession(CLASS, FN_NAME);
+        logger.startDebug(session);
+
+        CourseListFilters result = new CourseListFilters();
+
+        List<CourseLevel> courseLevelList = dbManager.findAll(session, CourseLevel.class, true);
+        result.setCourseLevelList(courseLevelList);
+
+        List<CourseType> courseTypeList = dbManager.findAll(session, CourseType.class, true);
+        result.setCourseTypeList(courseTypeList);
+
+        logger.endDebug(session, result);
+        return result;
+    }
+
     public CourseData getCourseByID(AppSession appSession, String courseID) throws Exception{
         String FN_NAME = "getCourseByID";
         AppSession session = appSession.updateSession(CLASS, FN_NAME);
@@ -111,5 +131,18 @@ public class CourseService {
 
         logger.endDebug(session, courseData);
         return courseData;
+    }
+
+//    @Transactional
+    public CourseListRS getCourseList(AppSession appSession, CourseListFilter courseListFilters, Users loggedInUser) throws Exception{
+        String FN_NAME = "addNewCourse";
+        AppSession session = appSession.updateSession(CLASS, FN_NAME);
+        logger.startDebug(session, courseListFilters, loggedInUser);
+
+        CourseListRS resultSet = new CourseListRS();
+        resultSet = courseRepository.getAllCourses(session, courseListFilters);
+
+        logger.endDebug(session, resultSet);
+        return resultSet;
     }
 }

@@ -1,0 +1,7 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-war" name="AMT exploded">
+    <root id="root">
+      <element id="dir-copy" path="$PROJECT_DIR$/Web-App/dist" />
+    </root>
+  </artifact>
+</component>

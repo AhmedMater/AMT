@@ -14,4 +14,8 @@ export class ConfigUtils{
         }else
             return true;
     }
+
+    static isNull(value){
+        return (value == null || value == '');
+    }
 }

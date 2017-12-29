@@ -6,8 +6,11 @@ import {Injectable} from "@angular/core";
 import {CourseData} from "../util/vto/course/CourseData";
 import {HttpClient} from "@angular/common/http";
 import {Response} from "@angular/http";
-import {NewCourseLookup} from "../util/vto/course/NewCourseLookup";
+import {NewCourseLookup} from "../util/vto/lookup/NewCourseLookup";
 import {ConfigParam} from "../util/constants/ConfigParam";
+import {CourseListFilter} from "../util/dto/filters/CourseListFilter";
+import {CourseListRS} from "../util/vto/resultset/CourseListRS";
+import {CourseListFilters} from "../util/vto/lookup/CourseListFilters";
 
 @Injectable()
 export class CourseService {
@@ -16,6 +19,9 @@ export class CourseService {
     private NEW_COURSE_PATH: string = this.COURSE_BASE_URL + "/new";
     private COURSE_DETAILS_PATH: string = this.COURSE_BASE_URL + "/";
     private NEW_COURSE_LOOKUPS_URL: string = this.NEW_COURSE_PATH + "/lookups";
+
+    private COURSE_LIST_URL: string = this.COURSE_BASE_URL + "/list";
+    private COURSE_LIST_FILTERS_URL: string = this.COURSE_LIST_URL + "/filters";
 
     constructor(private http: HttpClient) {
     }
@@ -26,6 +32,14 @@ export class CourseService {
 
     getCourseByID(courseID: string){
         return this.http.get<CourseData>(this.COURSE_DETAILS_PATH + courseID);
+    }
+
+    getCourseList(filters: CourseListFilter){
+        return this.http.post<CourseListRS>(this.COURSE_LIST_URL, filters);
+    }
+
+    getCourseListFilters(){
+        return this.http.get<CourseListFilters>(this.COURSE_LIST_FILTERS_URL);
     }
 
     getNewCourseLookups(){

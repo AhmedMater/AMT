@@ -34,7 +34,7 @@ public class MainGenerator {
             Gen.writeToFullScript(initialScript);
 
             UserGenerator userGenerator = new UserGenerator();
-            List<User> userList = userGenerator.generate(300, "2016-10-25", 20);
+            List<User> userList = userGenerator.generate(100, "2016-10-25", 20);
 
             List<User> students = new ArrayList<>();
             List<User> tutors = new ArrayList<>();

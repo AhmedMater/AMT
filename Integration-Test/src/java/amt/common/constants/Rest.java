@@ -10,6 +10,7 @@ public class Rest {
         public static final String RESOURCE = BASE_URL + "/course";
 
         public static final String NEW = "/new";
+        public static final String LIST = "/list";
     }
 
     public static final class USER {

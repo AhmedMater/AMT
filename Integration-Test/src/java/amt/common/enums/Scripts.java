@@ -45,7 +45,12 @@ public enum Scripts {
     ADMIN_USER_FOR_ROLE_UPGRADE(PROFILE_PATH + "/admin_user_for_role_upgrade.sql"),
     TUTOR_USER_FOR_ROLE_UPGRADE(PROFILE_PATH + "/tutor_user_for_role_upgrade.sql"),
     STD_USER_FOR_ROLE_UPGRADE(PROFILE_PATH + "/student_user_for_role_upgrade.sql"),
-    TUTOR_HAS_COURSES(PROFILE_PATH + "/tutor_user_has_courses.sql");
+    TUTOR_HAS_COURSES(PROFILE_PATH + "/tutor_user_has_courses.sql"),
+
+    LIST_OF_39_COURSES(COURSE_LIST_PATH + "/list_of_39_courses.sql")
+
+
+    ;
 
     private String path;
 

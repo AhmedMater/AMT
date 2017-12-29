@@ -1,4 +1,4 @@
-package am.infrastructure.data.view;
+package am.infrastructure.data.view.lookup.list;
 
 import am.infrastructure.data.hibernate.model.lookup.CourseLevel;
 import am.infrastructure.data.hibernate.model.lookup.CourseType;

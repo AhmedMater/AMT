@@ -28,6 +28,7 @@ import static am.shared.enums.EC.AMT_0002;
 @Table(name = "course")
 public class Course implements Serializable{
     public static final String COURSE_CREATOR_USER_ID = "createdBy." + Users.USER_ID;
+    public static final String CREATION_DATE = "creationDate";
 
     @Id
     @Column(name = "course_id")
@@ -80,6 +81,10 @@ public class Course implements Serializable{
     @Basic
     @Column(name = "due_date")
     private Date dueDate;
+
+    @Basic
+    @Column(name = "progress")
+    private Float progress;
 
     @ManyToOne
     @JoinColumn(name = "course_status", referencedColumnName = "status")
@@ -264,6 +269,13 @@ public class Course implements Serializable{
     }
     public void setPreRequisites(Set<CoursePreRequisite> preRequisites) {
         this.preRequisites = preRequisites;
+    }
+
+    public Float getProgress() {
+        return progress;
+    }
+    public void setProgress(Float progress) {
+        this.progress = progress;
     }
 
     @Override

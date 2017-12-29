@@ -9,7 +9,7 @@ export class PaginationInfo{
 
     constructor(){
         this.total = 0;
-        this.pageNum = 1;
-        this.pageSize = 25;
+        this.pageNum = 0;
+        this.pageSize = 10;
     }
 }

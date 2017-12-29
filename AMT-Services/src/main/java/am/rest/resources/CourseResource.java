@@ -2,9 +2,12 @@ package am.rest.resources;
 
 import am.application.CourseService;
 import am.infrastructure.data.dto.course.CourseData;
+import am.infrastructure.data.dto.filters.CourseListFilter;
 import am.infrastructure.data.enums.Roles;
 import am.infrastructure.data.hibernate.model.user.Users;
-import am.infrastructure.data.view.NewCourseLookup;
+import am.infrastructure.data.view.lookup.list.CourseListFilters;
+import am.infrastructure.data.view.lookup.list.NewCourseLookup;
+import am.infrastructure.data.view.resultset.CourseListRS;
 import am.main.api.AppLogger;
 import am.main.api.ErrorHandler;
 import am.main.api.InfoHandler;
@@ -60,6 +63,41 @@ public class CourseResource {
 
             courseData.setCourseID(courseID);
             return Response.ok().entity(courseData).build();
+        }catch (Exception ex){
+            throw businessException(logger, session, ex, EC.AMT_0018);
+        }
+    }
+
+    @Path("/list")
+    @POST
+    @Authorized()
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getCourseList(CourseListFilter courseListFilters, @Context ContainerRequestContext crc) {
+        String FN_NAME = "getCourseList";
+        AppSession session = new AppSession(Source.APP_SERVICES, Interface.REST, Phase.COURSE_VIEW,
+                httpSession.getId(), CLASS, FN_NAME, errorHandler, infoHandler, httpServletRequest.getRemoteAddr());
+        try {
+            Users loggedInUser = (Users) crc.getProperty(AUTH_USER);
+            CourseListRS resultSet = courseService.getCourseList(session, courseListFilters, loggedInUser);
+            return Response.ok().entity(resultSet).build();
+        }catch (Exception ex){
+            throw businessException(logger, session, ex, EC.AMT_0018);
+        }
+    }
+
+    @Path("/list/filters")
+    @GET
+    @Authorized()
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getCourseListFilters(@Context ContainerRequestContext crc) {
+        String FN_NAME = "getCourseListFilters";
+        AppSession session = new AppSession(Source.APP_SERVICES, Interface.REST, Phase.COURSE_VIEW,
+                httpSession.getId(), CLASS, FN_NAME, errorHandler, infoHandler, httpServletRequest.getRemoteAddr());
+        try {
+            CourseListFilters result = courseService.getCourseListFilters(session);
+            return Response.ok().entity(result).build();
         }catch (Exception ex){
             throw businessException(logger, session, ex, EC.AMT_0018);
         }

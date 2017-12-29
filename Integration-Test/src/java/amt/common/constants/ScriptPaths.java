@@ -12,5 +12,8 @@ public class ScriptPaths {
     public static final String LOGIN_PATH = USER_PATH + "/login";
     public static final String PROFILE_PATH = USER_PATH + "/profile";
 
+    private static final String COURSE_PATH = BASE_PATH + "/course";
+    public static final String COURSE_LIST_PATH = COURSE_PATH + "/list";
+
     public static final Integer ADMIN_USER_ID = 1;
 }

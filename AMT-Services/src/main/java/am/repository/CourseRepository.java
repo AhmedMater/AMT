@@ -1,19 +1,27 @@
 package am.repository;
 
+import am.infrastructure.data.dto.filters.CourseListFilter;
 import am.infrastructure.data.hibernate.model.SystemParameter;
 import am.infrastructure.data.hibernate.model.course.Course;
+import am.infrastructure.data.view.resultset.CourseListRS;
+import am.infrastructure.data.view.ui.CourseListUI;
 import am.infrastructure.generic.ConfigParam;
 import am.main.api.AppLogger;
 import am.main.api.db.DBManager;
+import am.main.data.dto.filter.SortingInfo;
+import am.main.data.vto.PaginationInfo;
 import am.main.session.AppSession;
 import org.apache.commons.lang.StringUtils;
 
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static am.infrastructure.generic.ConfigParam.MAX_PAGE_SIZE;
 
 /**
  * Created by ahmed.motair on 11/7/2017.
@@ -53,7 +61,6 @@ public class CourseRepository {
         logger.endDebug(session, courseID);
         return courseID;
     }
-
     public Boolean userHasCourses(AppSession session, Integer userID) throws Exception{
         String FN_NAME = "userHasCourses";
         logger.startDebug(session, userID);
@@ -68,5 +75,36 @@ public class CourseRepository {
 
         logger.endDebug(session, result);
         return result;
+    }
+
+//    @Transactional
+    public CourseListRS getAllCourses(AppSession session, CourseListFilter filters){
+        String FN_NAME = "getAllCourses";
+        logger.startDebug(session, filters);
+
+        EntityManager em = dbManager.getUnCachedEM();
+        SortingInfo sorting = filters.getSortingInfo();
+
+        String hql = "SELECT new am.infrastructure.data.view.ui.CourseListUI(courseID, courseName, courseLevel.level, " +
+                "courseStatus.status, estimatedDuration, actualDuration, " +
+                "concat(createdBy.firstName, concat(' ', createdBy.lastName)), " +
+                "startDate, progress) FROM Course " +
+                "ORDER BY " + sorting.getBy() + " " + sorting.getDirection();
+
+        List<CourseListUI> resultData = em.createQuery(hql, CourseListUI.class)
+            .setMaxResults(MAX_PAGE_SIZE)
+            .setFirstResult(filters.getPageNum() * MAX_PAGE_SIZE)
+            .getResultList();
+
+        Integer resultCount = em.createQuery(
+                "SELECT COUNT(*) FROM Course", Long.class)
+                .getResultList().get(0).intValue();
+
+        CourseListRS resultSet = new CourseListRS();
+        resultSet.setData(resultData);
+        resultSet.setPaginationInfo(new PaginationInfo(resultCount, MAX_PAGE_SIZE, filters.getPageNum()));
+
+        logger.endDebug(session, resultSet);
+        return resultSet;
     }
 }

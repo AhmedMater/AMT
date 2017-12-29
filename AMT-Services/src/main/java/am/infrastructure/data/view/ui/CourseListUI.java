@@ -11,21 +11,21 @@ public class CourseListUI implements Serializable{
     private String courseName;
     private String courseLevel;
     private String courseStatus;
-    private String estimatedDuration;
-    private String actualDuration;
+    private Integer estimatedDuration;
+    private Integer actualDuration;
     private String tutor;
     private Date startDate;
     private Float progress;
 
     public CourseListUI() {
     }
-    public CourseListUI(String courseID, String courseName, String courseLevel, String courseStatus, String estimatedDuration, String actualDuration, String tutor, Date startDate, Float progress) {
+    public CourseListUI(String courseID, String courseName, String courseLevel, String courseStatus, Integer estimatedDuration, Integer actualDuration, String tutor, Date startDate, Float progress) {
         this.courseID = courseID;
         this.courseName = courseName;
         this.courseLevel = courseLevel;
         this.courseStatus = courseStatus;
         this.estimatedDuration = estimatedDuration;
-        this.actualDuration = actualDuration;
+        this.setActualDuration(actualDuration);
         this.tutor = tutor;
         this.startDate = startDate;
         this.progress = progress;
@@ -59,18 +59,21 @@ public class CourseListUI implements Serializable{
         this.courseStatus = courseStatus;
     }
 
-    public String getEstimatedDuration() {
+    public Integer getEstimatedDuration() {
         return estimatedDuration;
     }
-    public void setEstimatedDuration(String estimatedDuration) {
+    public void setEstimatedDuration(Integer estimatedDuration) {
         this.estimatedDuration = estimatedDuration;
     }
 
-    public String getActualDuration() {
+    public Integer getActualDuration() {
         return actualDuration;
     }
-    public void setActualDuration(String actualDuration) {
-        this.actualDuration = actualDuration;
+    public void setActualDuration(Integer actualDuration) {
+        if(actualDuration == null)
+            this.actualDuration = 0;
+        else
+            this.actualDuration = actualDuration;
     }
 
     public String getTutor() {

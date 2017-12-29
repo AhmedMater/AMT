@@ -5,4 +5,9 @@
 export class CourseLevel{
     level: string;
     description: string;
+
+    constructor(level: string, description: string){
+        this.level = level;
+        this.description = description;
+    }
 }

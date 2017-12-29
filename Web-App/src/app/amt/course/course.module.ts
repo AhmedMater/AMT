@@ -16,12 +16,15 @@ import {CourseDetailComponent} from "./details/course-details.component";
 import {CommonModule} from "@angular/common";
 import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import {NgxPaginationModule} from "ngx-pagination";
+import {SortableTableDirective} from "../util/components.sorting/sortable-table";
+import {SortableColumnComponent} from "../util/components.sorting/sortable-column.component";
 
 @NgModule({
     imports: [CourseRoutingModule, CommonModule, NgxPaginationModule,
         ToastModule.forRoot(), ReactiveFormsModule, HttpModule
     ],
-    declarations: [NewCourseComponent, CourseListComponent, CourseDetailComponent]
+    declarations: [NewCourseComponent, CourseListComponent, CourseDetailComponent, SortableColumnComponent,
+        SortableTableDirective]
     // providers: [{provide: HTTP_INTERCEPTORS, useClass: RESTInterceptor, multi: true}]
 })
 export class CourseModule { }

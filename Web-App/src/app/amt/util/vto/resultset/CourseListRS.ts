@@ -3,13 +3,9 @@
  */
 
 import {CourseListUI} from "../ui/CourseListUI";
-import {PaginationInfo} from "../PaginationInfo";
+import {PaginationInfo} from "../common/PaginationInfo";
 
 export class CourseListRS{
     data: CourseListUI[];
     pagination: PaginationInfo;
-
-    constructor(){
-        this.pagination = new PaginationInfo();
-    }
 }

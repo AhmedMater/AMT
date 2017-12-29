@@ -23,7 +23,7 @@ export class RESTInterceptor implements HttpInterceptor{
         if (!req.headers.has('Content-Type'))
             req = req.clone({ headers: req.headers.set('Content-Type', 'application/json;charset=utf-8') });
 
-        console.log(req);
+        // console.log(req);
 
         return next.handle(req);
     }

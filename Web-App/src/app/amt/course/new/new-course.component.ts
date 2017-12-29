@@ -15,7 +15,7 @@ import {CourseType} from "../../util/dto/lookup/CourseType";
 import {CourseData} from "../../util/vto/course/CourseData";
 import {CourseReferences} from "./tables/CourseReferences";
 import {CoursePreRequisites} from "./tables/CoursePreRequisites";
-import {NewCourseLookup} from "../../util/vto/course/NewCourseLookup";
+import {NewCourseLookup} from "../../util/vto/lookup/NewCourseLookup";
 import {FullRoutes} from "../../util/constants/FullRoutes";
 import {AMError} from "../../util/vto/error/AMError";
 

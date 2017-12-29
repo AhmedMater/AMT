@@ -1,60 +1,127 @@
 <div class="animated fadeIn">
-  <div class="row">
 
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+        <form novalidate [formGroup]="courseListForm" (ngSubmit)="search()">
+          <div class="card-header">
+            <i class="fa fa-filter"></i> Filters
+          </div>
+          <div class="card-body">
+
+            <div class="row">
+              <div class="col-sm-3">
+                <div class="form-group">
+                  <label for="name">Course Name</label>
+                  <input type="text" class="form-control" id="name" placeholder="Enter Course name"
+                         formControlName="courseName">
+                </div>
+              </div>
+
+              <div class="col-sm-3">
+                <div class="form-group">
+                  <label for="courseType">Course Type</label>
+                  <select id="courseType" name="courseType" class="form-control"
+                          formControlName="courseType">
+                    <option *ngFor="let type of courseTypes" value="{{type.type}}">{{type.description}}</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="col-sm-3">
+                <div class="form-group">
+                  <label for="courseLevel">Course Level</label>
+                  <select id="courseLevel" name="courseLevel" class="form-control"
+                          formControlName="courseLevel">
+                    <option *ngFor="let level of courseLevels" value="{{level.level}}">{{level.description}}</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card-footer">
+            <button type="submit" class="btn btn-sm btn-primary"><i class="fa fa-dot-circle-o"></i> Search</button>
+            <button type="button" class="btn btn-sm btn-danger" (click)="clear()"><i class="fa fa-ban"></i> Clear</button>
+          </div>
+        </form>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="row" *ngIf="formInvalid">
+    <div class="col-sm-12">
+      <div class="card">
+        <div class="card-header">
+          <strong>{{amError.validation.formName}} Form Errors</strong>
+        </div>
+        <div class="card-body">
+          <h6><strong>{{amError.validation.mainError}}</strong></h6>
+          <ul *ngFor="let item of amError.validation.formErrors">
+            <li>{{item}}</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
     <div class="col-lg-12">
       <div class="card">
         <div class="card-header">
           <i class="fa fa-align-justify"></i> Course List
         </div>
         <div class="card-body">
-          <table class="table table-striped">
+          <table sortable-table (sorted)="doSort($event)" class="table table-striped">
             <thead>
-            <tr>
-              <th>Course Name</th>
-              <th>Level</th>
-              <th>Status</th>
-              <th>Est. Duration</th>
-              <th>Act. Duration</th>
-              <th>Tutor</th>
-              <th>Start Date</th>
-              <th>Progress</th>
-            </tr>
+              <tr>
+                <th sortable-column="courseName" sort-direction="desc">Course Name</th>
+                <th>Level</th>
+                <th>Status</th>
+                <th>Estimated</th>
+                <th>Actual</th>
+                <th>Tutor</th>
+                <th>St. Date</th>
+                <th>Progress</th>
+              </tr>
             </thead>
             <tbody>
-            <tr *ngFor="let item of courseList.data | paginate: {
-                                                        id: 'foo',
-                                                        itemsPerPage: 10,
-                                                        currentPage: p,
-                                                        totalItems: 200
-                                                         }">
-              <td>Java SE</td>
-              <td>Beginner</td>
-              <td>
-                <span class="badge badge-success">In Progress</span>
-              </td>
-              <td>30 Hr</td>
-              <td>12 Hr</td>
-              <td>Ahmed Mater</td>
-              <td>12 Jan 2017</td>
-              <td>42 %</td>
-            </tr>
+              <tr *ngFor="let item of courseList.data |
+                    paginate: {
+                        id: 'foo',
+                        itemsPerPage: paging.pageSize,
+                        currentPage: paging.pageNum,
+                        totalItems: paging.total
+                    }">
+                <td><a [routerLink]="[COURSE_DETAILS_URL, item.courseID]">{{item.courseName}}</a></td>
+                <td>
+                  <span class="font-sm badge badge-success" *ngIf="item.courseLevel == CLConstants.BEGINNER.level">{{CLConstants.BEGINNER.description}}</span>
+                  <span class="font-sm badge badge-warning" *ngIf="item.courseLevel == CLConstants.INTERMEDIATE.level">{{CLConstants.INTERMEDIATE.description}}</span>
+                  <span class="font-sm badge badge-danger" *ngIf="item.courseLevel == CLConstants.ADVANCED.level">{{CLConstants.ADVANCED.description}}</span>
+                </td>
+                <td>
+                  <span class="font-sm badge badge-success" *ngIf="item.courseStatus == CSConstants.DONE.status">{{CSConstants.DONE.description}}</span>
+                  <span class="font-sm badge badge-warning" *ngIf="item.courseStatus == CSConstants.FUTURE.status">{{CSConstants.FUTURE.description}}</span>
+                  <span class="font-sm badge badge-danger" *ngIf="item.courseStatus == CSConstants.IN_PROGRESS.status">{{CSConstants.IN_PROGRESS.description}}</span>
+                </td>
+                <td>{{item.estimatedDuration}} Hr</td>
+                <td>{{item.actualDuration}} Hr</td>
+                <td>{{item.tutor}}</td>
+                <td>
+                  {{item.startDate == null ? 'N/A' : item.startDate | date: 'dd/MM/yyyy'}}
+                </td>
+                <td>{{item.progress}} %</td>
+              </tr>
             </tbody>
             <tfoot>
-            <tr>
-              <pagination-controls id="foo" (pageChange)="p = $event"></pagination-controls>
-            </tr>
+              <tr>
+                <td colspan="8">
+                  <pagination-controls id="foo" (pageChange)="doPaging($event)"></pagination-controls>
+                </td>
+              </tr>
             </tfoot>
           </table>
-          <!--<ul class="pagination">-->
-            <!--<li class="page-item"><a class="page-link" href="#">Prev</a></li>-->
-            <!--<li class="page-item active">-->
-              <!--<a class="page-link" href="#">1</a>-->
-            <!--</li>-->
-            <!--<li class="page-item"><a class="page-link" href="#">2</a></li>-->
-            <!--<li class="page-item"><a class="page-link" href="#">3</a></li>-->
-            <!--<li class="page-item"><a class="page-link" href="#">4</a></li>-->
-            <!--<li class="page-item"><a class="page-link" href="#">Next</a></li>-->
-          <!--</ul>-->
         </div>
       </div>
     </div>
