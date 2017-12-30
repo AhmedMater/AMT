@@ -7,8 +7,8 @@ import am.infrastructure.data.hibernate.model.user.Users;
 import am.main.api.AMSecurityManager;
 import am.main.api.ErrorHandler;
 import am.main.api.InfoHandler;
-import am.main.common.validation.FormValidation;
-import am.main.common.validation.RegExp;
+import am.main.api.validation.FormValidation;
+import am.main.common.RegExp;
 import am.main.session.AppSession;
 import am.shared.session.Phase;
 import amt.common.DeploymentManger;
@@ -36,7 +36,7 @@ import java.util.Date;
 import static am.main.data.enums.Interface.ARQUILLIAN;
 import static am.main.data.enums.Source.INTEGRATION_TEST;
 import static amt.common.constants.Error.TEST_CASE;
-import static amt.common.constants.Error.USER.*;
+import static amt.common.constants.Error.USER.REGISTER_VALIDATION_ERROR;
 import static amt.common.constants.Rest.USER;
 
 /**

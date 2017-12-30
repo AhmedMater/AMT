@@ -22,6 +22,7 @@ public class Error {
         public static final String MIN_VALUE        = "AMT-0011: Value: ''{0}'' is invalid for Field: ''{1}'', as It allows min value ''{2}''";
         public static final String FUTURE_DATE      = "AMT-0012: Value: ''{0}'' is invalid for Field: ''{1}'', as It allows only Future Date";
         public static final String POSITIVE_NUM     = "AMT-0013: Value: ''{0}'' is invalid for Field: ''{1}'', as It allows only positive numbers";
+        public static final String POSITIVE_NUM_AND_ZERO = "AMT-0023: Value: ''{0}'' is invalid for Field: ''{1}'', as It allows only positive numbers and zero";
     }
 
     public static class USER {
@@ -39,47 +40,11 @@ public class Error {
         public static final String WRONG_PASSWORD = "AMT-0014: Wrong Password, Please try again";
         public static final String WRONG_PASSWORD_GT_MAX_TRAILS = "AMT-0015: Wrong Password, You have tried {0} trails, Your Account will be deactivated for {1} Min";
         public static final String WRONG_PASSWORD_LT_LOGIN_DEACTIVATION_DURATION = "AMT-0016: This User is deactivated, you have to wait {0} more Minutes and try login again";
-
-//        public static final String REQUIRED_USERNAME = "AM-VALID-001: Field 'Username' is mandatory";
-//        public static final String LENGTH_USERNAME = "AM-VALID-002: Length of Field 'Username' has to be within 5 to 50 char";
-//        public static final String INVALID_USERNAME = "AM-VALID-003: Invalid Field 'Username' as It allows only chars, numbers, period, hyphen, and Underscore";
-//        public static final String EMPTY_STR_USERNAME = "AM-VALID-004: Field 'Username' can't be empty";
-//
-//        public static final String REQUIRED_PASSWORD = "AM-VALID-001: Field 'Password' is mandatory";
-//        public static final String LENGTH_PASSWORD = "AM-VALID-002: Length of Field 'Password' has to be within 5 to 30 char";
-//        public static final String INVALID_PASSWORD = "AM-VALID-003: Invalid Field 'Password' as It allows only chars, numbers, period, hyphen, Ampersand, and Underscore";
-//        public static final String EMPTY_STR_PASSWORD = "AM-VALID-004: Field 'Password' can't be empty";
-//
-//        public static final String REQUIRED_EMAIL = "AM-VALID-001: Field 'Email' is mandatory";
-//        public static final String LENGTH_EMAIL = "AM-VALID-002: Length of Field 'Email' has to be within 10 to 100 char";
-//        public static final String INVALID_EMAIL = "AM-VALID-003: Invalid Field 'Email'";
-//        public static final String EMPTY_STR_EMAIL = "AM-VALID-004: Field 'Email' can't be empty";
-//
-//        public static final String REQUIRED_FIRST_NAME = "AM-VALID-001: Field 'First Name' is mandatory";
-//        public static final String LENGTH_FIRST_NAME = "AM-VALID-002: Length of Field 'First Name' has to be within 1 to 15 char";
-//        public static final String INVALID_FIRST_NAME = "AM-VALID-003: Invalid Field 'First Name' as It allows only chars, hyphen, comma, period, and Apostrophe";
-//        public static final String EMPTY_STR_FIRST_NAME = "AM-VALID-004: Field 'First Name' can't be empty";
-//
-//        public static final String REQUIRED_LAST_NAME = "AM-VALID-001: Field 'Last Name' is mandatory";
-//        public static final String LENGTH_LAST_NAME = "AM-VALID-002: Length of Field 'Last Name' has to be within 1 to 15 char";
-//        public static final String INVALID_LAST_NAME = "AM-VALID-003: Invalid Field 'Last Name' as It allows only chars, hyphen, comma, period, and Apostrophe";
-//        public static final String EMPTY_STR_LAST_NAME = "AM-VALID-004: Field 'Last Name' can't be empty";
-//
-//        public static final String REQUIRED_OWNER_ID = "AM-VALID-001: Field 'Owner UserID' is mandatory";
-//        public static final String INVALID_OWNER_ID = "AM-VALID-003: Invalid Field 'Owner UserID' as It allows only positive numbers";
-//
-//        public static final String REQUIRED_VIEWER_ID = "AM-VALID-001: Field 'Viewer UserID' is mandatory";
-//        public static final String INVALID_VIEWER_ID = "AM-VALID-003: Invalid Field 'Viewer UserID' as It allows only positive numbers";
-
-//        public static final String REQUIRED_ROLE = "AM-VALID-001: Field 'User Role' is mandatory";
-//        public static final String LENGTH_ROLE = "AM-VALID-007: Length of Field 'User Role' has to be of 2 char";
-//        public static final String EMPTY_STR_ROLE = "AM-VALID-004: Field 'User Role' can't be empty";
-
-
     }
 
     public static class COURSE {
         public static final String NEW_COURSE_VAL = "AMT-0001: New Course Form validation failed";
+        public static final String COURSE_LIST_VAL = "AMT-0001: Course List Filters Form validation failed";
 
         public static final String REQUIRED_COURSE_NAME = "AM-VALID-001: Field 'Course Name' is mandatory";
         public static final String LENGTH_COURSE_NAME = "AM-VALID-002: Length of Field 'Course Name' has to be within 5 to 100 char";

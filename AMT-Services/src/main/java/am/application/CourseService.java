@@ -15,7 +15,7 @@ import am.main.api.AMSecurityManager;
 import am.main.api.AppConfigManager;
 import am.main.api.AppLogger;
 import am.main.api.db.DBManager;
-import am.main.common.validation.FormValidation;
+import am.main.api.validation.FormValidation;
 import am.main.data.dto.ListResultSet;
 import am.main.session.AppSession;
 import am.repository.CourseRepository;

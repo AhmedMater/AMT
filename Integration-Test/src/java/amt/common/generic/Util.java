@@ -2,7 +2,7 @@ package amt.common.generic;
 
 
 import am.infrastructure.data.dto.user.LoginData;
-import am.main.common.validation.FormValidation;
+import am.main.api.validation.FormValidation;
 import am.main.exception.AMError;
 import org.junit.Assert;
 import org.unitils.thirdparty.org.apache.commons.io.IOUtils;

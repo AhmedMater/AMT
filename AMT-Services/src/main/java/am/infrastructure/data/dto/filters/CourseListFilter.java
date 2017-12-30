@@ -1,12 +1,15 @@
 package am.infrastructure.data.dto.filters;
 
 import am.infrastructure.data.hibernate.model.course.Course;
-import am.main.common.validation.RegExp;
-import am.main.common.validation.groups.*;
+import am.main.api.validation.custom.annotation.NullAndNotBlank;
+import am.main.api.validation.groups.*;
+import am.main.common.RegExp;
 import am.main.data.dto.SortingInfo;
 import org.hibernate.validator.constraints.Length;
 
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.PositiveOrZero;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.HashMap;
@@ -22,30 +25,27 @@ public class CourseListFilter implements Serializable {
                 put("courseLevel", "Course Level");
                 put("courseType", "Course Type");
                 put("pageNum", "Page Number");
+                put("sorting", "Sorting Info");
             }}
     );
 
-    @NotNull(message = FormValidation.REQUIRED, groups = RequiredValidation.class)
-    @Length(min = 5, max = 100, message = FormValidation.MIN_MAX_LENGTH, groups = LengthValidation.class)
+    @NullAndNotBlank(message = FormValidation.EMPTY_STR, groups = BlankValidation.class)
+    @Length(max = 100, message = FormValidation.MAX_LENGTH, groups = LengthValidation.class)
     @Pattern(regexp = RegExp.CONTENT_NAME, message = FormValidation.REGEX, groups = InvalidValidation.class)
-    @NotEmpty(message = FormValidation.EMPTY_STR, groups = BlankValidation.class)
     private String courseName;
 
-    @NotNull(message = FormValidation.REQUIRED, groups = RequiredValidation.class)
-    @Length(min = 2, max = 2, message = FormValidation.MIN_MAX_LENGTH, groups = LengthValidation.class)
+    @NullAndNotBlank(message = FormValidation.EMPTY_STR, groups = BlankValidation.class)
+    @Length(min = 2, max = 2, message = FormValidation.EQ_LENGTH, groups = LengthValidation.class)
     @Pattern(regexp = RegExp.LOOKUP, message = FormValidation.REGEX, groups = InvalidValidation.class)
-    @NotEmpty(message = FormValidation.EMPTY_STR, groups = BlankValidation.class)
     private String courseLevel;
 
-    @NotNull(message = FormValidation.REQUIRED, groups = RequiredValidation.class)
-    @Length(min = 2, max = 2, message = FormValidation.MIN_MAX_LENGTH, groups = LengthValidation.class)
+    @NullAndNotBlank(message = FormValidation.EMPTY_STR, groups = BlankValidation.class)
+    @Length(min = 2, max = 2, message = FormValidation.EQ_LENGTH, groups = LengthValidation.class)
     @Pattern(regexp = RegExp.LOOKUP, message = FormValidation.REGEX, groups = InvalidValidation.class)
-    @NotEmpty(message = FormValidation.EMPTY_STR, groups = BlankValidation.class)
     private String courseType;
 
     @NotNull(message = FormValidation.REQUIRED, groups = RequiredValidation.class)
-    @Positive(message = FormValidation.POSITIVE_NUM, groups = InvalidValidation.class)
-    @Min(value = 0, message = FormValidation.MIN_VALUE, groups = InvalidValidation.class)
+    @PositiveOrZero(message = FormValidation.POSITIVE_NUM_AND_ZERO, groups = InvalidValidation.class)
     private Integer pageNum;
 
     private SortingInfo sorting;
@@ -91,6 +91,7 @@ public class CourseListFilter implements Serializable {
     public static Map<String, String> getFIELDS() {
         return FIELDS;
     }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

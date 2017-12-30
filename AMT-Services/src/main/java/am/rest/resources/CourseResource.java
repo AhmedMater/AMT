@@ -12,12 +12,16 @@ import am.infrastructure.data.view.ui.CourseListUI;
 import am.main.api.AppLogger;
 import am.main.api.ErrorHandler;
 import am.main.api.InfoHandler;
+import am.main.api.validation.FormValidation;
 import am.main.data.dto.ListResultSet;
+import am.main.data.dto.SortingInfo;
 import am.main.data.enums.Interface;
 import am.main.data.enums.Source;
 import am.main.session.AppSession;
 import am.rest.annotations.Authorized;
 import am.shared.enums.EC;
+import am.shared.enums.Forms;
+import am.shared.enums.IC;
 import am.shared.session.Phase;
 
 import javax.inject.Inject;
@@ -80,11 +84,13 @@ public class CourseResource {
         AppSession session = new AppSession(Source.APP_SERVICES, Interface.REST, Phase.COURSE_VIEW,
                 httpSession.getId(), CLASS, FN_NAME, errorHandler, infoHandler, httpServletRequest.getRemoteAddr());
         try {
+            // Validating the Form Data
+            new FormValidation<CourseListFilter>(session, courseListFilters, EC.AMT_0001, Forms.COURSE_LIST_FILTERS);
+            new FormValidation<SortingInfo>(session, courseListFilters.getSorting(), EC.AMT_0001, Forms.COURSE_LIST_FILTERS);
+            logger.info(session, IC.AMT_0001, Forms.COURSE_LIST_FILTERS);
+
             Users loggedInUser = (Users) crc.getProperty(AUTH_USER);
             ListResultSet<CourseListUI> resultSet = courseService.getCourseList(session, courseListFilters, loggedInUser);
-//            GenericEntity<ListResultSet<CourseListUI>> genericEntity =
-//                    new GenericEntity<ListResultSet<CourseListUI>>(resultSet) {
-//            };//needs empty body to preserve generic type
             return Response.ok().entity(new CourseListRS(resultSet)).build();
         }catch (Exception ex){
             throw businessException(logger, session, ex, EC.AMT_0018);

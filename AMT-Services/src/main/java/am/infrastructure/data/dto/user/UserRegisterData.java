@@ -1,7 +1,7 @@
 package am.infrastructure.data.dto.user;
 
-import am.main.common.validation.RegExp;
-import am.main.common.validation.groups.*;
+import am.main.api.validation.groups.*;
+import am.main.common.RegExp;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotEmpty;

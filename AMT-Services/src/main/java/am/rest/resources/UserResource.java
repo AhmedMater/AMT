@@ -11,7 +11,7 @@ import am.infrastructure.data.view.UserProfileData;
 import am.main.api.AppLogger;
 import am.main.api.ErrorHandler;
 import am.main.api.InfoHandler;
-import am.main.common.validation.FormValidation;
+import am.main.api.validation.FormValidation;
 import am.main.data.enums.Interface;
 import am.main.data.enums.Source;
 import am.main.session.AppSession;

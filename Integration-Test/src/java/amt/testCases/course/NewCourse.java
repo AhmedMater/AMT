@@ -18,7 +18,7 @@ import am.main.api.AppConfigManager;
 import am.main.api.ErrorHandler;
 import am.main.api.InfoHandler;
 import am.main.api.db.DBManager;
-import am.main.common.validation.FormValidation;
+import am.main.api.validation.FormValidation;
 import am.main.session.AppSession;
 import am.shared.session.Phase;
 import amt.common.DeploymentManger;
