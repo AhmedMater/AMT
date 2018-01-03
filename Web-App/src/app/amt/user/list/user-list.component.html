@@ -1,1 +1,123 @@
-This Users List
+<div class="animated fadeIn">
+
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+        <form novalidate [formGroup]="userListForm" (ngSubmit)="search()">
+          <div class="card-header">
+            <i class="fa fa-filter"></i> Filters
+          </div>
+          <div class="card-body">
+
+            <div class="row">
+              <div class="col-sm-3">
+                <div class="form-group">
+                  <label for="name">Real Name</label>
+                  <input type="text" class="form-control" id="name" placeholder="Enter Real name"
+                         formControlName="realName">
+                </div>
+              </div>
+
+              <div class="col-sm-3">
+                <div class="form-group">
+                  <label for="role">Role</label>
+                  <select id="role" name="role" class="form-control"
+                          formControlName="role">
+                    <option *ngFor="let item of roles" value="{{item.role}}">{{item.description}}</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="col-sm-3">
+                <div class="form-group">
+                  <label for="creationDateFrom">Creation Date From</label>
+                  <my-date-picker id="creationDateFrom" [options]="DATE_PICKER_OPTIONS"
+                                  formControlName="creationDateFrom"></my-date-picker>
+                </div>
+              </div>
+
+              <div class="col-sm-3">
+                <div class="form-group">
+                  <label for="creationDateTo">Creation Date To</label>
+                  <my-date-picker id="creationDateTo" [options]="DATE_PICKER_OPTIONS"
+                                  formControlName="creationDateTo"></my-date-picker>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card-footer">
+            <button type="submit" class="btn btn-sm btn-primary"><i class="fa fa-dot-circle-o"></i> Search</button>
+            <button type="button" class="btn btn-sm btn-danger" (click)="clear()"><i class="fa fa-ban"></i> Clear</button>
+          </div>
+        </form>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="row" *ngIf="formInvalid">
+    <div class="col-sm-12">
+      <div class="card">
+        <div class="card-header">
+          <strong>{{amError.validation.formName}} Form Errors</strong>
+        </div>
+        <div class="card-body">
+          <h6><strong>{{amError.validation.mainError}}</strong></h6>
+          <ul *ngFor="let item of amError.validation.formErrors">
+            <li>{{item}}</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-header">
+          <i class="fa fa-align-justify"></i> Course List
+        </div>
+        <div class="card-body">
+          <table sortable-table (sorted)="doSort($event)" class="table table-striped">
+            <thead>
+            <tr>
+              <th sortable-column="userName" sort-direction="desc">Full Name</th>
+              <th>Role</th>
+              <!--<th>Last Login Date</th>-->
+              <th>Creation Date</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let item of userList.data |
+                    paginate: {
+                        id: 'foo',
+                        itemsPerPage: paging.pageSize,
+                        currentPage: paging.pageNum,
+                        totalItems: paging.total
+                    }">
+              <td>
+                <a [routerLink]="[FULL_ROUTES.USER_PROFILE_URL, item.userID]">{{item.realName}}</a>
+              </td>
+              <td>
+                <span class="font-sm badge badge-success" *ngIf="item.role == ROLES.ADMIN.role">{{ROLES.ADMIN.description}}</span>
+                <span class="font-sm badge badge-warning" *ngIf="item.role == ROLES.OWNER.role">{{ROLES.OWNER.description}}</span>
+                <span class="font-sm badge badge-primary" *ngIf="item.role == ROLES.STUDENT.role">{{ROLES.STUDENT.description}}</span>
+                <span class="font-sm badge badge-danger" *ngIf="item.role == ROLES.TUTOR.role">{{ROLES.TUTOR.description}}</span>
+              </td>
+              <td>{{item.creationDate | toDate | date: 'dd/MM/yyyy'}}</td>
+            </tr>
+            </tbody>
+            <tfoot>
+            <tr>
+              <td colspan="8">
+                <pagination-controls id="foo" (pageChange)="doPaging($event)"></pagination-controls>
+              </td>
+            </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

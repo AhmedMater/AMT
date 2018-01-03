@@ -1,4 +1,6 @@
 import {AMError} from "../vto/error/AMError";
+import {IMyDpOptions} from "mydatepicker";
+import {FormGroup} from "@angular/forms";
 /**
  * Created by ahmed.motair on 12/1/2017.
  */
@@ -19,5 +21,14 @@ export class ConfigUtils{
 
     static isNull(value){
         return (value == null || value == '');
+    }
+    static setDate(form: FormGroup): void {
+        form.patchValue({myDate: {
+            date: {
+                year: date.getFullYear(),
+                month: date.getMonth() + 1,
+                day: date.getDate()
+            }
+        }});
     }
 }

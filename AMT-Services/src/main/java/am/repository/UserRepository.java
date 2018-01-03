@@ -1,16 +1,28 @@
 package am.repository;
 
-import am.main.api.AppLogger;
-import am.main.api.db.DBManager;
-import am.main.data.enums.AME;
-import am.main.exception.DBException;
+import am.infrastructure.data.dto.filters.UserListFilter;
 import am.infrastructure.data.hibernate.model.user.UserIPDeActive;
 import am.infrastructure.data.hibernate.model.user.Users;
+import am.infrastructure.data.view.ui.UserListUI;
+import am.main.api.AppLogger;
+import am.main.api.db.DBManager;
+import am.main.api.db.HQLCondition;
+import am.main.api.db.QueryBuilder;
+import am.main.data.dto.ListResultSet;
+import am.main.data.enums.AME;
+import am.main.exception.DBException;
 import am.main.session.AppSession;
 
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.transaction.Transactional;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+
+import static am.infrastructure.generic.ConfigParam.MAX_PAGE_SIZE;
+import static am.main.data.enums.Operators.EQ;
+import static am.main.data.enums.Operators.LIKE;
 
 /**
  * Created by ahmed.motair on 9/23/2017.
@@ -111,4 +123,35 @@ public class UserRepository {
         return user;
     }
 
+    @Transactional
+    public ListResultSet<UserListUI> getAllUser(AppSession session, UserListFilter filters){
+        String FN_NAME = "getAllUser";
+        logger.startDebug(session, filters);
+
+        Date myDate = new Date();
+
+        String selectData = "SELECT new am.infrastructure.data.view.ui.UserListUI(userID, " +
+                "concat(firstName, concat(' ', lastName)), role.role, creationDate)";
+
+        String from = "FROM Users";
+
+        QueryBuilder<UserListUI> queryBuilder = new QueryBuilder<UserListUI>(UserListUI.class, logger, session);
+        queryBuilder.setDataSelect(selectData);
+        queryBuilder.setFrom(from);
+
+        String realNameAttribute = "concat(" + Users.FIRST_NAME + ", concat(' ', " + Users.LAST_NAME + "))";
+        queryBuilder.addCondition(new HQLCondition<String>(filters.getRealName(), realNameAttribute, LIKE));
+        queryBuilder.addCondition(new HQLCondition<String>(filters.getRole(), Users.ROLE, EQ));
+        queryBuilder.addCondition(new HQLCondition<Date>(filters.getCreationDateFrom(), filters.getCreationDateTo(), Users.CREATION_DATE));
+
+        queryBuilder.setSorting(filters.getSorting());
+        queryBuilder.setPagingInfo(filters.getPageNum(), MAX_PAGE_SIZE);
+
+        EntityManager em = dbManager.getUnCachedEM();
+        queryBuilder.executeQuery(em);
+
+        ListResultSet<UserListUI> resultSet = queryBuilder.getResultSet();
+        logger.endDebug(session, resultSet);
+        return resultSet;
+    }
 }

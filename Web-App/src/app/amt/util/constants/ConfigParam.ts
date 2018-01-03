@@ -1,3 +1,4 @@
+import {IMyDpOptions} from "mydatepicker";
 /**
  * Created by ahmed.motair on 10/25/2017.
  */
@@ -8,4 +9,10 @@ export class ConfigParam{
 
     static IS_LOGIN: boolean = false;
     static LOGGED_IN_USER: string;
+
+
+
+    public static DATE_PICKER_OPTIONS: IMyDpOptions = {
+        dateFormat: 'dd mmm yyyy',
+    };
 }

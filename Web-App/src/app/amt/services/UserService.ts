@@ -10,6 +10,10 @@ import {Response} from "@angular/http";
 import {Observable} from "rxjs";
 import {ConfigParam} from "../util/constants/ConfigParam";
 import {UserProfileData} from "../util/vto/user/UserProfileData";
+import {UserListRS} from "../util/vto/resultSet/UserListRS";
+import {UserListFilter} from "../util/dto/filters/UserListFilter";
+import {UserListLookup} from "../util/vto/lookup/UserListLookup";
+import DateTimeFormat = Intl.DateTimeFormat;
 
 @Injectable()
 export class UserService{
@@ -20,8 +24,10 @@ export class UserService{
     private USER_PROFILE_PATH: string = this.USER_BASE_URL + "/profile/";
     private CHANGE_ROLE_PATH: string = this.USER_BASE_URL + "/profile/changeRole/";
 
+    private USER_LIST_URL: string = this.USER_BASE_URL + "/list";
+    private USER_LIST_LOOKUPS_URL: string = this.USER_LIST_URL + "/lookups";
 
-    observer:Observable<Response>;
+    // observer:Observable<Response>;
 
     constructor(private http: HttpClient){}
 
@@ -39,5 +45,23 @@ export class UserService{
 
     changeUserRole(userID: number, newRole: string){
         return this.http.post<Response>(this.CHANGE_ROLE_PATH + userID, newRole);
+    }
+
+    getUserList(filters: UserListFilter){
+        return this.http.post<UserListRS>(this.USER_LIST_URL, filters);//.map(this.extractData);
+    }
+
+    getUserListLookup(){
+        return this.http.get<UserListLookup>(this.USER_LIST_LOOKUPS_URL);
+    }
+
+    private extractData(res){
+        console.log(res);
+        var data = res.data || [];
+        data.forEach((d) => {
+            d.creationDate = new Date(d.creationDate);
+        });
+        res.data = data;
+        return res;
     }
 }

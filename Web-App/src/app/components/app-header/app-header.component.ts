@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {ConfigParam} from "../../amt/util/constants/ConfigParam";
 import {AuthenticationService} from "../../amt/services/AuthenticationService";
 import {FullRoutes} from "../../amt/util/constants/FullRoutes";
-import {Lookups} from "../../amt/util/constants/Lookups";
+import {Roles} from "../../amt/util/constants/lookups/Roles";
 
 @Component({
   selector: 'app-header',
@@ -17,15 +17,10 @@ export class AppHeader implements OnInit{
 
     //Roles
     isAdmin: boolean;
+    isOwner: boolean;
     isTutor: boolean;
 
-    HOME_URL: string = FullRoutes.HOME_URL;
-    LOGIN_URL: string = FullRoutes.LOGIN_URL;
-    REGISTER_URL: string = FullRoutes.REGISTER_URL;
-    USER_PROFILE_URL: string = FullRoutes.USER_PROFILE_URL;
-
-    NEW_COURSE_URL: string = FullRoutes.NEW_COURSE_URL;
-    COURSE_LIST_URL: string = FullRoutes.COURSE_LIST_URL;
+    FULL_ROUTES = FullRoutes;
 
   // public disabled = false;
   // public status: {isopen: boolean} = {isopen: false};
@@ -51,8 +46,9 @@ export class AppHeader implements OnInit{
           this.userID = this.authService.getUserID();
 
           let role: string = this.authService.getUserRole();
-          this.isAdmin = role == Lookups.ADMIN_ROLE;
-          this.isTutor = role == Lookups.TUTOR_ROLE;
+          this.isAdmin = role == Roles.ADMIN.role;
+          this.isOwner = role == Roles.OWNER.role;
+          this.isTutor = role == Roles.TUTOR.role;
       }
   }
 

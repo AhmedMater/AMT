@@ -79,7 +79,6 @@ public class CourseRepository {
         return result;
     }
 
-//    @Transactional
     public ListResultSet<CourseListUI> getAllCourses(AppSession session, CourseListFilter filters){
         String FN_NAME = "getAllCourses";
         logger.startDebug(session, filters);
@@ -89,7 +88,7 @@ public class CourseRepository {
             "concat(createdBy.firstName, concat(' ', createdBy.lastName)), startDate, progress) ";
         String from = "FROM Course";
 
-        QueryBuilder<CourseListUI> queryBuilder = new QueryBuilder<CourseListUI>(CourseListUI.class);
+        QueryBuilder<CourseListUI> queryBuilder = new QueryBuilder<CourseListUI>(CourseListUI.class, logger, session);
         queryBuilder.setDataSelect(selectData);
         queryBuilder.setFrom(from);
 

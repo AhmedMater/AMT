@@ -5,7 +5,7 @@ import am.infrastructure.data.dto.course.CourseData;
 import am.infrastructure.data.dto.filters.CourseListFilter;
 import am.infrastructure.data.enums.Roles;
 import am.infrastructure.data.hibernate.model.user.Users;
-import am.infrastructure.data.view.lookup.list.CourseListFilters;
+import am.infrastructure.data.view.lookup.list.CourseListLookup;
 import am.infrastructure.data.view.lookup.list.NewCourseLookup;
 import am.infrastructure.data.view.resultset.CourseListRS;
 import am.infrastructure.data.view.ui.CourseListUI;
@@ -97,17 +97,17 @@ public class CourseResource {
         }
     }
 
-    @Path("/list/filters")
+    @Path("/list/lookups")
     @GET
     @Authorized()
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getCourseListFilters(@Context ContainerRequestContext crc) {
-        String FN_NAME = "getCourseListFilters";
+    public Response getCourseListLookup(@Context ContainerRequestContext crc) {
+        String FN_NAME = "getCourseListLookup";
         AppSession session = new AppSession(Source.APP_SERVICES, Interface.REST, Phase.COURSE_VIEW,
                 httpSession.getId(), CLASS, FN_NAME, errorHandler, infoHandler, httpServletRequest.getRemoteAddr());
         try {
-            CourseListFilters result = courseService.getCourseListFilters(session);
+            CourseListLookup result = courseService.getCourseListLookup(session);
             return Response.ok().entity(result).build();
         }catch (Exception ex){
             throw businessException(logger, session, ex, EC.AMT_0018);

@@ -3,36 +3,43 @@
     <ul class="nav">
 
       <li class="nav-item">
-        <a class="nav-link" routerLinkActive="active" [routerLink]="HOME_URL"><i class="icon-home"></i> Home <span class="badge badge-info">NEW</span></a>
+        <a class="nav-link" routerLinkActive="active" [routerLink]="FULL_ROUTES.HOME_URL">
+          <i class="icon-home"></i> Home <span class="badge badge-info">NEW</span>
+        </a>
       </li>
       <li class="divider"></li>
-      <!--<li class="nav-title" *ngIf="isAdmin">-->
-        <!--Administration-->
-      <!--</li>-->
-      <li class="nav-item nav-dropdown" routerLinkActive="open" appNavDropdown *ngIf="isAdmin">
+      <li class="nav-title" *ngIf="isAdmin || isOwner">
+        Administration
+      </li>
+      <li class="nav-item nav-dropdown" routerLinkActive="open" appNavDropdown *ngIf="isAdmin || isOwner">
+        <a class="nav-link nav-dropdown-toggle" href="#" appNavDropdownToggle>
+          <i class="icon-people"></i> Users
+        </a>
         <ul class="nav-dropdown-items">
-          <li class="nav-item" *ngIf="isAdmin">
-            <a class="nav-link" routerLinkActive="active" [routerLink]="USER_LIST_URL">
-              <i class="icon-puzzle"></i> User List
+          <li class="nav-item">
+            <a class="nav-link" routerLinkActive="active" [routerLink]="FULL_ROUTES.USER_LIST_URL">
+              <i class="icon-list"></i> User List
             </a>
           </li>
         </ul>
       </li>
       <li class="divider"></li>
-      <!--<li class="nav-title">-->
-        <!--Courses-->
-      <!--</li>-->
+      <li class="nav-title">
+        Courses
+      </li>
       <li class="nav-item nav-dropdown" routerLinkActive="open" appNavDropdown>
-        <a class="nav-link nav-dropdown-toggle" href="#" appNavDropdownToggle><i class="icon-star"></i> Courses</a>
+        <a class="nav-link nav-dropdown-toggle" href="#" appNavDropdownToggle>
+          <i class="icon-book-open"></i> Courses
+        </a>
         <ul class="nav-dropdown-items">
           <li class="nav-item" *ngIf="isTutor">
-            <a class="nav-link" routerLinkActive="active" [routerLink]="NEW_COURSE_URL" >
+            <a class="nav-link" routerLinkActive="active" [routerLink]="FULL_ROUTES.NEW_COURSE_URL" >
               <i class="icon-puzzle"></i> New Course
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" routerLinkActive="active" [routerLink]="COURSE_LIST_URL">
-              <i class="icon-puzzle"></i> Course List
+            <a class="nav-link" routerLinkActive="active" [routerLink]="FULL_ROUTES.COURSE_LIST_URL">
+              <i class="icon-list"></i> Course List
             </a>
           </li>
         </ul>

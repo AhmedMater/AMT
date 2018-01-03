@@ -32,19 +32,19 @@ public class CourseRefData implements Serializable {
     @NotNull(message = FormValidation.REQUIRED, groups = RequiredValidation.class)
     @Length(min = 5, max = 100, message = FormValidation.MIN_MAX_LENGTH, groups = LengthValidation.class)
     @Pattern(regexp = RegExp.CONTENT_NAME, message = FormValidation.REGEX, groups = InvalidValidation.class)
-    @NotEmpty(message = FormValidation.EMPTY_STR, groups = BlankValidation.class)
+    @NotBlank(message = FormValidation.EMPTY_STR, groups = BlankValidation.class)
     private String name;
 
     @NotNull(message = FormValidation.REQUIRED, groups = RequiredValidation.class)
     @Length(min = 2, max = 2, message = FormValidation.MIN_MAX_LENGTH, groups = LengthValidation.class)
     @Pattern(regexp = RegExp.LOOKUP, message = FormValidation.REGEX, groups = InvalidValidation.class)
-    @NotEmpty(message = FormValidation.EMPTY_STR, groups = BlankValidation.class)
+    @NotBlank(message = FormValidation.EMPTY_STR, groups = BlankValidation.class)
     private String type;
 
     @NotNull(message = FormValidation.REQUIRED, groups = RequiredValidation.class)
     @Length(min = 5, max = 200, message = FormValidation.MIN_MAX_LENGTH, groups = LengthValidation.class)
     @Pattern(regexp = RegExp.URL, message = FormValidation.REGEX, groups = InvalidValidation.class)
-    @NotEmpty(message = FormValidation.EMPTY_STR, groups = BlankValidation.class)
+    @NotBlank(message = FormValidation.EMPTY_STR, groups = BlankValidation.class)
     private String url;
 
     public CourseRefData() {

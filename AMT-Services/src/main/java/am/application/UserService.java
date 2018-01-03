@@ -1,5 +1,6 @@
 package am.application;
 
+import am.infrastructure.data.dto.filters.UserListFilter;
 import am.infrastructure.data.dto.user.LoginData;
 import am.infrastructure.data.dto.user.UserRegisterData;
 import am.infrastructure.data.enums.Roles;
@@ -10,10 +11,13 @@ import am.infrastructure.data.hibernate.model.user.UserLoginLog;
 import am.infrastructure.data.hibernate.model.user.Users;
 import am.infrastructure.data.view.AuthenticatedUser;
 import am.infrastructure.data.view.UserProfileData;
+import am.infrastructure.data.view.lookup.list.UserListLookup;
+import am.infrastructure.data.view.ui.UserListUI;
 import am.main.api.AMSecurityManager;
 import am.main.api.AppConfigManager;
 import am.main.api.AppLogger;
 import am.main.api.db.DBManager;
+import am.main.data.dto.ListResultSet;
 import am.main.exception.BusinessException;
 import am.main.session.AppSession;
 import am.repository.CourseRepository;
@@ -26,6 +30,7 @@ import am.shared.enums.IC;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by ahmed.motair on 9/23/2017.
@@ -249,5 +254,32 @@ public class UserService {
 
         logger.endDebug(session, profileData);
         return profileData;
+    }
+
+    public UserListLookup getUserListLookup(AppSession appSession) throws Exception{
+        String FN_NAME = "getUserListLookup";
+        AppSession session = appSession.updateSession(CLASS, FN_NAME);
+        logger.startDebug(session);
+
+        UserListLookup result = new UserListLookup();
+
+        List<Role> roleList = dbManager.findAll(session, Role.class, true);
+        result.setRoles(roleList);
+
+        logger.endDebug(session, result);
+        return result;
+    }
+
+    @Transactional
+    public ListResultSet<UserListUI> getUserList(AppSession appSession, UserListFilter userListFilters, Users loggedInUser) {
+        String FN_NAME = "getUserList";
+        AppSession session = appSession.updateSession(CLASS, FN_NAME);
+        logger.startDebug(session, userListFilters, loggedInUser);
+
+        ListResultSet<UserListUI> resultSet = new ListResultSet<UserListUI>();
+        resultSet = userRepository.getAllUser(session, userListFilters);
+
+        logger.endDebug(session, resultSet);
+        return resultSet;
     }
 }

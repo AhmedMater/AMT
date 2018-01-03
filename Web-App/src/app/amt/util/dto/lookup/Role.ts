@@ -6,4 +6,9 @@ export class Role{
     role: string;
     description: string;
     admin: boolean;
+
+    constructor(role: string, description: string){
+        this.role = role;
+        this.description = description;
+    }
 }

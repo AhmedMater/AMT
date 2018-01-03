@@ -16,22 +16,22 @@ import {CourseLevel} from "../../util/dto/lookup/CourseLevel";
 import {AMError} from "../../util/vto/error/AMError";
 import {CourseListFilter} from "../../util/dto/filters/CourseListFilter";
 import {SortingInfo} from "../../util/dto/common/SortingInfo";
-import {CourseListFilters} from "../../util/vto/lookup/CourseListFilters";
+import {CourseListLookup} from "../../util/vto/lookup/CourseListLookup";
 import {SortService} from "../../util/components.sorting/SortService";
-import {CourseLevelConstants} from "../../util/constants/lookups/CourseLevelConstants";
-import {CourseStatusConstants} from "../../util/constants/lookups/CourseStatusConstants";
 import {FullRoutes} from "../../util/constants/FullRoutes";
 import {PaginationInfo} from "../../util/vto/common/PaginationInfo";
 import {isNull} from "util";
 import {ConfigUtils} from "../../util/generic/ConfigUtils";
 import {ListResultSet} from "../../util/vto/ListResultSet";
 import {CourseListUI} from "../../util/vto/ui/CourseListUI";
-import {CourseListRS} from "../../util/vto/CourseListRS";
+import {CourseListRS} from "../../util/vto/resultSet/CourseListRS";
+import {CourseLevels} from "../../util/constants/lookups/CourseLevels";
+import {CourseStatuses} from "../../util/constants/lookups/CourseStatuses";
 
 @Component({
     selector: 'course-list',
     templateUrl: 'course-list.component.html',
-    providers: [RESTClient, CourseService, FormBuilder, PaginationService,
+    providers: [CourseService, FormBuilder, PaginationService,
         {provide: SortService, useClass: SortService}],
 })
 export class CourseListComponent implements OnInit{
@@ -46,14 +46,14 @@ export class CourseListComponent implements OnInit{
     formInvalid: boolean;
 
     TOASTR_TITLE :string = "Course List";
-    COURSE_DETAILS_URL = FullRoutes.COURSE_DETAILS_URL;
-    CLConstants: CourseLevelConstants = CourseLevelConstants;
-    CSConstants: CourseStatusConstants = CourseStatusConstants;
+    FULL_ROUTES = FullRoutes;
+    COURSE_LEVELS = CourseLevels;
+    COURSE_STATUSES = CourseStatuses;
 
     paging: PaginationInfo = new PaginationInfo();
-    sorting: SortingInfo = new SortingInfo('courseName', 'Asc');
+    sorting: SortingInfo = new SortingInfo('courseName', 'asc');
     doPaging(pageNum): void {
-        this.paging.pageNum = pageNum - 1;
+        // this.paging.pageNum = pageNum - 1;
         this.search();
     }
 
@@ -75,12 +75,12 @@ export class CourseListComponent implements OnInit{
     }
 
     ngOnInit(): void {
-        this.courseService.getCourseListFilters().subscribe(
+        this.courseService.getCourseListLookup().subscribe(
             res => {
-                let lookups: CourseListFilters = res;
+                let lookups: CourseListLookup = res;
 
-                this.courseLevels = lookups.courseLevelList;
-                this.courseTypes = lookups.courseTypeList;
+                this.courseLevels = lookups.courseLevels;
+                this.courseTypes = lookups.courseTypes;
             },
             err => {
                 this.amError = err.error;

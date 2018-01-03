@@ -17,6 +17,7 @@ import java.io.Serializable;
 @Table(name = "role")
 public class Role implements Serializable{
     public static final String IS_ADMIN = "admin";
+    public static final String ROLE = "role";
 
     @Id
     @Column(name = "role")

@@ -1,6 +1,7 @@
 package am.rest.resources;
 
 import am.application.UserService;
+import am.infrastructure.data.dto.filters.UserListFilter;
 import am.infrastructure.data.dto.user.ChangeRoleData;
 import am.infrastructure.data.dto.user.LoginData;
 import am.infrastructure.data.dto.user.UserRegisterData;
@@ -8,10 +9,15 @@ import am.infrastructure.data.enums.Roles;
 import am.infrastructure.data.hibernate.model.user.Users;
 import am.infrastructure.data.view.AuthenticatedUser;
 import am.infrastructure.data.view.UserProfileData;
+import am.infrastructure.data.view.lookup.list.UserListLookup;
+import am.infrastructure.data.view.resultset.UserListRS;
+import am.infrastructure.data.view.ui.UserListUI;
 import am.main.api.AppLogger;
 import am.main.api.ErrorHandler;
 import am.main.api.InfoHandler;
 import am.main.api.validation.FormValidation;
+import am.main.data.dto.ListResultSet;
+import am.main.data.dto.SortingInfo;
 import am.main.data.enums.Interface;
 import am.main.data.enums.Source;
 import am.main.session.AppSession;
@@ -138,6 +144,46 @@ public class UserResource {
             return Response.ok().entity(userProfileData).build();
         }catch (Exception ex){
             throw businessException(logger, session, ex, EC.AMT_0024, ownerID);
+        }
+    }
+
+    @Path("/list")
+    @POST
+    @Authorized({Roles.ADMIN, Roles.OWNER})
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getUserList(UserListFilter userListFilters, @Context ContainerRequestContext crc) {
+        String FN_NAME = "getUserList";
+        AppSession session = new AppSession(Source.APP_SERVICES, Interface.REST, Phase.USER_VIEW,
+                httpSession.getId(), CLASS, FN_NAME, errorHandler, infoHandler, httpServletRequest.getRemoteAddr());
+        try {
+            // Validating the Form Data
+            new FormValidation<UserListFilter>(session, userListFilters, EC.AMT_0001, Forms.USER_LIST_FILTERS);
+            new FormValidation<SortingInfo>(session, userListFilters.getSorting(), EC.AMT_0001, Forms.USER_LIST_FILTERS);
+            logger.info(session, IC.AMT_0001, Forms.USER_LIST_FILTERS);
+
+            Users loggedInUser = (Users) crc.getProperty(AUTH_USER);
+            ListResultSet<UserListUI> resultSet = userService.getUserList(session, userListFilters, loggedInUser);
+            return Response.ok().entity(new UserListRS(resultSet)).build();
+        }catch (Exception ex){
+            throw businessException(logger, session, ex, EC.AMT_0018);
+        }
+    }
+
+    @Path("/list/lookups")
+    @GET
+    @Authorized({Roles.ADMIN, Roles.OWNER})
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getUserListLookup(@Context ContainerRequestContext crc) {
+        String FN_NAME = "getUserListLookup";
+        AppSession session = new AppSession(Source.APP_SERVICES, Interface.REST, Phase.USER_VIEW,
+                httpSession.getId(), CLASS, FN_NAME, errorHandler, infoHandler, httpServletRequest.getRemoteAddr());
+        try {
+            UserListLookup result = userService.getUserListLookup(session);
+            return Response.ok().entity(result).build();
+        }catch (Exception ex){
+            throw businessException(logger, session, ex, EC.AMT_0018);
         }
     }
 }

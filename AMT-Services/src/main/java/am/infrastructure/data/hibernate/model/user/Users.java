@@ -18,8 +18,12 @@ import java.util.Date;
 public class Users {
     public static final String USER_ID = "userID";
     public static final String USER_NAME = "username";
+    public static final String ROLE = "role." + Role.ROLE;
     public static final String EMAIL = "email";
     public static final String PASSWORD = "password";
+    public static final String CREATION_DATE = "creationDate";
+    public static final String FIRST_NAME = "firstName";
+    public static final String LAST_NAME = "lastName";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

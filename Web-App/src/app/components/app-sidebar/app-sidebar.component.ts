@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {FullRoutes} from "../../amt/util/constants/FullRoutes";
 import {AuthenticationService} from "../../amt/services/AuthenticationService";
-import {Lookups} from "../../amt/util/constants/Lookups";
+import {Roles} from "../../amt/util/constants/lookups/Roles";
 
 @Component({
   selector: 'app-sidebar',
@@ -15,12 +15,10 @@ export class AppSidebar implements OnInit{
 
     //Roles
     isAdmin: boolean;
+    isOwner: boolean;
     isTutor: boolean;
 
-    NEW_COURSE_URL: string = FullRoutes.NEW_COURSE_URL;
-    COURSE_LIST_URL: string = FullRoutes.COURSE_LIST_URL;
-    HOME_URL: string = FullRoutes.HOME_URL;
-    USER_LIST_URL: string = FullRoutes.USER_LIST_URL;
+    FULL_ROUTES = FullRoutes;
 
     constructor(private authService: AuthenticationService){
     }
@@ -32,8 +30,9 @@ export class AppSidebar implements OnInit{
             this.userID = this.authService.getUserID();
 
             let role: string = this.authService.getUserRole();
-            this.isAdmin = role == Lookups.ADMIN_ROLE;
-            this.isTutor = role == Lookups.TUTOR_ROLE;
+            this.isAdmin = role == Roles.ADMIN.role;
+            this.isOwner = role == Roles.OWNER.role;
+            this.isTutor = role == Roles.TUTOR.role;
         }
     }
 }

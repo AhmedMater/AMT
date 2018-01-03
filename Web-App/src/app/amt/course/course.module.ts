@@ -18,6 +18,7 @@ import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import {NgxPaginationModule} from "ngx-pagination";
 import {SortableTableDirective} from "../util/components.sorting/sortable-table";
 import {SortableColumnComponent} from "../util/components.sorting/sortable-column.component";
+import {StringToDate} from "../util/pipe/StringToDate";
 
 @NgModule({
     imports: [CourseRoutingModule, CommonModule, NgxPaginationModule,

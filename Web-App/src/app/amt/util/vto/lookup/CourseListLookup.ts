@@ -6,7 +6,7 @@ import {CourseLevel} from "../../dto/lookup/CourseLevel";
 import {CourseType} from "../../dto/lookup/CourseType";
 
 
-export class CourseListFilters{
-    courseTypeList: CourseType[];
-    courseLevelList: CourseLevel[];
+export class CourseListLookup{
+    courseTypes: CourseType[];
+    courseLevels: CourseLevel[];
 }

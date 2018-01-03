@@ -76,7 +76,7 @@
           <table sortable-table (sorted)="doSort($event)" class="table table-striped">
             <thead>
               <tr>
-                <th sortable-column="courseName" sort-direction="desc">Course Name</th>
+                <th sortable-column="courseName" sort-direction="asc">Course Name</th>
                 <th>Level</th>
                 <th>Status</th>
                 <th>Estimated</th>
@@ -94,16 +94,16 @@
                         currentPage: paging.pageNum,
                         totalItems: paging.total
                     }">
-                <td><a [routerLink]="[COURSE_DETAILS_URL, item.courseID]">{{item.courseName}}</a></td>
+                <td><a [routerLink]="[FULL_ROUTES.COURSE_DETAILS_URL, item.courseID]">{{item.courseName}}</a></td>
                 <td>
-                  <span class="font-sm badge badge-success" *ngIf="item.courseLevel == CLConstants.BEGINNER.level">{{CLConstants.BEGINNER.description}}</span>
-                  <span class="font-sm badge badge-warning" *ngIf="item.courseLevel == CLConstants.INTERMEDIATE.level">{{CLConstants.INTERMEDIATE.description}}</span>
-                  <span class="font-sm badge badge-danger" *ngIf="item.courseLevel == CLConstants.ADVANCED.level">{{CLConstants.ADVANCED.description}}</span>
+                  <span class="font-sm badge badge-success" *ngIf="item.courseLevel == COURSE_LEVELS.BEGINNER.level">{{COURSE_LEVELS.BEGINNER.description}}</span>
+                  <span class="font-sm badge badge-primary" *ngIf="item.courseLevel == COURSE_LEVELS.INTERMEDIATE.level">{{COURSE_LEVELS.INTERMEDIATE.description}}</span>
+                  <span class="font-sm badge badge-danger" *ngIf="item.courseLevel == COURSE_LEVELS.ADVANCED.level">{{COURSE_LEVELS.ADVANCED.description}}</span>
                 </td>
                 <td>
-                  <span class="font-sm badge badge-success" *ngIf="item.courseStatus == CSConstants.DONE.status">{{CSConstants.DONE.description}}</span>
-                  <span class="font-sm badge badge-warning" *ngIf="item.courseStatus == CSConstants.FUTURE.status">{{CSConstants.FUTURE.description}}</span>
-                  <span class="font-sm badge badge-danger" *ngIf="item.courseStatus == CSConstants.IN_PROGRESS.status">{{CSConstants.IN_PROGRESS.description}}</span>
+                  <span class="font-sm badge badge-success" *ngIf="item.courseStatus == COURSE_STATUSES.DONE.status">{{COURSE_STATUSES.DONE.description}}</span>
+                  <span class="font-sm badge badge-primary" *ngIf="item.courseStatus == COURSE_STATUSES.FUTURE.status">{{COURSE_STATUSES.FUTURE.description}}</span>
+                  <span class="font-sm badge badge-danger" *ngIf="item.courseStatus == COURSE_STATUSES.IN_PROGRESS.status">{{COURSE_STATUSES.IN_PROGRESS.description}}</span>
                 </td>
                 <td>{{item.estimatedDuration}} Hr</td>
                 <td>{{item.actualDuration}} Hr</td>
