@@ -12,6 +12,7 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.PositiveOrZero;
 import java.io.Serializable;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -43,6 +44,11 @@ public class CourseListFilter implements Serializable {
     @Length(min = 2, max = 2, message = FormValidation.EQ_LENGTH, groups = LengthValidation.class)
     @Pattern(regexp = RegExp.LOOKUP, message = FormValidation.REGEX, groups = InvalidValidation.class)
     private String courseType;
+
+    private Date creationDateFrom;
+    private Date creationDateTo;
+    private Date startDateFrom;
+    private Date startDateTo;
 
     @NotNull(message = FormValidation.REQUIRED, groups = RequiredValidation.class)
     @PositiveOrZero(message = FormValidation.POSITIVE_NUM_AND_ZERO, groups = InvalidValidation.class)

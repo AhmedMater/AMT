@@ -3,7 +3,7 @@
   <div class="row">
     <div class="col-lg-12">
       <div class="card">
-        <form novalidate [formGroup]="userListForm" (ngSubmit)="search()">
+        <form novalidate [formGroup]="filterForm" (ngSubmit)="search()">
           <div class="card-header">
             <i class="fa fa-filter"></i> Filters
           </div>
@@ -28,7 +28,7 @@
                 </div>
               </div>
 
-              <div class="col-sm-3">
+              <div class="col-sm-2">
                 <div class="form-group">
                   <label for="creationDateFrom">Creation Date From</label>
                   <my-date-picker id="creationDateFrom" [options]="DATE_PICKER_OPTIONS"
@@ -36,7 +36,7 @@
                 </div>
               </div>
 
-              <div class="col-sm-3">
+              <div class="col-sm-2">
                 <div class="form-group">
                   <label for="creationDateTo">Creation Date To</label>
                   <my-date-picker id="creationDateTo" [options]="DATE_PICKER_OPTIONS"
@@ -76,7 +76,7 @@
     <div class="col-lg-12">
       <div class="card">
         <div class="card-header">
-          <i class="fa fa-align-justify"></i> Course List
+          <i class="fa fa-align-justify"></i> User List
         </div>
         <div class="card-body">
           <table sortable-table (sorted)="doSort($event)" class="table table-striped">
@@ -89,9 +89,9 @@
             </tr>
             </thead>
             <tbody>
-            <tr *ngFor="let item of userList.data |
+            <tr *ngFor="let item of list.data |
                     paginate: {
-                        id: 'foo',
+                        id: 'amtPaging',
                         itemsPerPage: paging.pageSize,
                         currentPage: paging.pageNum,
                         totalItems: paging.total
@@ -111,7 +111,7 @@
             <tfoot>
             <tr>
               <td colspan="8">
-                <pagination-controls id="foo" (pageChange)="doPaging($event)"></pagination-controls>
+                <pagination-controls id="amtPaging" (pageChange)="doPaging($event)"></pagination-controls>
               </td>
             </tr>
             </tfoot>

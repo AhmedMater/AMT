@@ -27,6 +27,7 @@ import {CourseListUI} from "../../util/vto/ui/CourseListUI";
 import {CourseListRS} from "../../util/vto/resultSet/CourseListRS";
 import {CourseLevels} from "../../util/constants/lookups/CourseLevels";
 import {CourseStatuses} from "../../util/constants/lookups/CourseStatuses";
+import {ConfigParam} from "../../util/constants/ConfigParam";
 
 @Component({
     selector: 'course-list',
@@ -35,12 +36,12 @@ import {CourseStatuses} from "../../util/constants/lookups/CourseStatuses";
         {provide: SortService, useClass: SortService}],
 })
 export class CourseListComponent implements OnInit{
-    courseList: CourseListRS = new CourseListRS();
+    list: CourseListRS = new CourseListRS();
     filters: CourseListFilter = new CourseListFilter();
     courseLevels: CourseLevel[];
     courseTypes: CourseType[];
 
-    courseListForm: FormGroup;
+    filterForm: FormGroup;
 
     amError: AMError;
     formInvalid: boolean;
@@ -53,7 +54,7 @@ export class CourseListComponent implements OnInit{
     paging: PaginationInfo = new PaginationInfo();
     sorting: SortingInfo = new SortingInfo('courseName', 'asc');
     doPaging(pageNum): void {
-        // this.paging.pageNum = pageNum - 1;
+        this.paging.pageNum = pageNum -1;
         this.search();
     }
 
@@ -92,17 +93,21 @@ export class CourseListComponent implements OnInit{
             }
         );
 
-        this.courseListForm = this.formBuilder.group({
+        this.filterForm = this.formBuilder.group({
             courseName: '',
             courseType: '',
-            courseLevel: ''
+            courseLevel: '',
+            creationDateFrom: '',
+            creationDateTo: '',
+            startDateFrom: '',
+            startDateTo: ''
         });
 
         this.search();
     }
 
     search(): void{
-        let values = this.courseListForm.value;
+        let values = this.filterForm.value;
         this.filters.courseName = !ConfigUtils.isNull(values.courseName) ? values.courseName : null;
         this.filters.courseType = !ConfigUtils.isNull(values.courseType) ? values.courseType : null;
         this.filters.courseLevel = !ConfigUtils.isNull(values.courseLevel) ? values.courseLevel : null;
@@ -112,9 +117,9 @@ export class CourseListComponent implements OnInit{
 
         this.courseService.getCourseList(this.filters).subscribe(
             res=>{
-                this.courseList = res;
+                this.list = res;
                 this.paging = res.pagination;
-                // this.paging.pageNum = res.pagination.pageNum;
+                this.paging.pageNum = res.pagination.pageNum + 1;
             },
             err=>{
                 this.amError = err.error;
@@ -128,11 +133,16 @@ export class CourseListComponent implements OnInit{
     }
 
     clear(): void{
-        this.courseListForm = this.formBuilder.group({
+        this.filterForm = this.formBuilder.group({
             courseName: '',
             courseType: '',
             courseLevel: ''
         });
         this.search();
+    }
+
+    DATE_PICKER_OPTIONS = ConfigParam.DATE_PICKER_OPTIONS;
+    setDate(){
+        ConfigUtils.setDate(this.filterForm);
     }
 }

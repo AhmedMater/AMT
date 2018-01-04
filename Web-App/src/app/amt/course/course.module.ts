@@ -19,13 +19,15 @@ import {NgxPaginationModule} from "ngx-pagination";
 import {SortableTableDirective} from "../util/components.sorting/sortable-table";
 import {SortableColumnComponent} from "../util/components.sorting/sortable-column.component";
 import {StringToDate} from "../util/pipe/StringToDate";
+import {MyDatePickerModule} from "mydatepicker";
+import {AMTPipes} from "../util/pipe/AMTPipes";
 
 @NgModule({
-    imports: [CourseRoutingModule, CommonModule, NgxPaginationModule,
-        ToastModule.forRoot(), ReactiveFormsModule, HttpModule
+    imports: [CourseRoutingModule, CommonModule, NgxPaginationModule, AMTPipes,
+        ToastModule.forRoot(), ReactiveFormsModule, HttpModule, MyDatePickerModule
     ],
-    declarations: [NewCourseComponent, CourseListComponent, CourseDetailComponent, SortableColumnComponent,
-        SortableTableDirective]
+    declarations: [NewCourseComponent, CourseListComponent, CourseDetailComponent,
+        SortableColumnComponent, SortableTableDirective]
     // providers: [{provide: HTTP_INTERCEPTORS, useClass: RESTInterceptor, multi: true}]
 })
 export class CourseModule { }

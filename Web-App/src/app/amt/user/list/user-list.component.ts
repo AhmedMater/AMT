@@ -32,10 +32,10 @@ import {ConfigParam} from "../../util/constants/ConfigParam";
         {provide: SortService, useClass: SortService}]
 })
 export class UserListComponent implements OnInit {
-    userList: UserListRS = new UserListRS();
+    list: UserListRS = new UserListRS();
     filters: UserListFilter = new UserListFilter();
     roles: Role[];
-    userListForm: FormGroup;
+    filterForm: FormGroup;
 
     amError: AMError;
     formInvalid: boolean;
@@ -47,6 +47,7 @@ export class UserListComponent implements OnInit {
     paging: PaginationInfo = new PaginationInfo();
     sorting: SortingInfo = new SortingInfo('username', 'asc');
     doPaging(pageNum): void {
+        this.paging.pageNum = pageNum -1;
         this.search();
     }
 
@@ -84,7 +85,7 @@ export class UserListComponent implements OnInit {
             }
         );
 
-        this.userListForm = this.formBuilder.group({
+        this.filterForm = this.formBuilder.group({
             realName: '',
             role: '',
             creationDateFrom: null,
@@ -95,7 +96,7 @@ export class UserListComponent implements OnInit {
     }
 
     search(): void{
-        let values = this.userListForm.value;
+        let values = this.filterForm.value;
         this.filters.realName = !ConfigUtils.isNull(values.realName) ? values.realName : null;
         this.filters.role = !ConfigUtils.isNull(values.role) ? values.role : null;
         this.filters.creationDateFrom = !ConfigUtils.isNull(values.creationDateFrom) ? values.creationDateFrom.jsdate : null;
@@ -106,8 +107,9 @@ export class UserListComponent implements OnInit {
 
         this.userService.getUserList(this.filters).subscribe(
             res=>{
-                this.userList = res;
+                this.list = res;
                 this.paging = res.pagination;
+                this.paging.pageNum = res.pagination.pageNum + 1;
             },
             err=>{
                 this.amError = err.error;
@@ -122,7 +124,7 @@ export class UserListComponent implements OnInit {
 
     clear(): void{
 
-        this.userListForm = this.formBuilder.group({
+        this.filterForm = this.formBuilder.group({
             realName: '',
             role: '',
             creationDateFrom: null,
@@ -133,6 +135,6 @@ export class UserListComponent implements OnInit {
 
     DATE_PICKER_OPTIONS = ConfigParam.DATE_PICKER_OPTIONS;
     setDate(){
-        ConfigUtils.setDate(this.userListForm);
+        ConfigUtils.setDate(this.filterForm);
     }
 }

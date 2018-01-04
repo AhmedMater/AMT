@@ -3,7 +3,7 @@
   <div class="row">
     <div class="col-lg-12">
       <div class="card">
-        <form novalidate [formGroup]="courseListForm" (ngSubmit)="search()">
+        <form novalidate [formGroup]="filterForm" (ngSubmit)="search()">
           <div class="card-header">
             <i class="fa fa-filter"></i> Filters
           </div>
@@ -35,6 +35,41 @@
                           formControlName="courseLevel">
                     <option *ngFor="let level of courseLevels" value="{{level.level}}">{{level.description}}</option>
                   </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-sm-2">
+                <div class="form-group">
+                  <label for="creationDateFrom">Creation Date From</label>
+                  <my-date-picker id="creationDateFrom" [options]="DATE_PICKER_OPTIONS"
+                                  formControlName="creationDateFrom"></my-date-picker>
+                </div>
+              </div>
+
+              <div class="col-sm-2">
+                <div class="form-group">
+                  <label for="creationDateTo">Creation Date To</label>
+                  <my-date-picker id="creationDateTo" [options]="DATE_PICKER_OPTIONS"
+                                  formControlName="creationDateTo"></my-date-picker>
+                </div>
+              </div>
+
+
+              <div class="col-sm-2">
+                <div class="form-group">
+                  <label for="startDateFrom">Start Date From</label>
+                  <my-date-picker id="startDateFrom" [options]="DATE_PICKER_OPTIONS"
+                                  formControlName="startDateFrom"></my-date-picker>
+                </div>
+              </div>
+
+              <div class="col-sm-2">
+                <div class="form-group">
+                  <label for="startDateTo">Start Date To</label>
+                  <my-date-picker id="startDateTo" [options]="DATE_PICKER_OPTIONS"
+                                  formControlName="startDateTo"></my-date-picker>
                 </div>
               </div>
             </div>
@@ -87,9 +122,9 @@
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let item of courseList.data |
+              <tr *ngFor="let item of list.data |
                     paginate: {
-                        id: 'foo',
+                        id: 'amtPaging',
                         itemsPerPage: paging.pageSize,
                         currentPage: paging.pageNum,
                         totalItems: paging.total
@@ -117,7 +152,7 @@
             <tfoot>
               <tr>
                 <td colspan="8">
-                  <pagination-controls id="foo" (pageChange)="doPaging($event)"></pagination-controls>
+                  <pagination-controls id="amtPaging" (pageChange)="doPaging($event)"></pagination-controls>
                 </td>
               </tr>
             </tfoot>

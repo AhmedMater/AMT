@@ -14,6 +14,7 @@ import {UserListComponent} from "./list/user-list.component";
 import {NgxPaginationModule} from "ngx-pagination";
 import {StringToDate} from "../util/pipe/StringToDate";
 import {MyDatePickerModule} from "mydatepicker";
+import {AMTPipes} from "../util/pipe/AMTPipes";
 
 const routes: Routes = [
     {
@@ -27,9 +28,9 @@ const routes: Routes = [
 
 @NgModule({
     imports: [RouterModule.forChild(routes), CommonModule, MyDatePickerModule,
-        ChartsModule, ToastModule.forRoot(), NgxPaginationModule,
+        ChartsModule, ToastModule.forRoot(), NgxPaginationModule, AMTPipes,
         BsDropdownModule,  ReactiveFormsModule, HttpModule
     ],
-    declarations: [ProfileComponent, UserListComponent, StringToDate]
+    declarations: [ProfileComponent, UserListComponent]
 })
 export class UserModule { }

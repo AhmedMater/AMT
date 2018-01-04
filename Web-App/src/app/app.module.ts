@@ -22,11 +22,11 @@ import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import {RESTInterceptor} from "./amt/services/RESTInterceptor";
 import {P404Component} from "./views/pages/404.component";
 import {NgxPaginationModule} from "ngx-pagination";
+import {StringToDate} from "./amt/util/pipe/StringToDate";
 
 const APP_COMPONENTS = [AppAside, AppBreadcrumbs, AppFooter, AppHeader, AppSidebar];
 const APP_CONTAINERS = [FullLayout, SimpleLayout];
 const APP_DIRECTIVES = [AsideToggleDirective, NAV_DROPDOWN_DIRECTIVES, SIDEBAR_TOGGLE_DIRECTIVES];
-
 
 @NgModule({
     imports: [ HttpClientModule, BrowserModule, BrowserAnimationsModule, AppRoutingModule,

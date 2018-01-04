@@ -23,6 +23,7 @@ export class ConfigUtils{
         return (value == null || value == '');
     }
     static setDate(form: FormGroup): void {
+        let date = new Date();
         form.patchValue({myDate: {
             date: {
                 year: date.getFullYear(),
