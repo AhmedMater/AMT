@@ -25,6 +25,10 @@ public class CourseListFilter implements Serializable {
                 put("courseName", "Course Name");
                 put("courseLevel", "Course Level");
                 put("courseType", "Course Type");
+                put("creationDateFrom", "Creation Date From");
+                put("creationDateTo", "Creation Date To");
+                put("startDateFrom", "Start Date From");
+                put("startDateTo", "Start Date To");
                 put("pageNum", "Page Number");
                 put("sorting", "Sorting Info");
             }}
@@ -78,6 +82,34 @@ public class CourseListFilter implements Serializable {
     }
     public void setCourseType(String courseType) {
         this.courseType = courseType;
+    }
+
+    public Date getCreationDateFrom() {
+        return creationDateFrom;
+    }
+    public void setCreationDateFrom(Date creationDateFrom) {
+        this.creationDateFrom = creationDateFrom;
+    }
+
+    public Date getCreationDateTo() {
+        return creationDateTo;
+    }
+    public void setCreationDateTo(Date creationDateTo) {
+        this.creationDateTo = creationDateTo;
+    }
+
+    public Date getStartDateFrom() {
+        return startDateFrom;
+    }
+    public void setStartDateFrom(Date startDateFrom) {
+        this.startDateFrom = startDateFrom;
+    }
+
+    public Date getStartDateTo() {
+        return startDateTo;
+    }
+    public void setStartDateTo(Date startDateTo) {
+        this.startDateTo = startDateTo;
     }
 
     public Integer getPageNum() {

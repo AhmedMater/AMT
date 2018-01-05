@@ -216,6 +216,7 @@ public class CourseList {
         }
     }
 
+                    /* Course Name Filter with other Filters */
     @Test @InSequence(6)
     public void getAllCourses_CourseName_Filter() throws Exception{
         try {
@@ -249,6 +250,42 @@ public class CourseList {
     }
 
     @Test @InSequence(7)
+    public void getAllCourses_CourseName_CDateFrom_Filter() throws Exception{
+        try {
+            Assert.fail("Not Implemented Yet");
+        }catch (Exception ex){
+            System.out.println(ex.getMessage());
+        }
+    }
+
+    @Test @InSequence(8)
+    public void getAllCourses_CourseName_CDateTo_Filter() throws Exception{
+        try {
+            Assert.fail("Not Implemented Yet");
+        }catch (Exception ex){
+            System.out.println(ex.getMessage());
+        }
+    }
+
+    @Test @InSequence(9)
+    public void getAllCourses_CourseName_SDateFrom_Filter() throws Exception{
+        try {
+            Assert.fail("Not Implemented Yet");
+        }catch (Exception ex){
+            System.out.println(ex.getMessage());
+        }
+    }
+
+    @Test @InSequence(10)
+    public void getAllCourses_CourseName_SDateTo_Filter() throws Exception{
+        try {
+            Assert.fail("Not Implemented Yet");
+        }catch (Exception ex){
+            System.out.println(ex.getMessage());
+        }
+    }
+
+    @Test @InSequence(11)
     public void getAllCourses_CourseName_Type_Filter() throws Exception{
         try {
             CourseListFilter filters = new CourseListFilter();
@@ -264,7 +301,7 @@ public class CourseList {
 
             CourseListRS resultSet = response.readEntity(CourseListRS.class);
             Assert.assertEquals("Total Courses is wrong", 5, resultSet.getPagination().getTotal());
-            
+
             List<String> expectedCourseIDs = new ArrayList<>();
             expectedCourseIDs.add("Cor0000029PrBe20171214");
             expectedCourseIDs.add("Cor0000022PrAd20170722");
@@ -278,7 +315,7 @@ public class CourseList {
         }
     }
 
-    @Test @InSequence(8)
+    @Test @InSequence(12)
     public void getAllCourses_CourseName_Level_Filter() throws Exception{
         try {
             CourseListFilter filters = new CourseListFilter();
@@ -294,7 +331,7 @@ public class CourseList {
 
             CourseListRS resultSet = response.readEntity(CourseListRS.class);
             Assert.assertEquals("Total Courses is wrong", 4, resultSet.getPagination().getTotal());
-            
+
             List<String> expectedCourseIDs = new ArrayList<>();
             expectedCourseIDs.add("Cor0000029PrBe20171214");
             expectedCourseIDs.add("Cor0000008PrBe20170417");
@@ -307,71 +344,9 @@ public class CourseList {
         }
     }
 
-    @Test @InSequence(9)
-    public void getAllCourses_CourseName_Level_Type_Filter() throws Exception{
-        try {
-            CourseListFilter filters = new CourseListFilter();
-            filters.setCourseName("Al");
-            filters.setCourseType("Pr");
-            filters.setCourseLevel("Be");
-            filters.setPageNum(0);
-            filters.setSorting(new SortingInfo("Asc", "courseName"));
-
-            LoginData loginData = Params.studentLoginData;
-
-            Response response = RestUtil.postSecured(Rest.COURSE.RESOURCE, Rest.COURSE.LIST, filters, loginData);
-            Assert.assertEquals("Response Status is wrong", Response.Status.OK.getStatusCode(), response.getStatus());
-
-            CourseListRS resultSet = response.readEntity(CourseListRS.class);
-            Assert.assertEquals("Total Courses is wrong", 3, resultSet.getPagination().getTotal());
-            
-            List<String> expectedCourseIDs = new ArrayList<>();
-            expectedCourseIDs.add("Cor0000029PrBe20171214");
-            expectedCourseIDs.add("Cor0000008PrBe20170417");
-            expectedCourseIDs.add("Cor0000027PrBe20170423");
-
-            compareCourseLists(expectedCourseIDs, resultSet.getData());
-        }catch (Exception ex){
-            System.out.println(ex.getMessage());
-        }
-    }
-
-    @Test @InSequence(10)
-    public void getAllCourses_CourseLevel_Filter() throws Exception{
-        try {
-            CourseListFilter filters = new CourseListFilter();
-            filters.setCourseLevel("Be");
-            filters.setPageNum(0);
-            filters.setSorting(new SortingInfo("Asc", "courseName"));
-
-            LoginData loginData = Params.studentLoginData;
-
-            Response response = RestUtil.postSecured(Rest.COURSE.RESOURCE, Rest.COURSE.LIST, filters, loginData);
-            Assert.assertEquals("Response Status is wrong", Response.Status.OK.getStatusCode(), response.getStatus());
-
-            CourseListRS resultSet = response.readEntity(CourseListRS.class);
-            Assert.assertEquals("Total Courses is wrong", 14, resultSet.getPagination().getTotal());
-            
-            List<String> expectedCourseIDs = new ArrayList<>();
-            expectedCourseIDs.add("Cor0000029PrBe20171214");
-            expectedCourseIDs.add("Cor0000038AcBe20170616");
-            expectedCourseIDs.add("Cor0000008PrBe20170417");
-            expectedCourseIDs.add("Cor0000025AcBe20170315");
-            expectedCourseIDs.add("Cor0000014PrBe20170415");
-            expectedCourseIDs.add("Cor0000007AcBe20170418");
-            expectedCourseIDs.add("Cor0000037PrBe20170614");
-            expectedCourseIDs.add("Cor0000017AcBe20170919");
-            expectedCourseIDs.add("Cor0000030PrBe20171213");
-            expectedCourseIDs.add("Cor0000033PrBe20171021");
-
-            compareCourseLists(expectedCourseIDs, resultSet.getData());
-        }catch (Exception ex){
-            System.out.println(ex.getMessage());
-        }
-    }
-
-    @Test @InSequence(11)
-    public void getAllCourses_CourseType_Filter() throws Exception{
+                /* Course Type Filter with other Filters */
+    @Test @InSequence(13)
+    public void getAllCourses_CorType_Filter() throws Exception{
         try {
             CourseListFilter filters = new CourseListFilter();
             filters.setCourseType("Ac");
@@ -385,7 +360,7 @@ public class CourseList {
 
             CourseListRS resultSet = response.readEntity(CourseListRS.class);
             Assert.assertEquals("Total Courses is wrong", 15, resultSet.getPagination().getTotal());
-            
+
             List<String> expectedCourseIDs = new ArrayList<>();
             expectedCourseIDs.add("Cor0000028AcIn20171217");
             expectedCourseIDs.add("Cor0000038AcBe20170616");
@@ -404,8 +379,8 @@ public class CourseList {
         }
     }
 
-    @Test @InSequence(12)
-    public void getAllCourses_CourseLevel_Type_Filter() throws Exception{
+    @Test @InSequence(14)
+    public void getAllCourses_CorType_Level_Filter() throws Exception{
         try {
             CourseListFilter filters = new CourseListFilter();
             filters.setCourseLevel("Be");
@@ -420,7 +395,7 @@ public class CourseList {
 
             CourseListRS resultSet = response.readEntity(CourseListRS.class);
             Assert.assertEquals("Total Courses is wrong", 4, resultSet.getPagination().getTotal());
-            
+
             List<String> expectedCourseIDs = new ArrayList<>();
             expectedCourseIDs.add("Cor0000038AcBe20170616");
             expectedCourseIDs.add("Cor0000025AcBe20170315");
@@ -433,7 +408,778 @@ public class CourseList {
         }
     }
 
-    @Test @InSequence(13)
+    @Test @InSequence(15)
+    public void getAllCourses_CorType_CDateFrom_Filter() throws Exception{
+        try {
+            Assert.fail("Not Implemented Yet");
+        }catch (Exception ex){
+            System.out.println(ex.getMessage());
+        }
+    }
+
+    @Test @InSequence(16)
+    public void getAllCourses_CorType_CDateTo_Filter() throws Exception{
+        try {
+            Assert.fail("Not Implemented Yet");
+        }catch (Exception ex){
+            System.out.println(ex.getMessage());
+        }
+    }
+
+    @Test @InSequence(17)
+    public void getAllCourses_CorType_SDateFrom_Filter() throws Exception{
+        try {
+            Assert.fail("Not Implemented Yet");
+        }catch (Exception ex){
+            System.out.println(ex.getMessage());
+        }
+    }
+
+    @Test @InSequence(18)
+    public void getAllCourses_CorType_SDateTo_Filter() throws Exception{
+        try {
+            Assert.fail("Not Implemented Yet");
+        }catch (Exception ex){
+            System.out.println(ex.getMessage());
+        }
+    }
+
+                /* Course Level Filter with other Filters */
+    @Test @InSequence(19)
+    public void getAllCourses_CorLev_Filter() throws Exception{
+        try {
+            CourseListFilter filters = new CourseListFilter();
+            filters.setCourseLevel("Be");
+            filters.setPageNum(0);
+            filters.setSorting(new SortingInfo("Asc", "courseName"));
+
+            LoginData loginData = Params.studentLoginData;
+
+            Response response = RestUtil.postSecured(Rest.COURSE.RESOURCE, Rest.COURSE.LIST, filters, loginData);
+            Assert.assertEquals("Response Status is wrong", Response.Status.OK.getStatusCode(), response.getStatus());
+
+            CourseListRS resultSet = response.readEntity(CourseListRS.class);
+            Assert.assertEquals("Total Courses is wrong", 14, resultSet.getPagination().getTotal());
+
+            List<String> expectedCourseIDs = new ArrayList<>();
+            expectedCourseIDs.add("Cor0000029PrBe20171214");
+            expectedCourseIDs.add("Cor0000038AcBe20170616");
+            expectedCourseIDs.add("Cor0000008PrBe20170417");
+            expectedCourseIDs.add("Cor0000025AcBe20170315");
+            expectedCourseIDs.add("Cor0000014PrBe20170415");
+            expectedCourseIDs.add("Cor0000007AcBe20170418");
+            expectedCourseIDs.add("Cor0000037PrBe20170614");
+            expectedCourseIDs.add("Cor0000017AcBe20170919");
+            expectedCourseIDs.add("Cor0000030PrBe20171213");
+            expectedCourseIDs.add("Cor0000033PrBe20171021");
+
+            compareCourseLists(expectedCourseIDs, resultSet.getData());
+        }catch (Exception ex){
+            System.out.println(ex.getMessage());
+        }
+    }
+
+    @Test @InSequence(20)
+    public void getAllCourses_CorLev_CDateFrom_Filter() throws Exception{
+        try {
+            Assert.fail("Not Implemented Yet");
+        }catch (Exception ex){
+            System.out.println(ex.getMessage());
+        }
+    }
+
+    @Test @InSequence(21)
+    public void getAllCourses_CorLev_CDateTo_Filter() throws Exception{
+        try {
+            Assert.fail("Not Implemented Yet");
+        }catch (Exception ex){
+            System.out.println(ex.getMessage());
+        }
+    }
+
+    @Test @InSequence(22)
+    public void getAllCourses_CorLev_SDateFrom_Filter() throws Exception{
+        try {
+            Assert.fail("Not Implemented Yet");
+        }catch (Exception ex){
+            System.out.println(ex.getMessage());
+        }
+    }
+
+    @Test @InSequence(23)
+    public void getAllCourses_CorLev_SDateTo_Filter() throws Exception{
+        try {
+            Assert.fail("Not Implemented Yet");
+        }catch (Exception ex){
+            System.out.println(ex.getMessage());
+        }
+    }
+
+            /* Course Creation Date From Filter with other Filters */
+
+    @Test @InSequence(24)
+    public void getAllCourses_CorCDateFrom_Filter() throws Exception{
+        try {
+            Assert.fail("Not Implemented Yet");
+        }catch (Exception ex){
+            System.out.println(ex.getMessage());
+        }
+    }
+
+    @Test @InSequence(25)
+    public void getAllCourses_CorCDateFrom_CDateTo_Filter() throws Exception{
+        try {
+            Assert.fail("Not Implemented Yet");
+        }catch (Exception ex){
+            System.out.println(ex.getMessage());
+        }
+    }
+
+    @Test @InSequence(26)
+    public void getAllCourses_CorCDateFrom_SDateFrom_Filter() throws Exception{
+        try {
+            Assert.fail("Not Implemented Yet");
+        }catch (Exception ex){
+            System.out.println(ex.getMessage());
+        }
+    }
+
+    @Test @InSequence(27)
+    public void getAllCourses_CorCDateFrom_SDateTo_Filter() throws Exception{
+        try {
+            Assert.fail("Not Implemented Yet");
+        }catch (Exception ex){
+            System.out.println(ex.getMessage());
+        }
+    }
+
+                    /* Course Creation Date To Filter with other Filters */
+
+    @Test @InSequence(28)
+    public void getAllCourses_CorCDateTo_Filter() throws Exception{
+        try {
+            Assert.fail("Not Implemented Yet");
+        }catch (Exception ex){
+            System.out.println(ex.getMessage());
+        }
+    }
+
+    @Test @InSequence(29)
+    public void getAllCourses_CorCDateTo_SDateFrom_Filter() throws Exception{
+        try {
+            Assert.fail("Not Implemented Yet");
+        }catch (Exception ex){
+            System.out.println(ex.getMessage());
+        }
+    }
+
+    @Test @InSequence(30)
+    public void getAllCourses_CorCDateTo_SDateTo_Filter() throws Exception{
+        try {
+            Assert.fail("Not Implemented Yet");
+        }catch (Exception ex){
+            System.out.println(ex.getMessage());
+        }
+    }
+
+                    /* Course Start Date From Filter with other Filters */
+
+    @Test @InSequence(31)
+    public void getAllCourses_CorSDateFrom_Filter() throws Exception{
+        try {
+            Assert.fail("Not Implemented Yet");
+        }catch (Exception ex){
+            System.out.println(ex.getMessage());
+        }
+    }
+
+    @Test @InSequence(32)
+    public void getAllCourses_CorSDateFrom_SDateTo_Filter() throws Exception{
+        try {
+            Assert.fail("Not Implemented Yet");
+        }catch (Exception ex){
+            System.out.println(ex.getMessage());
+        }
+    }
+
+                    /* Course Start Date To Filter with other Filters */
+
+    @Test @InSequence(33)
+    public void getAllCourses_CorSDateTo_Filter() throws Exception{
+        try {
+            Assert.fail("Not Implemented Yet");
+        }catch (Exception ex){
+            System.out.println(ex.getMessage());
+        }
+    }
+
+                    /* Course Name & Type Filter with other Filters */
+
+    @Test @InSequence(34)
+    public void getAllCourses_CourseName_Type_Level_Filter() throws Exception{
+        try {
+            CourseListFilter filters = new CourseListFilter();
+            filters.setCourseName("Al");
+            filters.setCourseType("Pr");
+            filters.setCourseLevel("Be");
+            filters.setPageNum(0);
+            filters.setSorting(new SortingInfo("Asc", "courseName"));
+
+            LoginData loginData = Params.studentLoginData;
+
+            Response response = RestUtil.postSecured(Rest.COURSE.RESOURCE, Rest.COURSE.LIST, filters, loginData);
+            Assert.assertEquals("Response Status is wrong", Response.Status.OK.getStatusCode(), response.getStatus());
+
+            CourseListRS resultSet = response.readEntity(CourseListRS.class);
+            Assert.assertEquals("Total Courses is wrong", 3, resultSet.getPagination().getTotal());
+
+            List<String> expectedCourseIDs = new ArrayList<>();
+            expectedCourseIDs.add("Cor0000029PrBe20171214");
+            expectedCourseIDs.add("Cor0000008PrBe20170417");
+            expectedCourseIDs.add("Cor0000027PrBe20170423");
+
+            compareCourseLists(expectedCourseIDs, resultSet.getData());
+        }catch (Exception ex){
+            System.out.println(ex.getMessage());
+        }
+    }
+    
+    @Test @InSequence(35)
+    public void getAllCourses_CourseName_Type_CDateFrom_Filter() throws Exception{
+        try {
+            Assert.fail("Not Implemented Yet");
+        }catch (Exception ex){
+            System.out.println(ex.getMessage());
+        }
+    }
+
+    @Test @InSequence(36)
+    public void getAllCourses_CourseName_Type_CDateTo_Filter() throws Exception{
+        try {
+            Assert.fail("Not Implemented Yet");
+        }catch (Exception ex){
+            System.out.println(ex.getMessage());
+        }
+    }
+
+    @Test @InSequence(37)
+    public void getAllCourses_CourseName_Type_SDateFrom_Filter() throws Exception{
+        try {
+            Assert.fail("Not Implemented Yet");
+        }catch (Exception ex){
+            System.out.println(ex.getMessage());
+        }
+    }
+
+    @Test @InSequence(38)
+    public void getAllCourses_CourseName_Type_SDateTo_Filter() throws Exception{
+        try {
+            Assert.fail("Not Implemented Yet");
+        }catch (Exception ex){
+            System.out.println(ex.getMessage());
+        }
+    }
+
+                /* Course Name & Level Filter with other Filters */
+    @Test @InSequence(39)
+    public void getAllCourses_CourseName_Level_CDateFrom_Filter() throws Exception{
+        try {
+            Assert.fail("Not Implemented Yet");
+        }catch (Exception ex){
+            System.out.println(ex.getMessage());
+        }
+    }
+
+    @Test @InSequence(40)
+    public void getAllCourses_CourseName_Level_CDateTo_Filter() throws Exception{
+        try {
+            Assert.fail("Not Implemented Yet");
+        }catch (Exception ex){
+            System.out.println(ex.getMessage());
+        }
+    }
+
+    @Test @InSequence(41)
+    public void getAllCourses_CourseName_Level_SDateFrom_Filter() throws Exception{
+        try {
+            Assert.fail("Not Implemented Yet");
+        }catch (Exception ex){
+            System.out.println(ex.getMessage());
+        }
+    }
+
+    @Test @InSequence(42)
+    public void getAllCourses_CourseName_Level_SDateTo_Filter() throws Exception{
+        try {
+            Assert.fail("Not Implemented Yet");
+        }catch (Exception ex){
+            System.out.println(ex.getMessage());
+        }
+    }
+    
+
+                /* Course Name & Creation Date From Filter with other Filters */
+
+    @Test @InSequence(43)
+    public void getAllCourses_CourseName_CDateFrom_CDateTo_Filter() throws Exception{
+        try {
+            Assert.fail("Not Implemented Yet");
+        }catch (Exception ex){
+            System.out.println(ex.getMessage());
+        }
+    }
+
+    @Test @InSequence(44)
+    public void getAllCourses_CourseName_CDateFrom_SDateFrom_Filter() throws Exception{
+        try {
+            Assert.fail("Not Implemented Yet");
+        }catch (Exception ex){
+            System.out.println(ex.getMessage());
+        }
+    }
+
+    @Test @InSequence(45)
+    public void getAllCourses_CourseName_CDateFrom_SDateTo_Filter() throws Exception{
+        try {
+            Assert.fail("Not Implemented Yet");
+        }catch (Exception ex){
+            System.out.println(ex.getMessage());
+        }
+    }
+    
+                /* Course Name & Creation Date To Filter with other Filters */
+                
+    @Test @InSequence(46)
+    public void getAllCourses_CourseName_CDateTo_SDateFrom_Filter() throws Exception{
+        try {
+            Assert.fail("Not Implemented Yet");
+        }catch (Exception ex){
+            System.out.println(ex.getMessage());
+        }
+    }
+
+    @Test @InSequence(47)
+    public void getAllCourses_CourseName_CDateTo_SDateTo_Filter() throws Exception{
+        try {
+            Assert.fail("Not Implemented Yet");
+        }catch (Exception ex){
+            System.out.println(ex.getMessage());
+        }
+    }
+
+                /* Course Type & Start Date From Filter with other Filters */
+                
+    @Test @InSequence(48)
+    public void getAllCourses_CourseName_SDateFrom_SDateTo_Filter() throws Exception{
+        try {
+            Assert.fail("Not Implemented Yet");
+        }catch (Exception ex){
+            System.out.println(ex.getMessage());
+        }
+    }
+                
+                /* Course Type & Level Filter with other Filters */
+
+    @Test @InSequence(49)
+    public void getAllCourses_CorType_Level_CDateFrom_Filter() throws Exception{
+        try {
+            Assert.fail("Not Implemented Yet");
+        }catch (Exception ex){
+            System.out.println(ex.getMessage());
+        }
+    }
+
+    @Test @InSequence(50)
+    public void getAllCourses_CorType_Level_CDateTo_Filter() throws Exception{
+        try {
+            Assert.fail("Not Implemented Yet");
+        }catch (Exception ex){
+            System.out.println(ex.getMessage());
+        }
+    }
+
+    @Test @InSequence(51)
+    public void getAllCourses_CorType_Level_SDateFrom_Filter() throws Exception{
+        try {
+            Assert.fail("Not Implemented Yet");
+        }catch (Exception ex){
+            System.out.println(ex.getMessage());
+        }
+    }
+
+    @Test @InSequence(52)
+    public void getAllCourses_CorType_Level_SDateTo_Filter() throws Exception{
+        try {
+            Assert.fail("Not Implemented Yet");
+        }catch (Exception ex){
+            System.out.println(ex.getMessage());
+        }
+    }
+                
+                /* Course Type & Creation Date From Filter with other Filters */
+
+    @Test @InSequence(53)
+    public void getAllCourses_CorType_CDateFrom_CDateTo_Filter() throws Exception{
+        try {
+            Assert.fail("Not Implemented Yet");
+        }catch (Exception ex){
+            System.out.println(ex.getMessage());
+        }
+    }
+
+    @Test @InSequence(54)
+    public void getAllCourses_CorType_CDateFrom_SDateFrom_Filter() throws Exception{
+        try {
+            Assert.fail("Not Implemented Yet");
+        }catch (Exception ex){
+            System.out.println(ex.getMessage());
+        }
+    }
+
+    @Test @InSequence(55)
+    public void getAllCourses_CorType_CDateFrom_SDateTo_Filter() throws Exception{
+        try {
+            Assert.fail("Not Implemented Yet");
+        }catch (Exception ex){
+            System.out.println(ex.getMessage());
+        }
+    }
+                
+                /* Course Type & Creation Date To Filter with other Filters */
+
+    @Test @InSequence(56)
+    public void getAllCourses_CorType_CDateTo_SDateFrom_Filter() throws Exception{
+        try {
+            Assert.fail("Not Implemented Yet");
+        }catch (Exception ex){
+            System.out.println(ex.getMessage());
+        }
+    }
+
+    @Test @InSequence(57)
+    public void getAllCourses_CorType_CDateTo_SDateTo_Filter() throws Exception{
+        try {
+            Assert.fail("Not Implemented Yet");
+        }catch (Exception ex){
+            System.out.println(ex.getMessage());
+        }
+    }
+                
+                /* Course Type & Start Date From Filter with other Filters */
+
+    @Test @InSequence(58)
+    public void getAllCourses_CorType_SDateFrom_SDateTo_Filter() throws Exception{
+        try {
+            Assert.fail("Not Implemented Yet");
+        }catch (Exception ex){
+            System.out.println(ex.getMessage());
+        }
+    }
+                
+                /* Course Level & Creation Date From Filter with other Filters */
+
+    @Test @InSequence(59)
+    public void getAllCourses_CorLevel_CDateFrom_CDateTo_Filter() throws Exception{
+        try {
+            Assert.fail("Not Implemented Yet");
+        }catch (Exception ex){
+            System.out.println(ex.getMessage());
+        }
+    }
+
+    @Test @InSequence(60)
+    public void getAllCourses_CorLevel_CDateFrom_SDateFrom_Filter() throws Exception{
+        try {
+            Assert.fail("Not Implemented Yet");
+        }catch (Exception ex){
+            System.out.println(ex.getMessage());
+        }
+    }
+
+    @Test @InSequence(61)
+    public void getAllCourses_CorLevel_CDateFrom_SDateTo_Filter() throws Exception{
+        try {
+            Assert.fail("Not Implemented Yet");
+        }catch (Exception ex){
+            System.out.println(ex.getMessage());
+        }
+    }
+                
+                /* Course Level & Creation Date To Filter with other Filters */
+
+    @Test @InSequence(62)
+    public void getAllCourses_CorLevel_CDateTo_SDateFrom_Filter() throws Exception{
+        try {
+            Assert.fail("Not Implemented Yet");
+        }catch (Exception ex){
+            System.out.println(ex.getMessage());
+        }
+    }
+
+    @Test @InSequence(63)
+    public void getAllCourses_CorLevel_CDateTo_SDateTo_Filter() throws Exception{
+        try {
+            Assert.fail("Not Implemented Yet");
+        }catch (Exception ex){
+            System.out.println(ex.getMessage());
+        }
+    }
+                
+                /* Course Level & Start Date From Filter with other Filters */
+
+    @Test @InSequence(64)
+    public void getAllCourses_CorLevel_SDateFrom_SDateTo_Filter() throws Exception{
+        try {
+            Assert.fail("Not Implemented Yet");
+        }catch (Exception ex){
+            System.out.println(ex.getMessage());
+        }
+    }
+
+        /* Course Creation Date From & Creation Date To Filter with other Filters */
+
+    @Test @InSequence(65)
+    public void getAllCourses_CorCDateFrom_CDateTo_SDateFrom_Filter() throws Exception{
+        try {
+            Assert.fail("Not Implemented Yet");
+        }catch (Exception ex){
+            System.out.println(ex.getMessage());
+        }
+    }
+
+    @Test @InSequence(66)
+    public void getAllCourses_CorCDateFrom_CDateTo_SDateTo_Filter() throws Exception{
+        try {
+            Assert.fail("Not Implemented Yet");
+        }catch (Exception ex){
+            System.out.println(ex.getMessage());
+        }
+    }
+
+        /* Course Creation Date From & Start Date From Filter with other Filters */
+
+    @Test @InSequence(67)
+    public void getAllCourses_CorCDateFrom_SDateFrom_SDateTo_Filter() throws Exception{
+        try {
+            Assert.fail("Not Implemented Yet");
+        }catch (Exception ex){
+            System.out.println(ex.getMessage());
+        }
+    }
+
+        /* Course Creation Date To & Start Date From Filter with other Filters */
+
+    @Test @InSequence(68)
+    public void getAllCourses_CorCDateTo_SDateFrom_SDateTo_Filter() throws Exception{
+        try {
+            Assert.fail("Not Implemented Yet");
+        }catch (Exception ex){
+            System.out.println(ex.getMessage());
+        }
+    }
+
+        /* Course Name & Type & Level Filter with other Filters */
+
+    @Test @InSequence(69)
+    public void getAllCourses_CorName_Type_Level_CDateFrom_Filter() throws Exception{
+        try {
+            Assert.fail("Not Implemented Yet");
+        }catch (Exception ex){
+            System.out.println(ex.getMessage());
+        }
+    }
+
+    @Test @InSequence(70)
+    public void getAllCourses_CorName_Type_Level_CDateTo_Filter() throws Exception{
+        try {
+            Assert.fail("Not Implemented Yet");
+        }catch (Exception ex){
+            System.out.println(ex.getMessage());
+        }
+    }
+
+    @Test @InSequence(71)
+    public void getAllCourses_CorName_Type_Level_SDateFrom_Filter() throws Exception{
+        try {
+            Assert.fail("Not Implemented Yet");
+        }catch (Exception ex){
+            System.out.println(ex.getMessage());
+        }
+    }
+
+    @Test @InSequence(72)
+    public void getAllCourses_CorName_Type_Level_SDateTo_Filter() throws Exception{
+        try {
+            Assert.fail("Not Implemented Yet");
+        }catch (Exception ex){
+            System.out.println(ex.getMessage());
+        }
+    }
+
+        /* Course Type & Level & Creation Date From Filter with other Filters */
+
+    @Test @InSequence(73)
+    public void getAllCourses_CorType_Level_CDateFrom_CDateTo_Filter() throws Exception{
+        try {
+            Assert.fail("Not Implemented Yet");
+        }catch (Exception ex){
+            System.out.println(ex.getMessage());
+        }
+    }
+
+    @Test @InSequence(74)
+    public void getAllCourses_CorType_Level_CDateFrom_SDateFrom_Filter() throws Exception{
+        try {
+            Assert.fail("Not Implemented Yet");
+        }catch (Exception ex){
+            System.out.println(ex.getMessage());
+        }
+    }
+
+    @Test @InSequence(75)
+    public void getAllCourses_CorType_Level_CDateFrom_SDateTo_Filter() throws Exception{
+        try {
+            Assert.fail("Not Implemented Yet");
+        }catch (Exception ex){
+            System.out.println(ex.getMessage());
+        }
+    }
+
+        /* Course Level & Creation Date From & Creation Date To Filter with other Filters */
+
+    @Test @InSequence(75)
+    public void getAllCourses_CorLevel_CDateFrom_CDateTo_SDateFrom_Filter() throws Exception{
+        try {
+            Assert.fail("Not Implemented Yet");
+        }catch (Exception ex){
+            System.out.println(ex.getMessage());
+        }
+    }
+
+    @Test @InSequence(76)
+    public void getAllCourses_CorLevel_CDateFrom_CDateTo_SDateTo_Filter() throws Exception{
+        try {
+            Assert.fail("Not Implemented Yet");
+        }catch (Exception ex){
+            System.out.println(ex.getMessage());
+        }
+    }
+
+    /* Course Creation Date From & Creation Date To & Start Date From Filter with other Filters */
+
+    @Test @InSequence(77)
+    public void getAllCourses_CorCDateFrom_CDateTo_SDateFrom_SDateTo_Filter() throws Exception{
+        try {
+            Assert.fail("Not Implemented Yet");
+        }catch (Exception ex){
+            System.out.println(ex.getMessage());
+        }
+    }
+
+     /* Course Name & Type & Level & Creation Date From Filter with other Filters */
+
+    @Test @InSequence(78)
+    public void getAllCourses_CorName_Type_Level_CDateFrom_CDateTo_Filter() throws Exception{
+        try {
+            Assert.fail("Not Implemented Yet");
+        }catch (Exception ex){
+            System.out.println(ex.getMessage());
+        }
+    }
+
+    @Test @InSequence(79)
+    public void getAllCourses_CorName_Type_Level_CDateFrom_SDateFrom_Filter() throws Exception{
+        try {
+            Assert.fail("Not Implemented Yet");
+        }catch (Exception ex){
+            System.out.println(ex.getMessage());
+        }
+    }
+
+    @Test @InSequence(80)
+    public void getAllCourses_CorName_Type_Level_CDateFrom_SDateTo_Filter() throws Exception{
+        try {
+            Assert.fail("Not Implemented Yet");
+        }catch (Exception ex){
+            System.out.println(ex.getMessage());
+        }
+    }
+
+        /* Course Type & Level & Cre Date From & Cre Date To Filter with other Filters */
+
+    @Test @InSequence(81)
+    public void getAllCourses_CorType_Level_CDateFrom_CDateTo_SDateFrom_Filter() throws Exception{
+        try {
+            Assert.fail("Not Implemented Yet");
+        }catch (Exception ex){
+            System.out.println(ex.getMessage());
+        }
+    }
+
+    @Test @InSequence(82)
+    public void getAllCourses_CorType_Level_CDateFrom_CDateTo_SDateTo_Filter() throws Exception{
+        try {
+            Assert.fail("Not Implemented Yet");
+        }catch (Exception ex){
+            System.out.println(ex.getMessage());
+        }
+    }
+
+        /* Course Level & Cre Date From & Cre Date To & St Date From Filter with other Filters */
+
+    @Test @InSequence(83)
+    public void getAllCourses_CorLevel_CDateFrom_CDateTo_SDateFrom_SDateTo_Filter() throws Exception{
+        try {
+            Assert.fail("Not Implemented Yet");
+        }catch (Exception ex){
+            System.out.println(ex.getMessage());
+        }
+    }
+
+     /* Course Name & Type & Level & Cre Date From & Cre Date To Filter with other Filters */
+
+    @Test @InSequence(84)
+    public void getAllCourses_CorName_Type_Level_CDateFrom_CDateTo_SDateFrom_Filter() throws Exception{
+        try {
+            Assert.fail("Not Implemented Yet");
+        }catch (Exception ex){
+            System.out.println(ex.getMessage());
+        }
+    }
+
+    @Test @InSequence(85)
+    public void getAllCourses_CorName_Type_Level_CDateFrom_CDateTo_SDateTo_Filter() throws Exception{
+        try {
+            Assert.fail("Not Implemented Yet");
+        }catch (Exception ex){
+            System.out.println(ex.getMessage());
+        }
+    }
+
+        /* Course Type & Level & Cre Date From & Cre Date To & St Date From Filter with other Filters */
+
+    @Test @InSequence(86)
+    public void getAllCourses_CorType_Level_CDateFrom_CDateTo_SDateFrom_SDateTo_Filter() throws Exception{
+        try {
+            Assert.fail("Not Implemented Yet");
+        }catch (Exception ex){
+            System.out.println(ex.getMessage());
+        }
+    }
+
+     /* Course Name & Type & Level & Cre Date From & Cre Date To & St Date From & St Date To Filter with other Filters */
+
+    @Test @InSequence(87)
+    public void getAllCourses_CorName_Type_Level_CDateFrom_CDateTo_SDateFrom_SDateTo_Filter() throws Exception{
+        try {
+            Assert.fail("Not Implemented Yet");
+        }catch (Exception ex){
+            System.out.println(ex.getMessage());
+        }
+    }
+
+
+    @Test @InSequence(88)
     public void getAllCourses_NoFilters_Sorting_By_ActualDuration() throws Exception{
         try {
             Assert.fail("Not Implemented Yet");
@@ -467,7 +1213,7 @@ public class CourseList {
         }
     }
 
-    @Test @InSequence(14)
+    @Test @InSequence(89)
     public void getAllCourses_NoFilters_Sorting_By_StartDate() throws Exception{
         try {
             Assert.fail("Not Implemented Yet");
@@ -501,7 +1247,7 @@ public class CourseList {
         }
     }
 
-    @Test @InSequence(15)
+    @Test @InSequence(90)
     public void getAllCourses_NoFilters_Sorting_By_Progress() throws Exception{
         try {
             Assert.fail("Not Implemented Yet");
@@ -535,7 +1281,8 @@ public class CourseList {
         }
     }
 
-    @Test @InSequence(16)
+
+    @Test @InSequence(91)
     public void getAllCourses_InvalidFilters_CourseName_EmptyStr() throws Exception{
         try {
             CourseListFilter filters = new CourseListFilter();
@@ -554,7 +1301,7 @@ public class CourseList {
         }
     }
 
-    @Test @InSequence(17)
+    @Test @InSequence(92)
     public void getAllCourses_InvalidFilters_CourseName_MaxLength() throws Exception{
         try {
             CourseListFilter filters = new CourseListFilter();
@@ -574,7 +1321,7 @@ public class CourseList {
         }
     }
 
-    @Test @InSequence(18)
+    @Test @InSequence(93)
     public void getAllCourses_InvalidFilters_CourseName_InvalidValue() throws Exception{
         try {
             CourseListFilter filters = new CourseListFilter();
@@ -595,8 +1342,8 @@ public class CourseList {
     }
 
 
-    @Test @InSequence(19)
-    public void getAllCourses_InvalidFilters_CourseLevel_EmptyStr() throws Exception{
+    @Test @InSequence(94)
+    public void getAllCourses_InvalidFilters_CorLev_EmptyStr() throws Exception{
         try {
             CourseListFilter filters = new CourseListFilter();
             filters.setCourseLevel(" ");
@@ -614,8 +1361,8 @@ public class CourseList {
         }
     }
 
-    @Test @InSequence(20)
-    public void getAllCourses_InvalidFilters_CourseLevel_MinLength() throws Exception{
+    @Test @InSequence(95)
+    public void getAllCourses_InvalidFilters_CorLev_MinLength() throws Exception{
         try {
             CourseListFilter filters = new CourseListFilter();
             filters.setCourseLevel("x");
@@ -634,8 +1381,8 @@ public class CourseList {
         }
     }
 
-    @Test @InSequence(21)
-    public void getAllCourses_InvalidFilters_CourseLevel_MaxLength() throws Exception{
+    @Test @InSequence(96)
+    public void getAllCourses_InvalidFilters_CorLev_MaxLength() throws Exception{
         try {
             CourseListFilter filters = new CourseListFilter();
             filters.setCourseLevel("azx");
@@ -654,8 +1401,8 @@ public class CourseList {
         }
     }
 
-    @Test @InSequence(22)
-    public void getAllCourses_InvalidFilters_CourseLevel_InvalidValue() throws Exception{
+    @Test @InSequence(97)
+    public void getAllCourses_InvalidFilters_CorLev_InvalidValue() throws Exception{
         try {
             CourseListFilter filters = new CourseListFilter();
             filters.setCourseLevel("12");
@@ -675,8 +1422,8 @@ public class CourseList {
     }
 
 
-    @Test @InSequence(23)
-    public void getAllCourses_InvalidFilters_CourseType_EmptyStr() throws Exception{
+    @Test @InSequence(98)
+    public void getAllCourses_InvalidFilters_CorType_EmptyStr() throws Exception{
         try {
             CourseListFilter filters = new CourseListFilter();
             filters.setCourseType(" ");
@@ -694,8 +1441,8 @@ public class CourseList {
         }
     }
 
-    @Test @InSequence(24)
-    public void getAllCourses_InvalidFilters_CourseType_MinLength() throws Exception{
+    @Test @InSequence(99)
+    public void getAllCourses_InvalidFilters_CorType_MinLength() throws Exception{
         try {
             CourseListFilter filters = new CourseListFilter();
             filters.setCourseType("x");
@@ -714,8 +1461,8 @@ public class CourseList {
         }
     }
 
-    @Test @InSequence(25)
-    public void getAllCourses_InvalidFilters_CourseType_MaxLength() throws Exception{
+    @Test @InSequence(100)
+    public void getAllCourses_InvalidFilters_CorType_MaxLength() throws Exception{
         try {
             CourseListFilter filters = new CourseListFilter();
             filters.setCourseType("azx");
@@ -734,8 +1481,8 @@ public class CourseList {
         }
     }
 
-    @Test @InSequence(26)
-    public void getAllCourses_InvalidFilters_CourseType_InvalidValue() throws Exception{
+    @Test @InSequence(101)
+    public void getAllCourses_InvalidFilters_CorType_InvalidValue() throws Exception{
         try {
             CourseListFilter filters = new CourseListFilter();
             filters.setCourseType("12");
@@ -754,7 +1501,7 @@ public class CourseList {
         }
     }
 
-    @Test @InSequence(27)
+    @Test @InSequence(102)
     public void getAllCourses_Default_Sorting() throws Exception{
         try {
             CourseListFilter filters = new CourseListFilter();
@@ -787,7 +1534,7 @@ public class CourseList {
     }
 
 
-    @Test @InSequence(28)
+    @Test @InSequence(103)
     public void getAllCourses_InvalidFilters_PageNum_Negative() throws Exception{
         try {
             CourseListFilter filters = new CourseListFilter();
@@ -806,7 +1553,7 @@ public class CourseList {
         }
     }
 
-    @Test @InSequence(29)
+    @Test @InSequence(104)
     public void getAllCourses_InvalidFilters_PageNum_NullValue() throws Exception{
         try {
             CourseListFilter filters = new CourseListFilter();
@@ -825,7 +1572,7 @@ public class CourseList {
     }
 
 
-    @Test @InSequence(30)
+    @Test @InSequence(105)
     public void getAllCourses_InvalidFilters_SortingBy_NullValue() throws Exception{
         try {
             CourseListFilter filters = new CourseListFilter();
@@ -843,7 +1590,7 @@ public class CourseList {
         }
     }
 
-    @Test @InSequence(31)
+    @Test @InSequence(106)
     public void getAllCourses_InvalidFilters_SortingBy_EmptyStr() throws Exception{
         try {
             CourseListFilter filters = new CourseListFilter();
@@ -862,7 +1609,7 @@ public class CourseList {
     }
 
 
-    @Test @InSequence(33)
+    @Test @InSequence(107)
     public void getAllCourses_InvalidFilters_SortingDirection_EmptyStr() throws Exception{
         try {
             CourseListFilter filters = new CourseListFilter();
@@ -880,7 +1627,7 @@ public class CourseList {
         }
     }
 
-    @Test @InSequence(34)
+    @Test @InSequence(108)
     public void getAllCourses_InvalidFilters_SortingDirection_MinLength() throws Exception{
         try {
             CourseListFilter filters = new CourseListFilter();
@@ -899,7 +1646,7 @@ public class CourseList {
         }
     }
 
-    @Test @InSequence(35)
+    @Test @InSequence(109)
     public void getAllCourses_InvalidFilters_SortingDirection_MaxLength() throws Exception{
         try {
             CourseListFilter filters = new CourseListFilter();
@@ -918,7 +1665,7 @@ public class CourseList {
         }
     }
 
-    @Test @InSequence(36)
+    @Test @InSequence(110)
     public void getAllCourses_InvalidFilters_SortingDirection_InvalidValue() throws Exception{
         try {
             CourseListFilter filters = new CourseListFilter();

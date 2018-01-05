@@ -111,6 +111,10 @@ export class CourseListComponent implements OnInit{
         this.filters.courseName = !ConfigUtils.isNull(values.courseName) ? values.courseName : null;
         this.filters.courseType = !ConfigUtils.isNull(values.courseType) ? values.courseType : null;
         this.filters.courseLevel = !ConfigUtils.isNull(values.courseLevel) ? values.courseLevel : null;
+        this.filters.creationDateFrom = !ConfigUtils.isNull(values.creationDateFrom) ? values.creationDateFrom.jsdate : null;
+        this.filters.creationDateTo = !ConfigUtils.isNull(values.creationDateTo) ? values.creationDateTo.jsdate : null;
+        this.filters.startDateFrom = !ConfigUtils.isNull(values.startDateFrom) ? values.startDateFrom.jsdate : null;
+        this.filters.startDateTo = !ConfigUtils.isNull(values.startDateTo) ? values.startDateTo.jsdate : null;
 
         this.filters.pageNum = this.paging.pageNum;
         this.filters.sorting = this.sorting;
@@ -136,7 +140,11 @@ export class CourseListComponent implements OnInit{
         this.filterForm = this.formBuilder.group({
             courseName: '',
             courseType: '',
-            courseLevel: ''
+            courseLevel: '',
+            creationDateFrom: null,
+            creationDateTo: null,
+            startDateFrom: null,
+            startDateTo: null
         });
         this.search();
     }

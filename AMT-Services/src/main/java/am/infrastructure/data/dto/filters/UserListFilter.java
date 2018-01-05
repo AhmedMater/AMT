@@ -1,11 +1,13 @@
 package am.infrastructure.data.dto.filters;
 
-import am.main.api.validation.groups.FormValidation;
-import am.main.api.validation.groups.InvalidValidation;
-import am.main.api.validation.groups.RequiredValidation;
+import am.main.api.validation.custom.annotation.NullAndNotBlank;
+import am.main.api.validation.groups.*;
+import am.main.common.RegExp;
 import am.main.data.dto.SortingInfo;
+import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.PositiveOrZero;
 import java.io.Serializable;
 import java.util.Collections;
@@ -28,8 +30,16 @@ public class UserListFilter implements Serializable {
             }}
     );
 
+    @NullAndNotBlank(message = FormValidation.EMPTY_STR, groups = BlankValidation.class)
+    @Length(max = 30, message = FormValidation.MAX_LENGTH, groups = LengthValidation.class)
+    @Pattern(regexp = RegExp.FULL_NAME, message = FormValidation.REGEX, groups = InvalidValidation.class)
     private String realName;
+
+    @NullAndNotBlank(message = FormValidation.EMPTY_STR, groups = BlankValidation.class)
+    @Length(min = 2, max = 2, message = FormValidation.EQ_LENGTH, groups = LengthValidation.class)
+    @Pattern(regexp = RegExp.LOOKUP, message = FormValidation.REGEX, groups = InvalidValidation.class)
     private String role;
+
     private Date creationDateFrom;
     private Date creationDateTo;
 
