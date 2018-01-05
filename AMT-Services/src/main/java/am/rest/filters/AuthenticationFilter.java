@@ -4,12 +4,12 @@
 //import am.main.api.AppLogger;
 //import am.main.api.ErrorHandler;
 //import am.main.api.InfoHandler;
-//import am.main.data.enums.Interface;
-//import am.main.data.enums.Source;
+//import am.main.data.am.shared.enums.Interface;
+//import am.main.data.am.shared.enums.Source;
 //import am.main.exception.BusinessException;
-//import am.main.session.AppSession;
-//import am.shared.enums.EC;
-//import am.shared.session.Phase;
+//import am.main.am.shared.session.AppSession;
+//import am.shared.am.shared.enums.EC;
+//import am.shared.am.shared.session.Phase;
 //
 //import javax.annotation.Priority;
 //import javax.inject.Inject;
@@ -42,16 +42,16 @@
 //
 //    public void filter(ContainerRequestContext requestContext) throws IOException {
 //        String FN_NAME = "filter";
-//        AppSession session = new AppSession(Source.APP_SERVICES, Interface.REST, Phase.AUTHENTICATION,
+//        AppSession am.shared.session = new AppSession(Source.APP_SERVICES, Interface.REST, Phase.AUTHENTICATION,
 //                httpSession.getId(), CLASS, FN_NAME, errorHandler, infoHandler, httpServletRequest.getRemoteAddr());
 //        try {
-//            logger.startDebug(session, requestContext);
+//            logger.startDebug(am.shared.session, requestContext);
 //
-//            securityService.checkAuthentication(session, requestContext);
+//            securityService.checkAuthentication(am.shared.session, requestContext);
 //
-//            logger.endDebug(session);
+//            logger.endDebug(am.shared.session);
 //        } catch (Exception e) {
-//            logger.error(session, e);
+//            logger.error(am.shared.session, e);
 //
 //            if (e instanceof BusinessException)
 //                requestContext.abortWith(
@@ -59,7 +59,7 @@
 //                );
 //            else
 //                requestContext.abortWith(
-//                        Response.status(Response.Status.UNAUTHORIZED).entity(errorHandler.getMsg(session, EC.AMT_0011)).build()
+//                        Response.status(Response.Status.UNAUTHORIZED).entity(errorHandler.getMsg(am.shared.session, EC.AMT_0011)).build()
 //                );
 //        }
 //

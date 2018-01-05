@@ -10,7 +10,7 @@ import am.main.api.InfoHandler;
 import am.main.api.validation.FormValidation;
 import am.main.common.RegExp;
 import am.main.session.AppSession;
-import am.shared.session.Phase;
+import am.shared.enums.Phase;
 import amt.common.DeploymentManger;
 import amt.common.constants.Error;
 import amt.common.constants.Params;

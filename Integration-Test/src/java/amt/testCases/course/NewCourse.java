@@ -20,7 +20,7 @@ import am.main.api.InfoHandler;
 import am.main.api.db.DBManager;
 import am.main.api.validation.FormValidation;
 import am.main.session.AppSession;
-import am.shared.session.Phase;
+import am.shared.enums.Phase;
 import amt.common.DeploymentManger;
 import amt.common.constants.Error;
 import amt.common.constants.Rest;
@@ -704,7 +704,7 @@ public class NewCourse {
 //    public void createCourse_CourseEstimatedDuration_InvalidValue(){
 //        String TEST_CASE_NAME = "createCourse_CourseEstimatedDuration_InvalidValue";
 //        try {
-//            AppSession session = appSession.updateSession(CLASS, TEST_CASE_NAME);
+//            AppSession am.shared.session = appSession.updateSession(CLASS, TEST_CASE_NAME);
 //
 //            repository.executeScript(Scripts.CLEARING_ALL_TABLES);
 //            LoginData tutorLoginData = createTutorUser();
@@ -715,7 +715,7 @@ public class NewCourse {
 //            FormValidation expected = new FormValidation(NEW_COURSE_VAL, INVALID_COURSE_NAME);
 //            Util.postSecuredFormValidation(Rest.COURSE.RESOURCE, Rest.COURSE.NEW, tutorLoginData, courseData, expected);
 //
-//            Course course = dbManager.find(session, Course.class, "Cor0000001PrBe" + new SimpleDateFormat("yyyyMMdd").format(new Date()), false);
+//            Course course = dbManager.find(am.shared.session, Course.class, "Cor0000001PrBe" + new SimpleDateFormat("yyyyMMdd").format(new Date()), false);
 //            Assert.assertNull("Course is inserted in Database", course);
 //
 //            repository.executeScript(Scripts.CLEARING_ALL_TABLES);

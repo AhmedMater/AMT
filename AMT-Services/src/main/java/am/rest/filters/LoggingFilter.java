@@ -9,7 +9,7 @@ import am.main.session.AppSession;
 import am.main.data.enums.Interface;
 import am.main.data.enums.Source;
 import am.shared.enums.IC;
-import am.shared.session.Phase;
+import am.shared.enums.Phase;
 
 import javax.annotation.Priority;
 import javax.inject.Inject;

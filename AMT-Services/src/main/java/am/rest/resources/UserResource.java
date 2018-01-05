@@ -25,7 +25,7 @@ import am.rest.annotations.Authorized;
 import am.shared.enums.EC;
 import am.shared.enums.Forms;
 import am.shared.enums.IC;
-import am.shared.session.Phase;
+import am.shared.enums.Phase;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
@@ -98,12 +98,17 @@ public class UserResource {
         AppSession session = new AppSession(Source.APP_SERVICES, Interface.REST, Phase.LOGIN,
                 httpSession.getId(), CLASS, FN_NAME, errorHandler, infoHandler, httpServletRequest.getRemoteAddr());
         try{
+
+            long startTime = System.currentTimeMillis();
             // Validating the Form Data
             new FormValidation<LoginData>(session, loginData, EC.AMT_0001, Forms.LOGIN);
             logger.info(session, IC.AMT_0001, Forms.LOGIN);
 
             String loginUserIP = httpServletRequest.getRemoteAddr();
             AuthenticatedUser user = userService.login(session, loginData, loginUserIP);
+
+            long endTime = System.currentTimeMillis();
+            System.out.println("Login took " + (endTime - startTime) + " mSec\n");
             return Response.ok().entity(user).build();
         }catch (Exception ex){
             throw businessException(logger, session, ex, EC.AMT_0017, loginData.getUsername());

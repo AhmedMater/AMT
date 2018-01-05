@@ -10,7 +10,7 @@ import am.application.SecurityService;
 import am.main.exception.BusinessException;
 import am.main.session.AppSession;
 import am.main.data.enums.Interface;
-import am.shared.session.Phase;
+import am.shared.enums.Phase;
 import am.main.data.enums.Source;
 
 import javax.annotation.Priority;

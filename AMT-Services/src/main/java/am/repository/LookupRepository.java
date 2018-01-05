@@ -33,25 +33,25 @@ public class LookupRepository {
         return roleList;
     }
 
-//    public Role getNonAdminRole(AppSession session, String newRole) throws Exception{
+//    public Role getNonAdminRole(AppSession am.shared.session, String newRole) throws Exception{
 //        String FN_NAME = "getNonAdminRole";
-//        logger.startDebug(session);
+//        logger.startDebug(am.shared.session);
 //        Role role = new Role();
 //
 //        Map<String, Object> parameters = new HashMap<>();
 //        parameters.put(Role.IS_ADMIN, false);
 //
 //        try{
-//            role = dbManager.getSingleResult(session, true, Role.class, parameters);
+//            role = dbManager.getSingleResult(am.shared.session, true, Role.class, parameters);
 //        }catch (DBException ex){
 //            if(ex.getAME_CODE().equals(AME.DB_016)) {
-//                logger.error(session, ex);
+//                logger.error(am.shared.session, ex);
 //                return null;
 //            }else
 //                throw ex;
 //        }
 //
-//        logger.endDebug(session, role);
+//        logger.endDebug(am.shared.session, role);
 //        return role;
 //    }
 }

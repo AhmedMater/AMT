@@ -22,7 +22,7 @@ import am.rest.annotations.Authorized;
 import am.shared.enums.EC;
 import am.shared.enums.Forms;
 import am.shared.enums.IC;
-import am.shared.session.Phase;
+import am.shared.enums.Phase;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;

@@ -95,13 +95,6 @@
             <version>2.5.0-b52</version>
         </dependency>
 
-        <!-- AM-Resources -->
-        <dependency>
-            <groupId>com.amt.www</groupId>
-            <artifactId>AM-Resources</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
-
         <!-- unitils-core -->
         <dependency>
             <groupId>org.unitils</groupId>
@@ -122,6 +115,14 @@
             <artifactId>javaee-api</artifactId>
             <version>7.0</version>
             <scope>provided</scope>
+        </dependency>
+
+
+        <!-- AM-Resources -->
+        <dependency>
+            <groupId>com.amt.www</groupId>
+            <artifactId>AM-Resources</artifactId>
+            <version>1.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
 

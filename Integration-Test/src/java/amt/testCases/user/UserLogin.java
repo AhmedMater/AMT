@@ -15,7 +15,7 @@ import am.main.common.RegExp;
 import am.main.session.AppSession;
 import am.shared.enums.App_CC;
 import am.shared.enums.EC;
-import am.shared.session.Phase;
+import am.shared.enums.Phase;
 import amt.common.DeploymentManger;
 import amt.common.constants.Error;
 import amt.common.constants.Rest;
@@ -559,7 +559,7 @@ public class UserLogin {
 //    public void user_login_Password_InvalidValue(){
 //        String TEST_CASE_NAME = "user_login_Password_InvalidValue";
 //        try{
-//            AppSession session = appSession.updateSession(CLASS, TEST_CASE_NAME);
+//            AppSession am.shared.session = appSession.updateSession(CLASS, TEST_CASE_NAME);
 //            LoginData invalidData = this.loginData.clone();
 //            invalidData.setPassword("Ah<med Mater");
 //
@@ -574,7 +574,7 @@ public class UserLogin {
 //    public void user_login_Password_EmptyString(){
 //        String TEST_CASE_NAME = "user_login_Password_EmptyString";
 //        try{
-//            AppSession session = appSession.updateSession(CLASS, TEST_CASE_NAME);
+//            AppSession am.shared.session = appSession.updateSession(CLASS, TEST_CASE_NAME);
 //            LoginData invalidData = this.loginData.clone();
 //            invalidData.setPassword("");
 //
@@ -589,7 +589,7 @@ public class UserLogin {
 //    public void user_login_Password_MinLength(){
 //        String TEST_CASE_NAME = "user_login_Password_MinLength";
 //        try{
-//            AppSession session = appSession.updateSession(CLASS, TEST_CASE_NAME);
+//            AppSession am.shared.session = appSession.updateSession(CLASS, TEST_CASE_NAME);
 //            LoginData invalidData = this.loginData.clone();
 //            invalidData.setPassword(Util.generateString(2));
 //
@@ -604,7 +604,7 @@ public class UserLogin {
 //    public void user_login_Password_MaxLength(){
 //        String TEST_CASE_NAME = "user_login_Password_MaxLength";
 //        try{
-//            AppSession session = appSession.updateSession(CLASS, TEST_CASE_NAME);
+//            AppSession am.shared.session = appSession.updateSession(CLASS, TEST_CASE_NAME);
 //            LoginData invalidData = this.loginData.clone();
 //            invalidData.setPassword(Util.generateString(35));
 //
@@ -619,7 +619,7 @@ public class UserLogin {
 //    public void user_login_Password_Required(){
 //        String TEST_CASE_NAME = "user_login_Password_Required";
 //        try{
-//            AppSession session = appSession.updateSession(CLASS, TEST_CASE_NAME);
+//            AppSession am.shared.session = appSession.updateSession(CLASS, TEST_CASE_NAME);
 //            LoginData invalidData = this.loginData.clone();
 //            invalidData.setPassword(null);
 //
