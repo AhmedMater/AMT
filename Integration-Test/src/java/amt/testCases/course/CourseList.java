@@ -4,9 +4,6 @@ import am.infrastructure.data.dto.filters.CourseListFilter;
 import am.infrastructure.data.dto.user.LoginData;
 import am.infrastructure.data.view.resultset.CourseListRS;
 import am.infrastructure.data.view.ui.CourseListUI;
-import am.main.api.AppConfigManager;
-import am.main.api.ErrorHandler;
-import am.main.api.InfoHandler;
 import am.main.api.db.DBManager;
 import am.main.api.validation.FormValidation;
 import am.main.common.RegExp;
@@ -36,8 +33,8 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import static am.main.data.enums.Interface.ARQUILLIAN;
-import static am.main.data.enums.Source.INTEGRATION_TEST;
+import static am.shared.enums.Interface.ARQUILLIAN;
+import static am.shared.enums.Source.INTEGRATION_TEST;
 import static amt.common.constants.Error.COURSE.COURSE_LIST_VAL;
 
 /**
@@ -47,14 +44,11 @@ import static amt.common.constants.Error.COURSE.COURSE_LIST_VAL;
 public class CourseList {
     @Inject private Repository repository;
     @Inject private DBManager dbManager;
-    @Inject private AppConfigManager appConfigManager;
     @Inject private DataGenerator dataGenerator;
-    @Inject private ErrorHandler errorHandler;
-    @Inject private InfoHandler infoHandler;
 
     private static final String CLASS = "CourseList";
 
-    private AppSession appSession = new AppSession(INTEGRATION_TEST, ARQUILLIAN, Phase.INTEGRATION_TEST, errorHandler, infoHandler);
+    private AppSession appSession = new AppSession(INTEGRATION_TEST, ARQUILLIAN, Phase.INTEGRATION_TEST);
 
     @Deployment
     public static WebArchive createDeployment() {

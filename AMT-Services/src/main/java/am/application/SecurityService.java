@@ -1,7 +1,7 @@
 package am.application;
 
 
-import am.main.api.AMSecurityManager;
+import am.main.api.SecurityManager;
 import am.main.api.AppLogger;
 import am.shared.enums.EC;
 import am.main.exception.BusinessException;
@@ -29,7 +29,7 @@ public class SecurityService {
     private static final String CLASS = "SecurityService";
     @Inject private UserRepository userRepository;
     @Inject private AppLogger logger;
-    @Inject private AMSecurityManager securityManager;
+    @Inject private SecurityManager securityManager;
 
     private final long EXPIRATION_MINUTES = 60;
 
@@ -153,7 +153,7 @@ public class SecurityService {
                         throw new BusinessException(session, Response.Status.UNAUTHORIZED, EC.AMT_0034, userOfToken.getFullName());
 
                     String password = userOfToken.getPassword();
-                    String ComputedHash = securityManager.generateToken(session, username, password, ticks);
+                    String ComputedHash = securityManager.generateToken(username, password, ticks);
 
                     if(!token.equals(ComputedHash))
                         throw new BusinessException(session, Response.Status.UNAUTHORIZED, EC.AMT_0035);

@@ -9,6 +9,7 @@
         <option value="$PROJECT_DIR$/Integration-Test/pom.xml" />
         <option value="$PROJECT_DIR$/Data-Generator/pom.xml" />
         <option value="$PROJECT_DIR$/AMT-Shared-Resources/pom.xml" />
+        <option value="$PROJECT_DIR$/AMT-Logger/pom.xml" />
       </list>
     </option>
   </component>

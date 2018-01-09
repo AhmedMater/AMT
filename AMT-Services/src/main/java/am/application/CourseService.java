@@ -13,9 +13,8 @@ import am.infrastructure.data.hibernate.model.user.Users;
 import am.infrastructure.data.view.lookup.list.CourseListLookup;
 import am.infrastructure.data.view.lookup.list.NewCourseLookup;
 import am.infrastructure.data.view.ui.CourseListUI;
-import am.main.api.AMSecurityManager;
-import am.main.api.AppConfigManager;
 import am.main.api.AppLogger;
+import am.main.api.SecurityManager;
 import am.main.api.db.DBManager;
 import am.main.api.validation.FormValidation;
 import am.main.data.dto.ListResultSet;
@@ -23,7 +22,6 @@ import am.main.session.AppSession;
 import am.repository.CourseRepository;
 import am.shared.enums.EC;
 import am.shared.enums.Forms;
-import am.shared.enums.IC;
 
 import javax.inject.Inject;
 import java.util.Date;
@@ -39,8 +37,8 @@ public class CourseService {
 
     @Inject private AppLogger logger;
     @Inject private CourseRepository courseRepository;
-    @Inject private AMSecurityManager securityManager;
-    @Inject private AppConfigManager appConfigManager;
+    @Inject private SecurityManager securityManager;
+//    @Inject private AppConfigManager appConfigManager;
     @Inject private DBManager dbManager;
 
     public void validatedNewCourseData(AppSession appSession, CourseData courseData){
@@ -49,17 +47,17 @@ public class CourseService {
         logger.startDebug(session, courseData);
 
         // Validating the Form Data
-        new FormValidation<CourseData>(session, courseData, EC.AMT_0001, Forms.NEW_COURSE);
+        new FormValidation<CourseData>(session, logger, courseData, EC.AMT_0001, Forms.NEW_COURSE);
 
         List<CoursePRData> coursePRDataList = courseData.getPreRequisites();
         for (CoursePRData coursePRData :coursePRDataList)
-            new FormValidation<CoursePRData>(session, coursePRData, EC.AMT_0001, Forms.NEW_COURSE);
+            new FormValidation<CoursePRData>(session, logger, coursePRData, EC.AMT_0001, Forms.NEW_COURSE);
 
         List<CourseRefData> courseRefDataList = courseData.getReferences();
         for (CourseRefData courseRefData :courseRefDataList)
-            new FormValidation<CourseRefData>(session, courseRefData, EC.AMT_0001, Forms.NEW_COURSE);
+            new FormValidation<CourseRefData>(session, logger, courseRefData, EC.AMT_0001, Forms.NEW_COURSE);
 
-        logger.info(session, IC.AMT_0001, Forms.NEW_COURSE);
+//        logger.info(session, IC.AMT_0001, Forms.NEW_COURSE);
         logger.endDebug(session);
     }
 

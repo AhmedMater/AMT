@@ -68,6 +68,7 @@ export class RegisterComponent implements OnInit{
                 this.router.navigate([this.LOGIN_URL]);
             },
             err => {
+                console.log(err);
                 this.amError = err.error;
                 this.formInvalid = ConfigUtils.handleError(err, this.toastr, this.TOASTR_TITLE);
             }

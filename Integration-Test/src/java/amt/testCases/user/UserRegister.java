@@ -4,9 +4,7 @@ import am.infrastructure.data.dto.user.LoginData;
 import am.infrastructure.data.dto.user.UserRegisterData;
 import am.infrastructure.data.enums.Roles;
 import am.infrastructure.data.hibernate.model.user.Users;
-import am.main.api.AMSecurityManager;
-import am.main.api.ErrorHandler;
-import am.main.api.InfoHandler;
+import am.main.api.SecurityManager;
 import am.main.api.validation.FormValidation;
 import am.main.common.RegExp;
 import am.main.session.AppSession;
@@ -33,8 +31,8 @@ import javax.ws.rs.core.Response;
 import java.text.MessageFormat;
 import java.util.Date;
 
-import static am.main.data.enums.Interface.ARQUILLIAN;
-import static am.main.data.enums.Source.INTEGRATION_TEST;
+import static am.shared.enums.Interface.ARQUILLIAN;
+import static am.shared.enums.Source.INTEGRATION_TEST;
 import static amt.common.constants.Error.TEST_CASE;
 import static amt.common.constants.Error.USER.REGISTER_VALIDATION_ERROR;
 import static amt.common.constants.Rest.USER;
@@ -46,16 +44,14 @@ import static amt.common.constants.Rest.USER;
 public class UserRegister {
     @Inject private Repository repository;
     @Inject private DataGenerator dataGenerator;
-    @Inject private AMSecurityManager securityManager;
-    @Inject private ErrorHandler errorHandler;
-    @Inject private InfoHandler infoHandler;
+    @Inject private SecurityManager securityManager;
 
     private UserRegisterData userData = new UserRegisterData("Ahmed", "Mater", 
             "Ahmed_Mater", "123456", "ahmed.motair@gizasystems.com");
 
     private static final String CLASS = "UserRegister";
 
-    private AppSession appSession = new AppSession(INTEGRATION_TEST, ARQUILLIAN, Phase.INTEGRATION_TEST, errorHandler, infoHandler);
+    private AppSession appSession = new AppSession(INTEGRATION_TEST, ARQUILLIAN, Phase.INTEGRATION_TEST);
 
     @Deployment
     public static WebArchive createDeployment() {
@@ -731,7 +727,7 @@ public class UserRegister {
             Assert.assertEquals("First name failed", userData.getFirstName(), actual.getFirstName());
             Assert.assertEquals("Last name failed", userData.getLastName(), actual.getLastName());
             Assert.assertEquals("Username failed", userData.getUsername(), actual.getUsername());
-            Assert.assertEquals("Password failed", securityManager.dm5Hash(session, userData.getPassword()), actual.getPassword());
+            Assert.assertEquals("Password failed", securityManager.dm5Hash(userData.getPassword()), actual.getPassword());
             Assert.assertEquals("Email failed", userData.getEmail(), actual.getEmail());
             Assert.assertEquals("Role failed", Roles.ADMIN.role(), actual.getRole().getRole());
 

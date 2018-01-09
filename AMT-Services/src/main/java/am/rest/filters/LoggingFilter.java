@@ -3,13 +3,12 @@ package am.rest.filters;
 
 import am.infrastructure.data.hibernate.model.user.Users;
 import am.main.api.AppLogger;
-import am.main.api.ErrorHandler;
-import am.main.api.InfoHandler;
+import am.main.api.MessageHandler;
 import am.main.session.AppSession;
-import am.main.data.enums.Interface;
-import am.main.data.enums.Source;
 import am.shared.enums.IC;
+import am.shared.enums.Interface;
 import am.shared.enums.Phase;
+import am.shared.enums.Source;
 
 import javax.annotation.Priority;
 import javax.inject.Inject;
@@ -30,14 +29,13 @@ public class LoggingFilter implements ContainerRequestFilter {
     private final String CLASS = "LoggingFilter";
     @Inject private HttpSession httpSession;
     @Inject private AppLogger logger;
-    @Inject private ErrorHandler errorHandler;
-    @Inject private InfoHandler infoHandler;
+    @Inject private MessageHandler messageHandler;
     @Context private HttpServletRequest httpServletRequest;
 
     public void filter(ContainerRequestContext requestContext) throws IOException {
         String FN_NAME = "filter";
-        AppSession session = new AppSession(Source.APP_SERVICES, Interface.REST, Phase.URL_LOGGING,
-                httpSession.getId(), CLASS, FN_NAME, errorHandler, infoHandler, httpServletRequest.getRemoteAddr());
+        AppSession session = new AppSession(Source.AMT_SERVICES, Interface.REST, Phase.URL_LOGGING,
+                httpSession.getId(), CLASS, FN_NAME, httpServletRequest.getRemoteAddr(), messageHandler);
 //        String ip = httpServletRequest.getLocalAddr();
 //        int ip5 = httpServletRequest.getLocalPort();
 //

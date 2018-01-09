@@ -6,8 +6,6 @@ import am.infrastructure.data.enums.Roles;
 import am.infrastructure.data.hibernate.model.lookup.Role;
 import am.infrastructure.data.hibernate.model.user.Users;
 import am.infrastructure.data.view.UserProfileData;
-import am.main.api.ErrorHandler;
-import am.main.api.InfoHandler;
 import am.main.api.db.DBManager;
 import am.main.api.validation.FormValidation;
 import am.main.common.RegExp;
@@ -36,8 +34,8 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import static am.main.data.enums.Interface.ARQUILLIAN;
-import static am.main.data.enums.Source.INTEGRATION_TEST;
+import static am.shared.enums.Interface.ARQUILLIAN;
+import static am.shared.enums.Source.INTEGRATION_TEST;
 import static amt.common.constants.Error.TEST_CASE;
 import static amt.common.constants.Error.USER.CHANGE_ROLE_VALIDATION_ERROR;
 
@@ -49,8 +47,6 @@ public class UserProfile {
     @Inject private Repository repository;
     @Inject private DBManager dbManager;
     @Inject private DataGenerator dataGenerator;
-    @Inject private ErrorHandler errorHandler;
-    @Inject private InfoHandler infoHandler;
 
     private static final Integer STD_USER_ID = 5;
     private static final Integer TUTOR_USER_ID = 8;
@@ -59,7 +55,7 @@ public class UserProfile {
     private static final Integer TUTOR_HAS_COURSES_USER_ID = 9;
     private static final String CLASS = "UserLogin";
 
-    private AppSession appSession = new AppSession(INTEGRATION_TEST, ARQUILLIAN, Phase.INTEGRATION_TEST, errorHandler, infoHandler);
+    private AppSession appSession = new AppSession(INTEGRATION_TEST, ARQUILLIAN, Phase.INTEGRATION_TEST);
 
     @Deployment
     public static WebArchive createDeployment() {

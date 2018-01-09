@@ -14,9 +14,6 @@ import am.infrastructure.data.hibernate.model.lookup.CourseLevel;
 import am.infrastructure.data.hibernate.model.lookup.CourseType;
 import am.infrastructure.data.hibernate.model.lookup.MaterialType;
 import am.infrastructure.data.hibernate.model.user.Users;
-import am.main.api.AppConfigManager;
-import am.main.api.ErrorHandler;
-import am.main.api.InfoHandler;
 import am.main.api.db.DBManager;
 import am.main.api.validation.FormValidation;
 import am.main.session.AppSession;
@@ -46,8 +43,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
-import static am.main.data.enums.Interface.ARQUILLIAN;
-import static am.main.data.enums.Source.INTEGRATION_TEST;
+import static am.shared.enums.Interface.ARQUILLIAN;
+import static am.shared.enums.Source.INTEGRATION_TEST;
 import static amt.common.constants.Error.COURSE.*;
 import static amt.common.constants.Error.LOOKUP_NOT_FOUND;
 import static amt.common.constants.Error.TEST_CASE;
@@ -59,14 +56,11 @@ import static amt.common.constants.Error.TEST_CASE;
 public class NewCourse {
     @Inject private Repository repository;
     @Inject private DBManager dbManager;
-    @Inject private AppConfigManager appConfigManager;
     @Inject private DataGenerator dataGenerator;
-    @Inject private ErrorHandler errorHandler;
-    @Inject private InfoHandler infoHandler;
 
     private static final String CLASS = "NewCourse";
 
-    private AppSession appSession = new AppSession(INTEGRATION_TEST, ARQUILLIAN, Phase.INTEGRATION_TEST, errorHandler, infoHandler);
+    private AppSession appSession = new AppSession(INTEGRATION_TEST, ARQUILLIAN, Phase.INTEGRATION_TEST);
 
     @Deployment
     public static WebArchive createDeployment() {

@@ -10,19 +10,14 @@ import am.infrastructure.data.view.lookup.list.NewCourseLookup;
 import am.infrastructure.data.view.resultset.CourseListRS;
 import am.infrastructure.data.view.ui.CourseListUI;
 import am.main.api.AppLogger;
-import am.main.api.ErrorHandler;
-import am.main.api.InfoHandler;
+import am.main.api.MessageHandler;
 import am.main.api.validation.FormValidation;
 import am.main.data.dto.ListResultSet;
 import am.main.data.dto.SortingInfo;
-import am.main.data.enums.Interface;
-import am.main.data.enums.Source;
 import am.main.session.AppSession;
 import am.rest.annotations.Authorized;
 import am.shared.enums.EC;
 import am.shared.enums.Forms;
-import am.shared.enums.IC;
-import am.shared.enums.Phase;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
@@ -34,7 +29,10 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import static am.infrastructure.generic.ConfigParam.AUTH_USER;
+import static am.infrastructure.generic.ConfigParam.SOURCE;
 import static am.infrastructure.generic.ConfigUtils.businessException;
+import static am.shared.enums.Interface.REST;
+import static am.shared.enums.Phase.*;
 
 /**
  * Created by ahmed.motair on 9/18/2017.
@@ -43,14 +41,15 @@ import static am.infrastructure.generic.ConfigUtils.businessException;
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class CourseResource {
-    private static final String CLASS = "CourseResource";
+    private static final String CLASS = CourseResource.class.getSimpleName();
 
-    @Inject private ErrorHandler errorHandler;
-    @Inject private CourseService courseService;
-    @Inject private InfoHandler infoHandler;
     @Inject private AppLogger logger;
+    @Inject private MessageHandler messageHandler;
+
     @Inject private HttpSession httpSession;
     @Context private HttpServletRequest httpServletRequest;
+
+    @Inject private CourseService courseService;
 
     @Path("/new")
     @POST
@@ -58,9 +57,9 @@ public class CourseResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response addNewCourse(CourseData courseData, @Context ContainerRequestContext crc) {
-        String FN_NAME = "addNewCourse";
-        AppSession session = new AppSession(Source.APP_SERVICES, Interface.REST, Phase.COURSE_CREATE,
-                httpSession.getId(), CLASS, FN_NAME, errorHandler, infoHandler, httpServletRequest.getRemoteAddr());
+        String METHOD = "addNewCourse";
+        AppSession session = new AppSession(SOURCE, REST, COURSE_NEW, httpSession.getId(),
+                CLASS, METHOD, httpServletRequest.getRemoteAddr(), messageHandler);
         try {
             courseService.validatedNewCourseData(session, courseData);
 
@@ -80,14 +79,13 @@ public class CourseResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response getCourseList(CourseListFilter courseListFilters, @Context ContainerRequestContext crc) {
-        String FN_NAME = "getCourseList";
-        AppSession session = new AppSession(Source.APP_SERVICES, Interface.REST, Phase.COURSE_VIEW,
-                httpSession.getId(), CLASS, FN_NAME, errorHandler, infoHandler, httpServletRequest.getRemoteAddr());
+        String METHOD = "getCourseList";
+        AppSession session = new AppSession(SOURCE, REST, COURSE_LIST, httpSession.getId(),
+                CLASS, METHOD, httpServletRequest.getRemoteAddr(), messageHandler);
         try {
             // Validating the Form Data
-            new FormValidation<CourseListFilter>(session, courseListFilters, EC.AMT_0001, Forms.COURSE_LIST_FILTERS);
-            new FormValidation<SortingInfo>(session, courseListFilters.getSorting(), EC.AMT_0001, Forms.COURSE_LIST_FILTERS);
-            logger.info(session, IC.AMT_0001, Forms.COURSE_LIST_FILTERS);
+            new FormValidation<CourseListFilter>(session, logger, courseListFilters, EC.AMT_0001, Forms.COURSE_LIST_FILTERS);
+            new FormValidation<SortingInfo>(session, logger, courseListFilters.getSorting(), EC.AMT_0001, Forms.COURSE_LIST_FILTERS);
 
             Users loggedInUser = (Users) crc.getProperty(AUTH_USER);
             ListResultSet<CourseListUI> resultSet = courseService.getCourseList(session, courseListFilters, loggedInUser);
@@ -103,9 +101,9 @@ public class CourseResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response getCourseListLookup(@Context ContainerRequestContext crc) {
-        String FN_NAME = "getCourseListLookup";
-        AppSession session = new AppSession(Source.APP_SERVICES, Interface.REST, Phase.COURSE_VIEW,
-                httpSession.getId(), CLASS, FN_NAME, errorHandler, infoHandler, httpServletRequest.getRemoteAddr());
+        String METHOD = "getCourseListLookup";
+        AppSession session = new AppSession(SOURCE, REST, COURSE_LIST, httpSession.getId(),
+                CLASS, METHOD, httpServletRequest.getRemoteAddr(), messageHandler);
         try {
             CourseListLookup result = courseService.getCourseListLookup(session);
             return Response.ok().entity(result).build();
@@ -118,9 +116,9 @@ public class CourseResource {
     @GET
     @Authorized({Roles.TUTOR})
     public Response getNewCourseLookups() {
-        String FN_NAME = "getNewCourseLookups";
-        AppSession session = new AppSession(Source.APP_SERVICES, Interface.REST, Phase.COURSE_CREATE,
-            httpSession.getId(), CLASS, FN_NAME, errorHandler, infoHandler, httpServletRequest.getRemoteAddr());
+        String METHOD = "getNewCourseLookups";
+        AppSession session = new AppSession(SOURCE, REST, COURSE_NEW, httpSession.getId(),
+                CLASS, METHOD, httpServletRequest.getRemoteAddr(), messageHandler);
         try{
             NewCourseLookup result = courseService.getNewCourseLookup(session);
             return Response.ok().entity(result).build();
@@ -133,9 +131,9 @@ public class CourseResource {
     @GET
     @Authorized
     public Response getCourseByID(@PathParam("courseID") String courseID)  {
-        String FN_NAME = "getCourseByID";
-        AppSession session = new AppSession(Source.APP_SERVICES, Interface.REST, Phase.COURSE_VIEW,
-            httpSession.getId(), CLASS, FN_NAME, errorHandler, infoHandler, httpServletRequest.getRemoteAddr());
+        String METHOD = "getCourseByID";
+        AppSession session = new AppSession(SOURCE, REST, COURSE_DETAIL, httpSession.getId(),
+                CLASS, METHOD, httpServletRequest.getRemoteAddr(), messageHandler);
         try {
             CourseData result = courseService.getCourseByID(session, courseID);
             return Response.ok().entity(result).build();

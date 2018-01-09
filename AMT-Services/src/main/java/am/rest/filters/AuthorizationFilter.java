@@ -1,17 +1,16 @@
 package am.rest.filters;
 
 
-import am.main.api.AppLogger;
-import am.main.api.ErrorHandler;
-import am.main.api.InfoHandler;
-import am.rest.annotations.Authorized;
-import am.shared.enums.EC;
 import am.application.SecurityService;
+import am.main.api.AppLogger;
+import am.main.api.MessageHandler;
 import am.main.exception.BusinessException;
 import am.main.session.AppSession;
-import am.main.data.enums.Interface;
+import am.rest.annotations.Authorized;
+import am.shared.enums.EC;
+import am.shared.enums.Interface;
 import am.shared.enums.Phase;
-import am.main.data.enums.Source;
+import am.shared.enums.Source;
 
 import javax.annotation.Priority;
 import javax.inject.Inject;
@@ -38,15 +37,14 @@ public class AuthorizationFilter implements ContainerRequestFilter {
     @Context private ResourceInfo resourceInfo;
     @Inject private SecurityService securityService;
     @Inject private AppLogger logger;
-    @Inject private ErrorHandler errorHandler;
-    @Inject private InfoHandler infoHandler;
+    @Inject private MessageHandler messageHandler;
     @Inject private HttpSession httpSession;
     @Context private HttpServletRequest httpServletRequest;
 
     public void filter(ContainerRequestContext requestContext) throws IOException {
         String FN_NAME = "filter";
-        AppSession session = new AppSession(Source.APP_SERVICES, Interface.REST, Phase.AUTHORIZATION,
-                httpSession.getId(), CLASS, FN_NAME, errorHandler, infoHandler, httpServletRequest.getRemoteAddr());
+        AppSession session = new AppSession(Source.AMT_SERVICES, Interface.REST, Phase.AUTHORIZATION,
+                httpSession.getId(), CLASS, FN_NAME, httpServletRequest.getRemoteAddr(), messageHandler);
         try {
             logger.startDebug(session);
 
@@ -63,7 +61,7 @@ public class AuthorizationFilter implements ContainerRequestFilter {
                 );
             else
                 requestContext.abortWith(
-                    Response.status(Response.Status.UNAUTHORIZED).entity(errorHandler.getMsg(session, EC.AMT_0036)).build()
+                    Response.status(Response.Status.UNAUTHORIZED).entity(session.getErrorMsg(EC.AMT_0036)).build()
                 );
         }
     }

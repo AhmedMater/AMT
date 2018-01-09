@@ -13,8 +13,8 @@ import am.infrastructure.data.view.AuthenticatedUser;
 import am.infrastructure.data.view.UserProfileData;
 import am.infrastructure.data.view.lookup.list.UserListLookup;
 import am.infrastructure.data.view.ui.UserListUI;
-import am.main.api.AMSecurityManager;
-import am.main.api.AppConfigManager;
+import am.main.api.ConfigManager;
+import am.main.api.SecurityManager;
 import am.main.api.AppLogger;
 import am.main.api.db.DBManager;
 import am.main.data.dto.ListResultSet;
@@ -40,8 +40,8 @@ public class UserService {
 
     @Inject private AppLogger logger;
     @Inject private UserRepository userRepository;
-    @Inject private AMSecurityManager securityManager;
-    @Inject private AppConfigManager appConfigManager;
+    @Inject private SecurityManager securityManager;
+    @Inject private ConfigManager configManager;
     @Inject private DBManager dbManager;
     @Inject private LookupRepository lookupRepository;
     @Inject private CourseRepository courseRepository;
@@ -66,7 +66,7 @@ public class UserService {
         user.setFirstName(userData.getFirstName());
         user.setLastName(userData.getLastName());
         user.setUsername(userData.getUsername());
-        user.setPassword(securityManager.dm5Hash(session, userData.getPassword()));
+        user.setPassword(securityManager.dm5Hash(userData.getPassword()));
         user.setEmail(userData.getEmail());
         user.setRole(new Role(role));
         user.setCreationDate(new Date());
@@ -98,11 +98,11 @@ public class UserService {
         AuthenticatedUser authenticatedUser = null;
         BusinessException ex = null;
 
-        String hashedPassword = securityManager.dm5Hash(session, password);
+        String hashedPassword = securityManager.dm5Hash(password);
         UserIPDeActive userIPDeActive = userRepository.getUserIPDeActive(session, username, hashedPassword, loginUserIP);
 
-        Integer MAX_LOGIN_TRAILS = appConfigManager.getConfigValue(session, App_CC.MAX_LOGIN_TRAILS, Integer.class);
-        Integer LOGIN_DEACTIVATION_DURATION = appConfigManager.getConfigValue(session, App_CC.LOGIN_ACTIVATE_MINUTES, Integer.class);
+        Integer MAX_LOGIN_TRAILS = configManager.getConfigValue(App_CC.MAX_LOGIN_TRAILS, Integer.class);
+        Integer LOGIN_DEACTIVATION_DURATION = configManager.getConfigValue(App_CC.LOGIN_ACTIVATE_MINUTES, Integer.class);
 
         if(user.getPassword().equals(hashedPassword)){
             //Case: Username and Password are correct and the User is active for this IP
@@ -179,7 +179,7 @@ public class UserService {
         AppSession session = appSession.updateSession(CLASS, FN_NAME);
         logger.startDebug(session, user, (hashedPassword != null ? "Hashed Password":"Null"));
 
-        String token = securityManager.generateToken(session, user.getUsername(), hashedPassword, new Date().getTime());
+        String token = securityManager.generateToken(user.getUsername(), hashedPassword, new Date().getTime());
         AuthenticatedUser authenticatedUser = new AuthenticatedUser(user, token);
 
         UserLoginLog userLoginLog = new UserLoginLog(user, ip);

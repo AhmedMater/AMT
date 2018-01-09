@@ -6,9 +6,7 @@ import am.infrastructure.data.dto.user.UserRegisterData;
 import am.infrastructure.data.enums.Roles;
 import am.infrastructure.data.hibernate.model.user.Users;
 import am.infrastructure.data.view.AuthenticatedUser;
-import am.main.api.AMSecurityManager;
-import am.main.api.ErrorHandler;
-import am.main.api.InfoHandler;
+import am.main.api.SecurityManager;
 import am.main.api.db.DBManager;
 import am.main.session.AppSession;
 import am.shared.enums.Phase;
@@ -22,8 +20,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import static am.main.data.enums.Interface.ARQUILLIAN;
-import static am.main.data.enums.Source.INTEGRATION_TEST;
+import static am.shared.enums.Interface.ARQUILLIAN;
+import static am.shared.enums.Source.INTEGRATION_TEST;
 
 /**
  * Created by ahmed.motair on 11/23/2017.
@@ -31,15 +29,12 @@ import static am.main.data.enums.Source.INTEGRATION_TEST;
 public class DataGenerator {
     @Inject private Repository repository;
     @Inject private DBManager dbManager;
-    @Inject private AMSecurityManager securityManager;
+    @Inject private SecurityManager securityManager;
     @Inject private SecurityService securityService;
-
-    @Inject private ErrorHandler errorHandler;
-    @Inject private InfoHandler infoHandler;
 
     private static final String CLASS = "DataGenerator";
 
-    private AppSession appSession = new AppSession(INTEGRATION_TEST, ARQUILLIAN, Phase.INTEGRATION_TEST, errorHandler, infoHandler);
+    private AppSession appSession = new AppSession(INTEGRATION_TEST, ARQUILLIAN, Phase.INTEGRATION_TEST);
 
     /**
      * <p>Calling the User Registering REST to insert new User in the Database and confirm its insertion</p>
@@ -63,7 +58,7 @@ public class DataGenerator {
         Assert.assertEquals("First name failed", data.getFirstName(), actual.getFirstName());
         Assert.assertEquals("Last name failed", data.getLastName(), actual.getLastName());
         Assert.assertEquals("Username failed", data.getUsername(), actual.getUsername());
-        Assert.assertEquals("Password failed", securityManager.dm5Hash(session, data.getPassword()), actual.getPassword());
+        Assert.assertEquals("Password failed", securityManager.dm5Hash(data.getPassword()), actual.getPassword());
         Assert.assertEquals("Email failed", data.getEmail(), actual.getEmail());
         Assert.assertEquals("Role failed", Roles.STUDENT.role(), actual.getRole().getRole());
 

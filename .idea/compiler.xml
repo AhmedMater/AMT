@@ -7,6 +7,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="AM-Resources" />
+        <module name="AMT-Logger" />
         <module name="AMT-Services" />
         <module name="AMT-Shared-Resources" />
         <module name="Data-Generator" />
@@ -15,6 +16,7 @@
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="AM-Resources" target="1.8" />
+      <module name="AMT-Logger" target="1.8" />
       <module name="AMT-Services" target="1.8" />
       <module name="AMT-Shared-Resources" target="1.8" />
       <module name="Data-Generator" target="1.8" />
