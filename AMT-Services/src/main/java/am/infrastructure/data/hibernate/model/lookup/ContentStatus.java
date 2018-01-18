@@ -9,6 +9,8 @@ import java.io.Serializable;
 @Entity
 @Table(name = "content_status")
 public class ContentStatus implements Serializable{
+    public static final String STATUS = "status";
+
     @Id
     @Column(name = "status")
     private String status;

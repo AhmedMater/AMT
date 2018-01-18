@@ -20,7 +20,10 @@ import java.util.List;
  */
 public class DeploymentManger {
 
-    private static final String AMT_SERVICES_PATH = "F:\\Giza-Projects\\AMT\\AMT-Code\\target\\AMT-Services.war";
+    private static final String APPS_PATH = "F:\\Giza-Projects\\AMT\\AMT-Code\\target\\";
+
+    private static final String AMT_SERVICES_PATH = "AMT-Services.war";
+    private static final String AMT_LOGGER_PATH = "AMT-Logger.war";
     private static final String BASE_URL = "http://localhost/AMT-Services/api";
 
     private static Class[] classes = {
@@ -28,9 +31,21 @@ public class DeploymentManger {
             Util.class, ScriptPaths.class, Scripts.class, Error.class, Method.class, Rest.class
     };
 
-    public static WebArchive createDeployment(List<String> ... resourceFiles) {
-        WebArchive archive = ShrinkWrap.createFromZipFile(WebArchive.class,
+    public static WebArchive AMTServicesWAR(List<String> ... resourceFiles) {
+        WebArchive archive = ShrinkWrap.
+                createFromZipFile(WebArchive.class,
                 new File(AMT_SERVICES_PATH)).addClasses(classes);
+
+        for (List<String> resources : resourceFiles)
+            for (String resource: resources)
+                archive.addAsResource(resource, resource);
+
+        return archive;
+    }
+
+    public static WebArchive AMTLoggerWAR(List<String> ... resourceFiles) {
+        WebArchive archive = ShrinkWrap.createFromZipFile(WebArchive.class,
+                new File(AMT_LOGGER_PATH)).addClasses(classes);
 
         for (List<String> resources : resourceFiles)
             for (String resource: resources)

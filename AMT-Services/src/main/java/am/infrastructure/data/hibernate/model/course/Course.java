@@ -27,11 +27,15 @@ import static am.shared.enums.EC.AMT_0002;
 @Cacheable(false)
 @Table(name = "course")
 public class Course implements Serializable{
+
+    public static final String CLASS = Course.class.getSimpleName();
+
     public static final String COURSE_CREATOR_USER_ID = "createdBy." + Users.USER_ID;
     public static final String CREATION_DATE = "creationDate";
     public static final String COURSE_NAME = "courseName";
     public static final String COURSE_TYPE = "courseType." + CourseType.TYPE;
     public static final String COURSE_LEVEL = "courseLevel." + CourseLevel.LEVEL;
+    public static final String COURSE_STATUS = "courseStatus." + ContentStatus.STATUS;
 
     @Id
     @Column(name = "course_id")

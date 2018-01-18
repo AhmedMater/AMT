@@ -1,4 +1,4 @@
-package am.shared.enums;
+package am.shared.enums.notification;
 
 /**
  * Created by ahmed.motair on 1/6/2018.

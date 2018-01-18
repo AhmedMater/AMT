@@ -1,6 +1,8 @@
 package am.shared.enums;
 
-import static am.shared.enums.Category.*;
+import am.shared.enums.notification.Category;
+
+import static am.shared.enums.notification.Category.*;
 import static am.shared.enums.LoggerLevels.ST_DEBUG;
 
 /**
@@ -8,7 +10,6 @@ import static am.shared.enums.LoggerLevels.ST_DEBUG;
  */
 public enum Phase {
     SECURITY_MANAGER(AM, "Security-Manager", true, ST_DEBUG),
-    NOTIFICATION_MANAGER(AM, "Notification-Manager", true, ST_DEBUG),
     MESSAGE_HANDLER(AM, "Message-Handler", true, ST_DEBUG),
     XML_HANDLER(AM, "XML-Handler", true, ST_DEBUG),
     JMS_MANAGER(AM, "JMS-Manager", true, ST_DEBUG),
@@ -17,10 +18,9 @@ public enum Phase {
     CONFIG_MANAGER(AM, "Config-Manager", true, ST_DEBUG),
     APP_LOGGER(AM, "App-Logger", true, ST_DEBUG),
 
-    AMT_LOGGING(GENERIC, "AMT-Logging", true, ST_DEBUG),
-//
-//    AM_INITIALIZING(AM, "AM-Initializing", true, ST_DEBUG),
-//    AM_LIBRARY(AM, "AM-Library", true, ST_DEBUG),
+    AM_LOGGING(GENERIC, "AM-Logging", true, ST_DEBUG),
+    AM_NOTIFICATION(AM, "AM-Notification", true, ST_DEBUG),
+
     INTEGRATION_TEST(AM, "Integration-Test", true, ST_DEBUG),
 
     AUTHORIZATION(SECURITY, "Authorization", true, ST_DEBUG),

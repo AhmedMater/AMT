@@ -5,9 +5,12 @@ package am.shared.enums;
  */
 public enum Source {
     AM("AM-Library"),
+    AM_LOGGER("AM-Logger"),
+    AM_NOTIFICATION("AM-Notification"),
+    AM_FILE_MANAGER("AM-File-Manager"),
+
     AMT_SERVICES("AMT-Services"),
-    INTEGRATION_TEST("Integration-Test"),
-    AMT_LOGGER("AMT-Logger");
+    INTEGRATION_TEST("Integration-Test");
 
     private String value;
 

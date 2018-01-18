@@ -14,20 +14,29 @@ import am.infrastructure.data.view.lookup.list.CourseListLookup;
 import am.infrastructure.data.view.lookup.list.NewCourseLookup;
 import am.infrastructure.data.view.ui.CourseListUI;
 import am.main.api.AppLogger;
+import am.main.api.JMSManager;
 import am.main.api.SecurityManager;
 import am.main.api.db.DBManager;
 import am.main.api.validation.FormValidation;
 import am.main.data.dto.ListResultSet;
+import am.main.exception.BusinessException;
 import am.main.session.AppSession;
 import am.repository.CourseRepository;
+import am.shared.dto.AMDestination;
+import am.shared.dto.AMNotification;
 import am.shared.enums.EC;
 import am.shared.enums.Forms;
+import am.shared.enums.notification.AMEventNotifications;
+import am.shared.enums.notification.AMEvents;
+import am.shared.enums.notification.Attributes;
 
 import javax.inject.Inject;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import static am.infrastructure.data.enums.ContentStatus.FUTURE;
+import static am.shared.enums.JMSQueues.NOTIFICATION_INPUT;
+import static am.shared.enums.notification.AMEventNotifications.*;
+import static am.shared.enums.notification.Attributes.*;
 
 /**
  * Created by ahmed.motair on 11/6/2017.
@@ -38,7 +47,7 @@ public class CourseService {
     @Inject private AppLogger logger;
     @Inject private CourseRepository courseRepository;
     @Inject private SecurityManager securityManager;
-//    @Inject private AppConfigManager appConfigManager;
+    @Inject private JMSManager jmsManager;
     @Inject private DBManager dbManager;
 
     public void validatedNewCourseData(AppSession appSession, CourseData courseData){
@@ -72,17 +81,51 @@ public class CourseService {
         course.setActualDuration(0);
         course.setCourseStatus(new ContentStatus(FUTURE.status()));
 
-//        Integer numOfDays = (int) Math.ceil((courseData.getEstimatedDuration() * 60) / courseData.getEstimatedMinPerDay());
-//        LocalDateTime dueDateTime = LocalDateTime.ofInstant(courseData.getStartDate().toInstant(), ZoneId.systemDefault())
-//                .plusDays(numOfDays);
-//        course.setDueDate(Date.from(dueDateTime.atZone(ZoneId.systemDefault()).toInstant()));
+        if(!courseRepository.canTutorAddNewCourse(session, tutorUser))
+            throw new BusinessException(session, EC.AMT_0041);
 
         String courseID = courseRepository.generateCourseID(session, course);
         course.setCourseID(courseID);
 
         course = dbManager.persist(session, course, true);
+
+
         logger.endDebug(session, courseID);
         return courseID;
+    }
+
+    public void generateNewCourseNotification(AppSession appSession, Course course) throws Exception{
+
+        Map<Attributes, String> parameters = new HashMap<>();
+        parameters.put(COURSE_ID, course.getCourseID());
+        parameters.put(COURSE_NAME, course.getCourseName());
+        parameters.put(COURSE_LEVEL, course.getCourseLevel().getDescription());
+        parameters.put(COURSE_TYPE, course.getCourseType().getDescription());
+        parameters.put(COURSE_ESTIMATED_DURATION, course.getEstimatedDuration().toString() + " Hr");
+
+        Map<AMEventNotifications, List<AMDestination>> emails = new HashMap<>();
+
+        List<AMDestination> interestedStudents = new ArrayList<>();
+        interestedStudents.add(new AMDestination("ahmedmotair@gmail.com", "01273024235", "1234"));
+        interestedStudents.add(new AMDestination("amrmotair@gmail.com", "01273024235", "1234"));
+
+        List<AMDestination> interestedTechRev = new ArrayList<>();
+        interestedTechRev.add(new AMDestination("manal.mahmoud.gouda@gmail.com", "01001997640", "2234"));
+
+        List<AMDestination> interestedTranslators = new ArrayList<>();
+        interestedTranslators.add(new AMDestination("night.wolf2015@yahoo.com", "01174254232", "934"));
+
+        emails.put(IS, interestedStudents);
+        emails.put(ITR, interestedTechRev);
+        emails.put(ITT, interestedTranslators);
+
+        AMNotification notification = new AMNotification();
+        notification.setEvent(AMEvents.NEW_COURSE);
+        notification.setCategoryRelatedID(course.getCourseID());
+        notification.setParameters(parameters);
+        notification.setDestinations(emails);
+
+        jmsManager.sendMessage(NOTIFICATION_INPUT, notification);
     }
 
     public NewCourseLookup getNewCourseLookup(AppSession appSession) throws Exception{

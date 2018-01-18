@@ -140,8 +140,8 @@ public class UserRepository {
         queryBuilder.setFrom(from);
 
         String realNameAttribute = "concat(" + Users.FIRST_NAME + ", concat(' ', " + Users.LAST_NAME + "))";
-        queryBuilder.addCondition(new HQLCondition<String>(filters.getRealName(), realNameAttribute, LIKE));
-        queryBuilder.addCondition(new HQLCondition<String>(filters.getRole(), Users.ROLE, EQ));
+        queryBuilder.addCondition(new HQLCondition<String>(realNameAttribute, LIKE, filters.getRealName()));
+        queryBuilder.addCondition(new HQLCondition<String>(Users.ROLE, EQ, filters.getRole()));
         queryBuilder.addCondition(new HQLCondition<Date>(filters.getCreationDateFrom(), filters.getCreationDateTo(), Users.CREATION_DATE));
 
         queryBuilder.setSorting(filters.getSorting());

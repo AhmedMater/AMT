@@ -53,10 +53,37 @@ public class UserRegister {
 
     private AppSession appSession = new AppSession(INTEGRATION_TEST, ARQUILLIAN, Phase.INTEGRATION_TEST);
 
+
     @Deployment
     public static WebArchive createDeployment() {
-        return DeploymentManger.createDeployment(Scripts.getAllScripts());
+        return DeploymentManger.AMTServicesWAR(Scripts.getAllScripts());
     }
+
+
+//    @Deployment(name = "dep1", order = 1)
+//    public static EnterpriseArchive createDep1() {
+//        return ShrinkWrap.create(EnterpriseArchive.class)
+//                .addAsModule(DeploymentManger.AMTLoggerWAR(Scripts.getAllScripts()))
+//                .addAsModule(DeploymentManger.AMTServicesWAR(Scripts.getAllScripts()));
+//    }
+
+
+//    @Deployment(name = "dep1", order = 1)
+//    public static WebArchive createDep1() {
+//        return DeploymentManger.AMTLoggerWAR(Scripts.getAllScripts());
+//    }
+//
+//    @Deployment(name = "dep2", order = 2)
+//    public static WebArchive createDep2() {
+//        return DeploymentManger.AMTServicesWAR(Scripts.getAllScripts());
+//    }
+//
+//    @Test @OperateOnDeployment("dep1")
+//    public void testRunningInDep1() {}
+//
+//    @Test @OperateOnDeployment("dep2")
+//    public void testRunningInDep2() {}
+
 
     @Test @InSequence(1)
     public void startClearingAllDBTables() throws Exception{

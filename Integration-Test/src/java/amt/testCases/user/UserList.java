@@ -46,7 +46,7 @@ public class UserList {
 
     @Deployment
     public static WebArchive createDeployment() {
-        return DeploymentManger.createDeployment(Scripts.getAllScripts());
+        return DeploymentManger.AMTServicesWAR(Scripts.getAllScripts());
     }
 
     private void compareLists(List<Integer> expectedListIDs, List<UserListUI> actual){

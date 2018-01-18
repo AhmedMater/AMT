@@ -59,7 +59,7 @@ public class UserProfile {
 
     @Deployment
     public static WebArchive createDeployment() {
-        return DeploymentManger.createDeployment(Scripts.getAllScripts());
+        return DeploymentManger.AMTServicesWAR(Scripts.getAllScripts());
     }
 
     @Test @InSequence(1)

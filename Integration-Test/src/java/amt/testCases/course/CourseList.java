@@ -52,7 +52,7 @@ public class CourseList {
 
     @Deployment
     public static WebArchive createDeployment() {
-        return DeploymentManger.createDeployment(Scripts.getAllScripts());
+        return DeploymentManger.AMTServicesWAR(Scripts.getAllScripts());
     }
 
     private void compareCourseLists(List<String> expectedCourseIDs, List<CourseListUI> actual){

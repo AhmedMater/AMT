@@ -9,7 +9,8 @@ public enum Forms {
     CHANGE_ROLE("Change Role"),
     NEW_COURSE("New Course"),
     COURSE_LIST_FILTERS("Course List Filters"),
-    USER_LIST_FILTERS("User List Filters");
+    USER_LIST_FILTERS("User List Filters"),
+    NOTIFICATION_EVENT("Notification Event");
 
     private String name;
 

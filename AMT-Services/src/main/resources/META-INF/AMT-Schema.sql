@@ -1,3 +1,3 @@
-DROP SCHEMA amt;
-CREATE SCHEMA amt;
-USE amt;
+DROP SCHEMA IF EXISTS amt_data;
+CREATE SCHEMA amt_data;
+USE amt_data;

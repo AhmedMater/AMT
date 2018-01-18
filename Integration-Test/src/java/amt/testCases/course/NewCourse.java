@@ -64,7 +64,7 @@ public class NewCourse {
 
     @Deployment
     public static WebArchive createDeployment() {
-        return DeploymentManger.createDeployment(Scripts.getAllScripts());
+        return DeploymentManger.AMTServicesWAR(Scripts.getAllScripts());
     }
 
     private CourseData createValidCourseData(){
