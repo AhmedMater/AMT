@@ -7,14 +7,14 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="AM-Resources" />
-        <module name="AMT-Logger" />
         <module name="AMT-Services" />
-        <module name="AMT-Shared-Resources" />
-        <module name="Data-Generator" />
-        <module name="Integration-Test" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="AM-File-Manager" target="1.8" />
+      <module name="AM-Logger" target="1.8" />
+      <module name="AM-Notification" target="1.8" />
+      <module name="AM-Notifier" target="1.8" />
       <module name="AM-Resources" target="1.8" />
       <module name="AMT-Logger" target="1.8" />
       <module name="AMT-Services" target="1.8" />

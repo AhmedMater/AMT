@@ -2,10 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/AM-Resources/AM-Resources.iml" filepath="$PROJECT_DIR$/AM-Resources/AM-Resources.iml" />
-      <module fileurl="file://$PROJECT_DIR$/AMT-Logger/AMT-Logger.iml" filepath="$PROJECT_DIR$/AMT-Logger/AMT-Logger.iml" />
+      <module fileurl="file://$PROJECT_DIR$/AM-Resources/AM-Resources.iml" filepath="$PROJECT_DIR$/AM-Resources/AM-Resources.iml" group="AM-Components" />
       <module fileurl="file://$PROJECT_DIR$/AMT-Services/AMT-Services.iml" filepath="$PROJECT_DIR$/AMT-Services/AMT-Services.iml" />
-      <module fileurl="file://$PROJECT_DIR$/AMT-Shared-Resources/AMT-Shared-Resources.iml" filepath="$PROJECT_DIR$/AMT-Shared-Resources/AMT-Shared-Resources.iml" />
       <module fileurl="file://$PROJECT_DIR$/Data-Generator/Data-Generator.iml" filepath="$PROJECT_DIR$/Data-Generator/Data-Generator.iml" />
       <module fileurl="file://$PROJECT_DIR$/Integration-Test/Integration-Test.iml" filepath="$PROJECT_DIR$/Integration-Test/Integration-Test.iml" />
       <module fileurl="file://$PROJECT_DIR$/Web-App/Web-App.iml" filepath="$PROJECT_DIR$/Web-App/Web-App.iml" />

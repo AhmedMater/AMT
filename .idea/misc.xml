@@ -4,12 +4,13 @@
     <option name="originalFiles">
       <list>
         <option value="$PROJECT_DIR$/../../AM-Resources/pom.xml" />
+        <option value="$PROJECT_DIR$/AMT-Notifier/pom.xml" />
+        <option value="$PROJECT_DIR$/AM-Components/AM-File-Manager/pom.xml" />
+        <option value="$PROJECT_DIR$/AM-Components/AM-Logger/pom.xml" />
+        <option value="$PROJECT_DIR$/AM-Components/AM-Notification/pom.xml" />
         <option value="$PROJECT_DIR$/AM-Resources/pom.xml" />
         <option value="$PROJECT_DIR$/AMT-Services/pom.xml" />
-        <option value="$PROJECT_DIR$/Integration-Test/pom.xml" />
-        <option value="$PROJECT_DIR$/Data-Generator/pom.xml" />
         <option value="$PROJECT_DIR$/AMT-Shared-Resources/pom.xml" />
-        <option value="$PROJECT_DIR$/AMT-Logger/pom.xml" />
       </list>
     </option>
   </component>
