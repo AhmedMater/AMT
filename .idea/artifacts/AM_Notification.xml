@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" build-on-make="true" name="AM-Notification">
+    <output-path>$PROJECT_DIR$/_AMT-Release</output-path>
+    <root id="archive" name="AM-Notification.war">
+      <element id="artifact" artifact-name="AM-Notification exploded" />
+    </root>
+  </artifact>
+</component>

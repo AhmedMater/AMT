@@ -1,5 +1,5 @@
 <component name="ArtifactManager">
-  <artifact type="exploded-war" name="AMT-Services exploded">
+  <artifact type="exploded-war" build-on-make="true" name="AMT-Services exploded">
     <root id="root">
       <element id="directory" name="WEB-INF">
         <element id="directory" name="classes">

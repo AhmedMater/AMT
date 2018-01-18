@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" build-on-make="true" name="AM-File-Manager">
+    <output-path>$PROJECT_DIR$/_AMT-Release</output-path>
+    <root id="archive" name="AM-File-Manager.war">
+      <element id="artifact" artifact-name="AM-File-Manager exploded" />
+    </root>
+  </artifact>
+</component>

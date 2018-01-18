@@ -13,6 +13,11 @@
         <option value="$PROJECT_DIR$/AMT-Shared-Resources/pom.xml" />
         <option value="$PROJECT_DIR$/Integration-Test/pom.xml" />
         <option value="$PROJECT_DIR$/Data-Generator/pom.xml" />
+        <option value="$PROJECT_DIR$/AM-Resources/AM-File-Manager/pom.xml" />
+        <option value="$PROJECT_DIR$/AM-Resources/AM-Logger/pom.xml" />
+        <option value="$PROJECT_DIR$/AM-Resources/AM-Notification/pom.xml" />
+        <option value="$PROJECT_DIR$/AM-Resources/AM-Resources/pom.xml" />
+        <option value="$PROJECT_DIR$/AM-Resources/AM-Shared-Resources/pom.xml" />
       </list>
     </option>
   </component>

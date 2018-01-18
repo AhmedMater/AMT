@@ -6,6 +6,11 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="AM-File-Manager" />
+        <module name="AM-Logger" />
+        <module name="AM-Notification" />
+        <module name="AM-Resources" />
+        <module name="AM-Shared-Resources" />
         <module name="AMT-Services" />
         <module name="Data-Generator" />
         <module name="Integration-Test" />
@@ -17,6 +22,7 @@
       <module name="AM-Notification" target="1.8" />
       <module name="AM-Notifier" target="1.8" />
       <module name="AM-Resources" target="1.8" />
+      <module name="AM-Shared-Resources" target="1.8" />
       <module name="AMT-Logger" target="1.8" />
       <module name="AMT-Services" target="1.8" />
       <module name="AMT-Shared-Resources" target="1.8" />
