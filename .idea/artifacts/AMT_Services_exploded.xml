@@ -7,6 +7,7 @@
           <element id="module-output" name="AM-Resources" />
           <element id="module-output" name="AMT-Services" />
           <element id="jpa-descriptors" facet="AMT-Services/jpa/JPA" />
+          <element id="module-output" name="AM-Shared-Resources" />
         </element>
         <element id="directory" name="lib">
           <element id="library" level="project" name="Maven: org.unitils:unitils-core:3.4.6" />
@@ -57,6 +58,7 @@
           <element id="library" level="project" name="Maven: org.glassfish.hk2.external:asm-all-repackaged:2.5.0-b52" />
           <element id="library" level="project" name="Maven: org.modelmapper:modelmapper:0.7.5" />
           <element id="library" level="project" name="Maven: com.sun.mail:javax.mail:1.5.0" />
+          <element id="library" level="project" name="Maven: javax:javaee-api:7.0" />
         </element>
       </element>
     </root>
