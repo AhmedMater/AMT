@@ -12,8 +12,7 @@ import java.util.Date;
  * Created by ahmed.motair on 9/23/2017.
  */
 @Entity
-@Cacheable(true)
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE, region = ConfigParam.EH_CACHE_READ_WRITE_REGION)
+@Cacheable(false)
 @Table(name = "users")
 public class Users {
     public static final String USER_ID = "userID";

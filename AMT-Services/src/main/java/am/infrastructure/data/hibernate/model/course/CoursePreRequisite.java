@@ -9,7 +9,7 @@ import am.main.session.AppSession;
 import javax.persistence.*;
 import java.io.Serializable;
 
-import static am.shared.enums.EC.AMT_0002;
+import static am.main.data.enums.impl.IEC.E_DB_7;
 
 /**
  * Created by ahmed.motair on 11/7/2017.
@@ -57,7 +57,7 @@ public class CoursePreRequisite implements Serializable {
         if(materialType != null)
             this.type = materialType;
         else
-            throw new BusinessException(session, AMT_0002, MaterialType.class.getSimpleName(), preReq.getType());
+            throw new BusinessException(session, E_DB_7, MaterialType.class.getSimpleName(), preReq.getType());
 
         this.num = preReq.getNum();
         this.name = preReq.getName();

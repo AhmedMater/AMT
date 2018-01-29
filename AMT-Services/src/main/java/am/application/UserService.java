@@ -1,9 +1,9 @@
 package am.application;
 
-import am.infrastructure.data.dto.filters.UserListFilter;
 import am.infrastructure.data.dto.user.LoginData;
 import am.infrastructure.data.dto.user.UserRegisterData;
 import am.infrastructure.data.enums.Roles;
+import am.infrastructure.data.enums.impl.ECC;
 import am.infrastructure.data.hibernate.model.lookup.Role;
 import am.infrastructure.data.hibernate.model.user.UserIPDeActive;
 import am.infrastructure.data.hibernate.model.user.UserIPFailure;
@@ -12,25 +12,24 @@ import am.infrastructure.data.hibernate.model.user.Users;
 import am.infrastructure.data.view.AuthenticatedUser;
 import am.infrastructure.data.view.UserProfileData;
 import am.infrastructure.data.view.lookup.list.UserListLookup;
-import am.infrastructure.data.view.ui.UserListUI;
+import am.main.api.AppLogger;
 import am.main.api.ConfigManager;
 import am.main.api.SecurityManager;
-import am.main.api.AppLogger;
 import am.main.api.db.DBManager;
-import am.main.data.dto.ListResultSet;
 import am.main.exception.BusinessException;
 import am.main.session.AppSession;
 import am.repository.CourseRepository;
 import am.repository.LookupRepository;
 import am.repository.UserRepository;
-import am.shared.enums.App_CC;
-import am.shared.enums.EC;
-import am.shared.enums.IC;
 
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 import java.util.Date;
 import java.util.List;
+
+import static am.infrastructure.data.enums.impl.AMTError.*;
+import static am.infrastructure.data.enums.impl.AMTInfo.I_USR_3;
+import static am.infrastructure.data.enums.impl.AMTInfo.I_USR_4;
 
 /**
  * Created by ahmed.motair on 9/23/2017.
@@ -47,20 +46,20 @@ public class UserService {
     @Inject private CourseRepository courseRepository;
 
     @Transactional
-    public void register(AppSession appSession, UserRegisterData userData, Roles role) throws Exception{
+    public Users register(AppSession appSession, UserRegisterData userData, Roles role) throws Exception{
         String FN_NAME = "register";
         AppSession session = appSession.updateSession(CLASS, FN_NAME);
         logger.startDebug(session, userData);
 
         if(userRepository.checkUsernameInDatabase(session, userData.getUsername()))
-            throw new BusinessException(session, EC.AMT_0021, userData.getUsername());
+            throw new BusinessException(session, E_USR_1, userData.getUsername());
         else
-            logger.info(session, IC.AMT_0004, userData.getUsername());
+            logger.info(session, I_USR_3, userData.getUsername());
 
         if(userRepository.checkEmailInDatabase(session, userData.getEmail()))
-            throw new BusinessException(session, EC.AMT_0022, userData.getEmail());
+            throw new BusinessException(session, E_USR_2, userData.getEmail());
         else
-            logger.info(session, IC.AMT_0005, userData.getEmail());
+            logger.info(session, I_USR_4, userData.getEmail());
 
         Users user = new Users();
         user.setFirstName(userData.getFirstName());
@@ -71,10 +70,9 @@ public class UserService {
         user.setRole(new Role(role));
         user.setCreationDate(new Date());
 
-        dbManager.persist(session, user, true);
-        logger.info(session, IC.AMT_0007, user.getFullName());
-
-        logger.endDebug(session);
+        user = dbManager.persist(session, user, true);
+        logger.endDebug(session, user);
+        return user;
     }
 
     @Transactional(dontRollbackOn = BusinessException.class)
@@ -92,7 +90,7 @@ public class UserService {
         if(user == null) {
             UserIPFailure userIPFailure = new UserIPFailure(username, loginUserIP);
             dbManager.persist(session, userIPFailure, false);
-            throw new BusinessException(session, EC.AMT_0034, username);
+            throw new BusinessException(session, E_USR_4, username);
         }
 
         AuthenticatedUser authenticatedUser = null;
@@ -101,8 +99,8 @@ public class UserService {
         String hashedPassword = securityManager.dm5Hash(password);
         UserIPDeActive userIPDeActive = userRepository.getUserIPDeActive(session, username, hashedPassword, loginUserIP);
 
-        Integer MAX_LOGIN_TRAILS = configManager.getConfigValue(App_CC.MAX_LOGIN_TRAILS, Integer.class);
-        Integer LOGIN_DEACTIVATION_DURATION = configManager.getConfigValue(App_CC.LOGIN_ACTIVATE_MINUTES, Integer.class);
+        Integer MAX_LOGIN_TRAILS = configManager.getConfigValue(ECC.MAX_LOGIN_TRAILS, Integer.class);
+        Integer LOGIN_DEACTIVATION_DURATION = configManager.getConfigValue(ECC.LOGIN_ACTIVATION_MIN, Integer.class);
 
         if(user.getPassword().equals(hashedPassword)){
             //Case: Username and Password are correct and the User is active for this IP
@@ -113,7 +111,7 @@ public class UserService {
 
                 // Case: Correct Authentication, But IP Deactivated, and within the Deactivation time
                 if(diffInMin < LOGIN_DEACTIVATION_DURATION){
-                    ex = new BusinessException(session, EC.AMT_0016, LOGIN_DEACTIVATION_DURATION - diffInMin);
+                    ex = new BusinessException(session, E_USR_5, LOGIN_DEACTIVATION_DURATION - diffInMin);
                     UserLoginLog userLoginLog = new UserLoginLog(userIPDeActive, ex);
                     dbManager.persist(session, userLoginLog, false);
 
@@ -130,7 +128,7 @@ public class UserService {
                 UserIPDeActive newUserIPDeActive = new UserIPDeActive(user, loginUserIP);
                 dbManager.persist(session, newUserIPDeActive, false);
 
-                ex = new BusinessException(session, EC.AMT_0014);
+                ex = new BusinessException(session, E_USR_6);
                 UserLoginLog userLoginLog = new UserLoginLog(newUserIPDeActive, ex);
                 dbManager.persist(session, userLoginLog, false);
 
@@ -139,7 +137,7 @@ public class UserService {
                 userIPDeActive.incTrail();
                 dbManager.merge(session, userIPDeActive, false);
 
-                ex = new BusinessException(session, EC.AMT_0015, userIPDeActive.getTrailNum(), LOGIN_DEACTIVATION_DURATION);
+                ex = new BusinessException(session, E_USR_7, userIPDeActive.getTrailNum(), LOGIN_DEACTIVATION_DURATION);
                 UserLoginLog userLoginLog = new UserLoginLog(userIPDeActive, ex);
                 dbManager.persist(session, userLoginLog, false);
             }else if(userIPDeActive.getActive()){
@@ -149,7 +147,7 @@ public class UserService {
                     userIPDeActive.incTrail();
                     dbManager.merge(session, userIPDeActive, false);
 
-                    ex = new BusinessException(session, EC.AMT_0014);
+                    ex = new BusinessException(session, E_USR_6);
                     UserLoginLog userLoginLog = new UserLoginLog(userIPDeActive, ex);
                     dbManager.persist(session, userLoginLog, false);
 
@@ -158,7 +156,7 @@ public class UserService {
                     userIPDeActive.deActiveIP();
                     dbManager.merge(session, userIPDeActive, false);
 
-                    ex = new BusinessException(session, EC.AMT_0015, userIPDeActive.getTrailNum(), LOGIN_DEACTIVATION_DURATION);
+                    ex = new BusinessException(session, E_USR_7, userIPDeActive.getTrailNum(), LOGIN_DEACTIVATION_DURATION);
                     UserLoginLog userLoginLog = new UserLoginLog(userIPDeActive, ex);
                     dbManager.persist(session, userLoginLog, false);
                 }
@@ -168,10 +166,8 @@ public class UserService {
         if(authenticatedUser != null) {
             logger.endDebug(session, authenticatedUser);
             return authenticatedUser;
-        }else{
-            logger.endDebug(session);
+        }else
             throw ex;
-        }
     }
 
     private AuthenticatedUser correctAuthActive(AppSession appSession, Users user, String hashedPassword, String ip) throws Exception{
@@ -179,7 +175,7 @@ public class UserService {
         AppSession session = appSession.updateSession(CLASS, FN_NAME);
         logger.startDebug(session, user, (hashedPassword != null ? "Hashed Password":"Null"));
 
-        String token = securityManager.generateToken(user.getUsername(), hashedPassword, new Date().getTime());
+        String token = securityManager.generateAccessToken(user.getUsername(), hashedPassword, new Date().getTime());
         AuthenticatedUser authenticatedUser = new AuthenticatedUser(user, token);
 
         UserLoginLog userLoginLog = new UserLoginLog(user, ip);
@@ -189,38 +185,38 @@ public class UserService {
         return authenticatedUser;
     }
 
-    public void changeRole(AppSession appSession, String newRole, String ownerUserID) throws Exception{
-        String FN_NAME = "changeRole";
-        AppSession session = appSession.updateSession(CLASS, FN_NAME);
-        logger.startDebug(session, newRole, ownerUserID);
-
-        Integer ownerID;
-        try {
-            ownerID = new Integer(ownerUserID);
-        }catch (Exception ex){
-            throw new BusinessException(session, EC.AMT_0023, ownerUserID);
-        }
-
-        Users profileOwner = dbManager.find(session, Users.class, ownerID, false);
-        if(profileOwner == null)
-            throw new BusinessException(session, EC.AMT_0023, ownerUserID);
-        else if(profileOwner.getRole().isAdmin())
-            throw new BusinessException(session, EC.AMT_0026);
-        else if(profileOwner.getRole().getRole().equals(Roles.TUTOR.role()) &&
-                courseRepository.userHasCourses(session, profileOwner.getUserID()))
-            throw new BusinessException(session, EC.AMT_0029);
-
-        Role role = dbManager.find(session, Role.class, newRole, true);
-        if(role == null)
-            throw new BusinessException(session, EC.AMT_0002, Role.class.getSimpleName(), newRole);
-        else if(role.isAdmin())
-            throw new BusinessException(session, EC.AMT_0027);
-
-        profileOwner.setRole(role);
-        dbManager.merge(session, profileOwner, false);
-
-        logger.endDebug(session);
-    }
+//    public void changeRole(AppSession appSession, String newRole, String ownerUserID) throws Exception{
+//        String FN_NAME = "changeRole";
+//        AppSession session = appSession.updateSession(CLASS, FN_NAME);
+//        logger.startDebug(session, newRole, ownerUserID);
+//
+//        Integer ownerID;
+//        try {
+//            ownerID = new Integer(ownerUserID);
+//        }catch (Exception ex){
+//            throw new BusinessException(session, EC.AMT_0023, ownerUserID);
+//        }
+//
+//        Users profileOwner = dbManager.find(session, Users.class, ownerID, false);
+//        if(profileOwner == null)
+//            throw new BusinessException(session, EC.AMT_0023, ownerUserID);
+//        else if(profileOwner.getRole().isAdmin())
+//            throw new BusinessException(session, EC.AMT_0026);
+//        else if(profileOwner.getRole().getRole().equals(Roles.TUTOR.role()) &&
+//                courseRepository.userHasCourses(session, profileOwner.getUserID()))
+//            throw new BusinessException(session, EC.AMT_0029);
+//
+//        Role role = dbManager.find(session, Role.class, newRole, true);
+//        if(role == null)
+//            throw new BusinessException(session, EC.AMT_0002, Role.class.getSimpleName(), newRole);
+//        else if(role.isAdmin())
+//            throw new BusinessException(session, EC.AMT_0027);
+//
+//        profileOwner.setRole(role);
+//        dbManager.merge(session, profileOwner, false);
+//
+//        logger.endDebug(session);
+//    }
 
     public UserProfileData getProfileData(AppSession appSession, String ownerUserID, Users viewerUser) throws Exception{
         String FN_NAME = "getProfileData";
@@ -231,12 +227,13 @@ public class UserService {
         try {
             ownerID = new Integer(ownerUserID);
         }catch (Exception ex){
-            throw new BusinessException(session, EC.AMT_0023, ownerUserID);
+            logger.error(session, ex);
+            throw new BusinessException(session, E_USR_9, ownerUserID);
         }
 
         Users profileOwner = dbManager.find(session, Users.class, ownerID, false);
         if(profileOwner == null)
-            throw new BusinessException(session, EC.AMT_0023, ownerID);
+            throw new BusinessException(session, E_USR_10, ownerID);
 
         UserProfileData profileData = new UserProfileData(profileOwner);
 
@@ -268,18 +265,5 @@ public class UserService {
 
         logger.endDebug(session, result);
         return result;
-    }
-
-    @Transactional
-    public ListResultSet<UserListUI> getUserList(AppSession appSession, UserListFilter userListFilters, Users loggedInUser) {
-        String FN_NAME = "getUserList";
-        AppSession session = appSession.updateSession(CLASS, FN_NAME);
-        logger.startDebug(session, userListFilters, loggedInUser);
-
-        ListResultSet<UserListUI> resultSet = new ListResultSet<UserListUI>();
-        resultSet = userRepository.getAllUser(session, userListFilters);
-
-        logger.endDebug(session, resultSet);
-        return resultSet;
     }
 }

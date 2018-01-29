@@ -2,7 +2,6 @@ package am.rest.resources;
 
 import am.application.UserService;
 import am.infrastructure.data.dto.filters.UserListFilter;
-import am.infrastructure.data.dto.user.ChangeRoleData;
 import am.infrastructure.data.dto.user.LoginData;
 import am.infrastructure.data.dto.user.UserRegisterData;
 import am.infrastructure.data.enums.Roles;
@@ -18,8 +17,8 @@ import am.main.api.validation.FormValidation;
 import am.main.data.dto.ListResultSet;
 import am.main.data.dto.SortingInfo;
 import am.main.session.AppSession;
+import am.repository.UserRepository;
 import am.rest.annotations.Authorized;
-import am.shared.enums.EC;
 import am.shared.enums.Forms;
 
 import javax.inject.Inject;
@@ -31,11 +30,14 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import static am.infrastructure.data.enums.impl.AMTError.*;
+import static am.infrastructure.data.enums.impl.AMTInfo.*;
+import static am.infrastructure.data.enums.impl.AMTPhase.*;
 import static am.infrastructure.generic.ConfigParam.AUTH_USER;
 import static am.infrastructure.generic.ConfigParam.SOURCE;
 import static am.infrastructure.generic.ConfigUtils.businessException;
-import static am.shared.enums.Interface.REST;
-import static am.shared.enums.Phase.*;
+import static am.main.data.enums.Interface.REST;
+import static am.main.data.enums.impl.IEC.E_VAL_0;
 
 /**
  * Created by ahmed.motair on 9/23/2017.
@@ -53,6 +55,7 @@ public class UserResource {
     @Context private HttpServletRequest httpServletRequest;
 
     @Inject private UserService userService;
+    @Inject private UserRepository userRepository;
 
     @Path("/register")
     @POST
@@ -61,13 +64,14 @@ public class UserResource {
         AppSession session = new AppSession(SOURCE, REST, USER_REGISTRATION, httpSession.getId(),
                 CLASS, METHOD, httpServletRequest.getRemoteAddr(), messageHandler);
         try{
-            // Validating the Form Data
-            new FormValidation<UserRegisterData>(session, logger, userRegisterData, EC.AMT_0001, Forms.REGISTER);
+            logger.info(session, I_USR_1);
+            new FormValidation<UserRegisterData>(session, logger, userRegisterData, E_VAL_0, Forms.REGISTER);
 
             userService.register(session, userRegisterData, Roles.STUDENT);
+            logger.info(session, I_USR_2, userRegisterData.fullName());
             return Response.ok().build();
         }catch (Exception ex){
-            throw businessException(logger, session, ex, EC.AMT_0050, userRegisterData.fullName());
+            throw businessException(logger, session, ex, E_USR_3, userRegisterData.fullName());
         }
     }
 
@@ -80,13 +84,13 @@ public class UserResource {
 //                httpSession.getId(), CLASS, METHOD, httpServletRequest.getRemoteAddr(), messageHandler);
 //        try{
 //            // Validating the Form Data
-//            new FormValidation<UserRegisterData>(session, adminUserData, EC.AMT_0001, Forms.REGISTER);
-//            logger.info(session, IC.AMT_0001, Forms.LOGIN);
+//            new FormValidation<UserRegisterData>(session, adminUserData, E_VAL_0, Forms.REGISTER);
+//            loggerList.info(session, IC.AMT_0001, Forms.LOGIN);
 //
 //            userService.register(session, adminUserData, Roles.ADMIN);
 //            return Response.ok().build();
 //        }catch (Exception ex){
-//            throw businessException(logger, session, ex, EC.AMT_0050, adminUserData.fullName());
+//            throw businessException(loggerList, session, ex, EC.AMT_0050, adminUserData.fullName());
 //        }
 //    }
 
@@ -97,39 +101,36 @@ public class UserResource {
         AppSession session = new AppSession(SOURCE, REST, USER_LOGIN, httpSession.getId(),
                 CLASS, METHOD, httpServletRequest.getRemoteAddr(), messageHandler);
         try{
-
-            long startTime = System.currentTimeMillis();
-            // Validating the Form Data
-            new FormValidation<LoginData>(session, logger, loginData, EC.AMT_0001, Forms.LOGIN);
+            logger.info(session, I_USR_5, loginData.getUsername());
+            new FormValidation<LoginData>(session, logger, loginData, E_VAL_0, Forms.LOGIN);
 
             String loginUserIP = httpServletRequest.getRemoteAddr();
             AuthenticatedUser user = userService.login(session, loginData, loginUserIP);
 
-            long endTime = System.currentTimeMillis();
-            System.out.println("Login took " + (endTime - startTime) + " mSec\n");
+            logger.info(session, I_USR_6, user.getFullName());
             return Response.ok().entity(user).build();
         }catch (Exception ex){
-            throw businessException(logger, session, ex, EC.AMT_0017, loginData.getUsername());
+            throw businessException(logger, session, ex, E_USR_8, loginData.getUsername());
         }
     }
 
-    @Path("/profile/changeRole/{ownerID}")
-    @POST
-    @Authorized({Roles.ADMIN, Roles.OWNER})
-    public Response changeUserRole(@PathParam("ownerID") String ownerID, ChangeRoleData changeRoleData) {
-        String METHOD = "changeUserRole";
-        AppSession session = new AppSession(SOURCE, REST, USER_DETAIL, httpSession.getId(),
-                CLASS, METHOD, httpServletRequest.getRemoteAddr(), messageHandler);
-        try{
-            // Validating the Form Data
-            new FormValidation<ChangeRoleData>(session, logger, changeRoleData, EC.AMT_0001, Forms.CHANGE_ROLE);
-
-            userService.changeRole(session, changeRoleData.getNewRole(), ownerID);
-            return Response.ok().build();
-        }catch (Exception ex){
-            throw businessException(logger, session, ex, EC.AMT_0025, ownerID);
-        }
-    }
+//    @Path("/profile/changeRole/{ownerID}")
+//    @POST
+//    @Authorized({Roles.ADMIN, Roles.OWNER})
+//    public Response changeUserRole(@PathParam("ownerID") String ownerID, ChangeRoleData changeRoleData) {
+//        String METHOD = "changeUserRole";
+//        AppSession session = new AppSession(SOURCE, REST, USER_DETAIL, httpSession.getId(),
+//                CLASS, METHOD, httpServletRequest.getRemoteAddr(), messageHandler);
+//        try{
+//            // Validating the Form Data
+//            new FormValidation<ChangeRoleData>(session, logger, changeRoleData, E_VAL_0, Forms.CHANGE_ROLE);
+//
+//            userService.changeRole(session, changeRoleData.getNewRole(), ownerID);
+//            return Response.ok().build();
+//        }catch (Exception ex){
+//            throw businessException(logger, session, ex, EC.AMT_0025, ownerID);
+//        }
+//    }
 
     @Path("/profile/{ownerID}/")
     @GET
@@ -141,11 +142,15 @@ public class UserResource {
         AppSession session = new AppSession(SOURCE, REST, USER_DETAIL, httpSession.getId(),
                 CLASS, METHOD, httpServletRequest.getRemoteAddr(), messageHandler);
         try{
+            logger.info(session, I_USR_7, ownerID);
+
             Users viewer = (Users) crc.getProperty(AUTH_USER);
             UserProfileData userProfileData = userService.getProfileData(session, ownerID, viewer);
+
+            logger.info(session, I_USR_8, userProfileData.getFullName());
             return Response.ok().entity(userProfileData).build();
         }catch (Exception ex){
-            throw businessException(logger, session, ex, EC.AMT_0024, ownerID);
+            throw businessException(logger, session, ex, E_USR_11, ownerID);
         }
     }
 
@@ -159,15 +164,20 @@ public class UserResource {
         AppSession session = new AppSession(SOURCE, REST, USER_LIST, httpSession.getId(),
                 CLASS, METHOD, httpServletRequest.getRemoteAddr(), messageHandler);
         try {
-            // Validating the Form Data
-            new FormValidation<UserListFilter>(session, logger, userListFilters, EC.AMT_0001, Forms.USER_LIST_FILTERS);
-            new FormValidation<SortingInfo>(session, logger, userListFilters.getSorting(), EC.AMT_0001, Forms.USER_LIST_FILTERS);
+            logger.info(session, I_USR_9);
+
+            new FormValidation<UserListFilter>(session, logger, userListFilters, E_VAL_0, Forms.USER_LIST_FILTERS);
+            new FormValidation<SortingInfo>(session, logger, userListFilters.getSorting(), E_VAL_0, Forms.USER_LIST_FILTERS);
 
             Users loggedInUser = (Users) crc.getProperty(AUTH_USER);
-            ListResultSet<UserListUI> resultSet = userService.getUserList(session, userListFilters, loggedInUser);
+
+            ListResultSet<UserListUI> resultSet = new ListResultSet<UserListUI>();
+            resultSet = userRepository.getAllUser(session, userListFilters);
+
+            logger.info(session, I_USR_10);
             return Response.ok().entity(new UserListRS(resultSet)).build();
         }catch (Exception ex){
-            throw businessException(logger, session, ex, EC.AMT_0018);
+            throw businessException(logger, session, ex, E_USR_12);
         }
     }
 
@@ -184,7 +194,7 @@ public class UserResource {
             UserListLookup result = userService.getUserListLookup(session);
             return Response.ok().entity(result).build();
         }catch (Exception ex){
-            throw businessException(logger, session, ex, EC.AMT_0018);
+            throw businessException(logger, session, ex, E_USR_13);
         }
     }
 }

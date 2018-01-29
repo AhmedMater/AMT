@@ -5,10 +5,7 @@ import am.infrastructure.data.hibernate.model.user.Users;
 import am.main.api.AppLogger;
 import am.main.api.MessageHandler;
 import am.main.session.AppSession;
-import am.shared.enums.IC;
-import am.shared.enums.Interface;
-import am.shared.enums.Phase;
-import am.shared.enums.Source;
+import am.main.data.enums.Interface;
 
 import javax.annotation.Priority;
 import javax.inject.Inject;
@@ -19,6 +16,11 @@ import javax.ws.rs.container.ContainerRequestFilter;
 import javax.ws.rs.container.PreMatching;
 import javax.ws.rs.core.Context;
 import java.io.IOException;
+
+import static am.infrastructure.data.enums.impl.AMTInfo.I_USR_11;
+import static am.infrastructure.data.enums.impl.AMTInfo.I_USR_12;
+import static am.infrastructure.data.enums.impl.AMTPhase.URL_LOGGING;
+import static am.infrastructure.generic.ConfigParam.SOURCE;
 
 /**
  * Created by mohamed.elewa on 8/3/2016.
@@ -34,7 +36,7 @@ public class LoggingFilter implements ContainerRequestFilter {
 
     public void filter(ContainerRequestContext requestContext) throws IOException {
         String FN_NAME = "filter";
-        AppSession session = new AppSession(Source.AMT_SERVICES, Interface.REST, Phase.URL_LOGGING,
+        AppSession session = new AppSession(SOURCE, Interface.REST, URL_LOGGING,
                 httpSession.getId(), CLASS, FN_NAME, httpServletRequest.getRemoteAddr(), messageHandler);
 //        String ip = httpServletRequest.getLocalAddr();
 //        int ip5 = httpServletRequest.getLocalPort();
@@ -54,9 +56,9 @@ public class LoggingFilter implements ContainerRequestFilter {
 
         Users authenticatedUser = (Users) requestContext.getProperty("Authenticated-User");
         if(authenticatedUser != null)
-            logger.info(session, IC.AMT_0002, authenticatedUser, requestContext.getUriInfo().getRequestUri().toString());
+            logger.info(session, I_USR_11, authenticatedUser, requestContext.getUriInfo().getRequestUri().toString());
         else
-            logger.info(session, IC.AMT_0003, requestContext.getUriInfo().getRequestUri().toString());
+            logger.info(session, I_USR_12, requestContext.getUriInfo().getRequestUri().toString());
     }
 
 

@@ -1,26 +1,26 @@
 package am.application;
 
 
-import am.main.api.SecurityManager;
-import am.main.api.AppLogger;
-import am.shared.enums.EC;
-import am.main.exception.BusinessException;
 import am.infrastructure.data.enums.Roles;
 import am.infrastructure.data.hibernate.model.lookup.Role;
 import am.infrastructure.data.hibernate.model.user.Users;
+import am.main.api.AppLogger;
+import am.main.api.SecurityManager;
+import am.main.exception.BusinessException;
+import am.main.session.AppSession;
 import am.repository.UserRepository;
 import am.rest.annotations.Authorized;
-import am.main.session.AppSession;
 
 import javax.inject.Inject;
-import javax.ws.rs.NotAuthorizedException;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ResourceInfo;
 import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.Response;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
 import java.util.*;
+
+import static am.infrastructure.data.enums.impl.AMTError.*;
+import static javax.ws.rs.core.Response.Status.UNAUTHORIZED;
 
 /**
  * Created by Ahmed Mater on 5/9/2017.
@@ -102,7 +102,7 @@ public class SecurityService {
                 authorized = true;
 
         if(!authorized)
-            throw new NotAuthorizedException(session, EC.AMT_0031, authenticatedUser.getFullName());
+            throw new BusinessException(session, UNAUTHORIZED, E_USR_14, authenticatedUser.getFullName());
 
         logger.endDebug(session);
     }
@@ -114,7 +114,7 @@ public class SecurityService {
 
         String authorizationHeader = requestContext.getHeaderString(HttpHeaders.AUTHORIZATION);
         if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer "))
-            throw new NotAuthorizedException(session, EC.AMT_0032, requestContext.getUriInfo().getAbsolutePath().toString());
+            throw new BusinessException(session, UNAUTHORIZED, E_USR_15, requestContext.getUriInfo().getAbsolutePath().toString());
 
         // Extract the token from the HTTP Authorization header
         String token = authorizationHeader.substring("Bearer".length()).trim();
@@ -146,28 +146,28 @@ public class SecurityService {
                 long diffMinutes = diff / (60 * 1000) % 60;
 
                 if(diffMinutes > EXPIRATION_MINUTES)
-                    throw new BusinessException(session, Response.Status.UNAUTHORIZED, EC.AMT_0033);
+                    throw new BusinessException(session, UNAUTHORIZED, E_USR_16);
                 else {
                     Users userOfToken = userRepository.getUserByUserName(session, username);
                     if(userOfToken==null)
-                        throw new BusinessException(session, Response.Status.UNAUTHORIZED, EC.AMT_0034, userOfToken.getFullName());
+                        throw new BusinessException(session, UNAUTHORIZED, E_USR_17, userOfToken.getFullName());
 
                     String password = userOfToken.getPassword();
-                    String ComputedHash = securityManager.generateToken(username, password, ticks);
+                    String ComputedHash = securityManager.generateAccessToken(username, password, ticks);
 
                     if(!token.equals(ComputedHash))
-                        throw new BusinessException(session, Response.Status.UNAUTHORIZED, EC.AMT_0035);
+                        throw new BusinessException(session, UNAUTHORIZED, E_USR_18);
 
                     logger.endDebug(session, userOfToken);
                     return userOfToken;
                 }
             } else
-                throw new BusinessException(session, Response.Status.UNAUTHORIZED, EC.AMT_0035);
+                throw new BusinessException(session, UNAUTHORIZED, E_USR_18);
         }catch (Exception ex){
             if(ex instanceof BusinessException)
                 throw (BusinessException)ex;
 
-            throw new BusinessException(session, ex, EC.AMT_0030);
+            throw new BusinessException(session, E_USR_19);
         }
     }
 

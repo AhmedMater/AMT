@@ -1,7 +1,5 @@
 package am.rest;
 
-import am.main.common.ConfigParam;
-//import am.rest.filters.AuthenticationFilter;
 import am.rest.filters.AuthorizationFilter;
 import am.rest.filters.CORSResponseFilter;
 import am.rest.filters.LoggingFilter;
@@ -10,9 +8,10 @@ import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 
 import javax.enterprise.context.RequestScoped;
-import javax.naming.InitialContext;
 import javax.servlet.http.HttpSession;
 import javax.ws.rs.ApplicationPath;
+
+//import am.rest.filters.AuthenticationFilter;
 
 /**
  * Created by ahmed.motair on 9/9/2017.
@@ -22,8 +21,6 @@ public class AMTApplication extends ResourceConfig {
 
     public AMTApplication() {
         try {
-            InitialContext ctx = new InitialContext();
-            ConfigParam.APP_CONFIG_PATH = (String) ctx.lookup("AMTConfigPath");
 
             //register filters
             register(CORSResponseFilter.class);

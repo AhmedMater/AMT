@@ -35,7 +35,7 @@ public class LookupRepository {
 
 //    public Role getNonAdminRole(AppSession am.shared.session, String newRole) throws Exception{
 //        String FN_NAME = "getNonAdminRole";
-//        logger.startDebug(am.shared.session);
+//        loggerList.startDebug(am.shared.session);
 //        Role role = new Role();
 //
 //        Map<String, Object> parameters = new HashMap<>();
@@ -45,13 +45,13 @@ public class LookupRepository {
 //            role = dbManager.getSingleResult(am.shared.session, true, Role.class, parameters);
 //        }catch (DBException ex){
 //            if(ex.getAME_CODE().equals(AME.DB_016)) {
-//                logger.error(am.shared.session, ex);
+//                loggerList.error(am.shared.session, ex);
 //                return null;
 //            }else
 //                throw ex;
 //        }
 //
-//        logger.endDebug(am.shared.session, role);
+//        loggerList.endDebug(am.shared.session, role);
 //        return role;
 //    }
 }

@@ -4,13 +4,10 @@ package am.rest.filters;
 import am.application.SecurityService;
 import am.main.api.AppLogger;
 import am.main.api.MessageHandler;
+import am.main.data.enums.Interface;
 import am.main.exception.BusinessException;
 import am.main.session.AppSession;
 import am.rest.annotations.Authorized;
-import am.shared.enums.EC;
-import am.shared.enums.Interface;
-import am.shared.enums.Phase;
-import am.shared.enums.Source;
 
 import javax.annotation.Priority;
 import javax.inject.Inject;
@@ -24,6 +21,10 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;
 import java.io.IOException;
+
+import static am.infrastructure.data.enums.impl.AMTError.E_USR_20;
+import static am.infrastructure.data.enums.impl.AMTPhase.AUTHORIZATION;
+import static am.infrastructure.generic.ConfigParam.SOURCE;
 
 /**
  * Created by mohamed.elewa on 5/4/2016.
@@ -43,7 +44,7 @@ public class AuthorizationFilter implements ContainerRequestFilter {
 
     public void filter(ContainerRequestContext requestContext) throws IOException {
         String FN_NAME = "filter";
-        AppSession session = new AppSession(Source.AMT_SERVICES, Interface.REST, Phase.AUTHORIZATION,
+        AppSession session = new AppSession(SOURCE, Interface.REST, AUTHORIZATION,
                 httpSession.getId(), CLASS, FN_NAME, httpServletRequest.getRemoteAddr(), messageHandler);
         try {
             logger.startDebug(session);
@@ -61,7 +62,7 @@ public class AuthorizationFilter implements ContainerRequestFilter {
                 );
             else
                 requestContext.abortWith(
-                    Response.status(Response.Status.UNAUTHORIZED).entity(session.getErrorMsg(EC.AMT_0036)).build()
+                    Response.status(Response.Status.UNAUTHORIZED).entity(E_USR_20.getFullMsg(session.getMessageHandler())).build()
                 );
         }
     }

@@ -1,8 +1,8 @@
 package am.infrastructure.generic;
 
-import am.shared.enums.Source;
+import am.infrastructure.data.enums.impl.AMTSource;
 
-import static am.shared.enums.Source.AMT_SERVICES;
+import static am.infrastructure.data.enums.impl.AMTSource.AMT_SERVICES;
 
 /**
  * Created by ahmed.motair on 9/7/2017.
@@ -17,5 +17,5 @@ public class ConfigParam {
 
     public static final Integer MAX_PAGE_SIZE = 10;
 
-    public static final Source SOURCE = AMT_SERVICES;
+    public static final AMTSource SOURCE = AMT_SERVICES;
 }

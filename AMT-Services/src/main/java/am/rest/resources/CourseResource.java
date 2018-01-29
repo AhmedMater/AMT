@@ -15,8 +15,8 @@ import am.main.api.validation.FormValidation;
 import am.main.data.dto.ListResultSet;
 import am.main.data.dto.SortingInfo;
 import am.main.session.AppSession;
+import am.repository.CourseRepository;
 import am.rest.annotations.Authorized;
-import am.shared.enums.EC;
 import am.shared.enums.Forms;
 
 import javax.inject.Inject;
@@ -28,12 +28,14 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import static am.infrastructure.data.enums.impl.AMTError.*;
+import static am.infrastructure.data.enums.impl.AMTInfo.*;
+import static am.infrastructure.data.enums.impl.AMTPhase.*;
 import static am.infrastructure.generic.ConfigParam.AUTH_USER;
 import static am.infrastructure.generic.ConfigParam.SOURCE;
 import static am.infrastructure.generic.ConfigUtils.businessException;
-import static am.shared.enums.Interface.REST;
-import static am.shared.enums.Phase.*;
-
+import static am.main.data.enums.Interface.REST;
+import static am.main.data.enums.impl.IEC.E_VAL_0;
 /**
  * Created by ahmed.motair on 9/18/2017.
  */
@@ -50,6 +52,7 @@ public class CourseResource {
     @Context private HttpServletRequest httpServletRequest;
 
     @Inject private CourseService courseService;
+    @Inject private CourseRepository courseRepository;
 
     @Path("/new")
     @POST
@@ -61,15 +64,17 @@ public class CourseResource {
         AppSession session = new AppSession(SOURCE, REST, COURSE_NEW, httpSession.getId(),
                 CLASS, METHOD, httpServletRequest.getRemoteAddr(), messageHandler);
         try {
+            logger.info(session, I_COR_1);
             courseService.validatedNewCourseData(session, courseData);
 
             Users tutorUser = (Users) crc.getProperty(AUTH_USER);
             String courseID = courseService.addNewCourse(session, courseData, tutorUser);
 
             courseData.setCourseID(courseID);
+            logger.info(session, I_COR_2, courseData.getCourseName());
             return Response.ok().entity(courseData).build();
         }catch (Exception ex){
-            throw businessException(logger, session, ex, EC.AMT_0018);
+            throw businessException(logger, session, ex, E_COR_2);
         }
     }
 
@@ -83,15 +88,20 @@ public class CourseResource {
         AppSession session = new AppSession(SOURCE, REST, COURSE_LIST, httpSession.getId(),
                 CLASS, METHOD, httpServletRequest.getRemoteAddr(), messageHandler);
         try {
+            logger.info(session, I_COR_5);
             // Validating the Form Data
-            new FormValidation<CourseListFilter>(session, logger, courseListFilters, EC.AMT_0001, Forms.COURSE_LIST_FILTERS);
-            new FormValidation<SortingInfo>(session, logger, courseListFilters.getSorting(), EC.AMT_0001, Forms.COURSE_LIST_FILTERS);
+            new FormValidation<CourseListFilter>(session, logger, courseListFilters, E_VAL_0, Forms.COURSE_LIST_FILTERS);
+            new FormValidation<SortingInfo>(session, logger, courseListFilters.getSorting(), E_VAL_0, Forms.COURSE_LIST_FILTERS);
 
             Users loggedInUser = (Users) crc.getProperty(AUTH_USER);
-            ListResultSet<CourseListUI> resultSet = courseService.getCourseList(session, courseListFilters, loggedInUser);
+
+            ListResultSet<CourseListUI> resultSet = new ListResultSet<CourseListUI>();
+            resultSet = courseRepository.getAllCourses(session, courseListFilters);
+
+            logger.info(session, I_COR_6);
             return Response.ok().entity(new CourseListRS(resultSet)).build();
         }catch (Exception ex){
-            throw businessException(logger, session, ex, EC.AMT_0018);
+            throw businessException(logger, session, ex, E_COR_3);
         }
     }
 
@@ -108,7 +118,7 @@ public class CourseResource {
             CourseListLookup result = courseService.getCourseListLookup(session);
             return Response.ok().entity(result).build();
         }catch (Exception ex){
-            throw businessException(logger, session, ex, EC.AMT_0018);
+            throw businessException(logger, session, ex, E_COR_6);
         }
     }
 
@@ -123,7 +133,7 @@ public class CourseResource {
             NewCourseLookup result = courseService.getNewCourseLookup(session);
             return Response.ok().entity(result).build();
         }catch (Exception ex){
-            throw businessException(logger, session, ex, EC.AMT_0019);
+            throw businessException(logger, session, ex, E_COR_5);
         }
     }
 
@@ -135,10 +145,12 @@ public class CourseResource {
         AppSession session = new AppSession(SOURCE, REST, COURSE_DETAIL, httpSession.getId(),
                 CLASS, METHOD, httpServletRequest.getRemoteAddr(), messageHandler);
         try {
+            logger.info(session, I_COR_3);
             CourseData result = courseService.getCourseByID(session, courseID);
+            logger.info(session, I_COR_4, result.getCourseName());
             return Response.ok().entity(result).build();
         }catch (Exception ex){
-            throw businessException(logger, session, ex, EC.AMT_0019);
+            throw businessException(logger, session, ex, E_COR_4);
         }
     }
 

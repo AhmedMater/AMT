@@ -1,5 +1,5 @@
 <AM-Loggers>
-    <!-- AM Initializing Logger -->
+    <!-- AM Initializing LoggerData -->
     <Logger>
         <Name>AM-Initializing</Name>
         <enabled>true</enabled>
@@ -11,7 +11,7 @@
         <level>info</level>
     </Logger>
 
-    <!-- Integration Test Logger -->
+    <!-- Integration Test LoggerData -->
     <Logger>
         <Name>Integration-Test</Name>
         <enabled>true</enabled>

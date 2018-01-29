@@ -17,7 +17,8 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-import static am.shared.enums.EC.AMT_0002;
+import static am.main.data.enums.impl.IEC.E_DB_7;
+
 
 /**
  * Created by ahmed.motair on 9/15/2017.
@@ -135,13 +136,13 @@ public class Course implements Serializable{
         if(courseType != null)
             this.courseType = courseType;
         else
-            throw new BusinessException(session, AMT_0002, CourseType.class.getSimpleName(), courseData.getCourseType());
+            throw new BusinessException(session, E_DB_7, CourseType.class.getSimpleName(), courseData.getCourseType());
 
         CourseLevel courseLevel = dbManager.find(session, CourseLevel.class, courseData.getCourseLevel(), true);
         if(courseLevel != null)
             this.courseLevel = courseLevel;
         else
-            throw new BusinessException(session, AMT_0002, CourseLevel.class.getSimpleName(), courseData.getCourseLevel());
+            throw new BusinessException(session, E_DB_7, CourseLevel.class.getSimpleName(), courseData.getCourseLevel());
 
         this.references = new HashSet<>();
         for (CourseRefData ref : courseData.getReferences())

@@ -9,7 +9,6 @@ import am.main.api.db.DBManager;
 import am.main.api.db.HQLCondition;
 import am.main.api.db.QueryBuilder;
 import am.main.data.dto.ListResultSet;
-import am.main.data.enums.AME;
 import am.main.exception.DBException;
 import am.main.session.AppSession;
 
@@ -23,6 +22,7 @@ import java.util.Map;
 import static am.infrastructure.generic.ConfigParam.MAX_PAGE_SIZE;
 import static am.main.data.enums.Operators.EQ;
 import static am.main.data.enums.Operators.LIKE;
+import static am.main.data.enums.impl.IEC.E_DB_16;
 
 /**
  * Created by ahmed.motair on 9/23/2017.
@@ -96,7 +96,7 @@ public class UserRepository {
         try {
             user = dbManager.getSingleResult(session, true, UserIPDeActive.class, parameters);
         }catch (DBException ex){
-            if(ex.getAME_CODE().equals(AME.DB_016)) {
+            if(ex.getCode().equals(E_DB_16)) {
                 logger.error(session, ex);
                 return null;
             }else
@@ -112,9 +112,9 @@ public class UserRepository {
 
         Users user = null;
         try {
-            user = dbManager.getSingleResult(session, true, Users.class, parameters);
+            user = dbManager.getSingleResult(session, false, Users.class, parameters);
         }catch (DBException ex){
-            if(ex.getAME_CODE().equals(AME.DB_016)) {
+            if(ex.getCode().equals(E_DB_16)) {
                 logger.error(session, ex);
                 return null;
             }else
