@@ -9,8 +9,8 @@ import am.infrastructure.data.view.AuthenticatedUser;
 import am.main.api.SecurityManager;
 import am.main.api.db.DBManager;
 import am.main.session.AppSession;
-import am.shared.enums.Phase;
 import amt.common.constants.Rest;
+import amt.common.enums.ITSource;
 import amt.common.enums.Scripts;
 import org.junit.Assert;
 
@@ -20,8 +20,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import static am.shared.enums.Interface.ARQUILLIAN;
-import static am.shared.enums.Source.INTEGRATION_TEST;
+import static am.main.data.enums.Interface.ARQUILLIAN;
+import static amt.common.enums.ITPhase.IT;
 
 /**
  * Created by ahmed.motair on 11/23/2017.
@@ -34,7 +34,7 @@ public class DataGenerator {
 
     private static final String CLASS = "DataGenerator";
 
-    private AppSession appSession = new AppSession(INTEGRATION_TEST, ARQUILLIAN, Phase.INTEGRATION_TEST);
+    private AppSession appSession = new AppSession(ITSource.INTEGRATION_TEST, ARQUILLIAN, IT);
 
     /**
      * <p>Calling the User Registering REST to insert new User in the Database and confirm its insertion</p>

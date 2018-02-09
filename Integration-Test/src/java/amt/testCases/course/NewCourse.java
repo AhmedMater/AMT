@@ -17,10 +17,10 @@ import am.infrastructure.data.hibernate.model.user.Users;
 import am.main.api.db.DBManager;
 import am.main.api.validation.FormValidation;
 import am.main.session.AppSession;
-import am.shared.enums.Phase;
 import amt.common.DeploymentManger;
 import amt.common.constants.Error;
 import amt.common.constants.Rest;
+import amt.common.enums.ITSource;
 import amt.common.enums.Scripts;
 import amt.common.generic.DataGenerator;
 import amt.common.generic.Repository;
@@ -43,11 +43,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
-import static am.shared.enums.Interface.ARQUILLIAN;
-import static am.shared.enums.Source.INTEGRATION_TEST;
+import static am.main.data.enums.Interface.ARQUILLIAN;
 import static amt.common.constants.Error.COURSE.*;
 import static amt.common.constants.Error.LOOKUP_NOT_FOUND;
 import static amt.common.constants.Error.TEST_CASE;
+import static amt.common.enums.ITPhase.IT;
 
 /**
  * Created by ahmed.motair on 11/23/2017.
@@ -60,7 +60,7 @@ public class NewCourse {
 
     private static final String CLASS = "NewCourse";
 
-    private AppSession appSession = new AppSession(INTEGRATION_TEST, ARQUILLIAN, Phase.INTEGRATION_TEST);
+    private AppSession appSession = new AppSession(ITSource.INTEGRATION_TEST, ARQUILLIAN, IT);
 
     @Deployment
     public static WebArchive createDeployment() {

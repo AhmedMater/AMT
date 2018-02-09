@@ -22,7 +22,7 @@
     </option>
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" default="false" project-jdk-name="1.8 Build 144" project-jdk-type="JavaSDK">
-    <output url="file://$PROJECT_DIR$/target/compiled-classes" />
+    <output url="file://$PROJECT_DIR$/_Compiled-Classes" />
   </component>
   <component name="SvnBranchConfigurationManager">
     <option name="myConfigurationMap">

@@ -10,11 +10,11 @@ import am.main.api.db.DBManager;
 import am.main.api.validation.FormValidation;
 import am.main.common.RegExp;
 import am.main.session.AppSession;
-import am.shared.enums.Phase;
 import amt.common.DeploymentManger;
 import amt.common.constants.Error;
 import amt.common.constants.Params;
 import amt.common.constants.Rest.USER;
+import amt.common.enums.ITSource;
 import amt.common.enums.Scripts;
 import amt.common.generic.DataGenerator;
 import amt.common.generic.Repository;
@@ -34,10 +34,10 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import static am.shared.enums.Interface.ARQUILLIAN;
-import static am.shared.enums.Source.INTEGRATION_TEST;
+import static am.main.data.enums.Interface.ARQUILLIAN;
 import static amt.common.constants.Error.TEST_CASE;
 import static amt.common.constants.Error.USER.CHANGE_ROLE_VALIDATION_ERROR;
+import static amt.common.enums.ITPhase.IT;
 
 /**
  * Created by ahmed.motair on 11/24/2017.
@@ -55,7 +55,7 @@ public class UserProfile {
     private static final Integer TUTOR_HAS_COURSES_USER_ID = 9;
     private static final String CLASS = "UserLogin";
 
-    private AppSession appSession = new AppSession(INTEGRATION_TEST, ARQUILLIAN, Phase.INTEGRATION_TEST);
+    private AppSession appSession = new AppSession(ITSource.INTEGRATION_TEST, ARQUILLIAN, IT);
 
     @Deployment
     public static WebArchive createDeployment() {

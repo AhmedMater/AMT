@@ -9,11 +9,11 @@ import am.main.api.validation.FormValidation;
 import am.main.common.RegExp;
 import am.main.data.dto.SortingInfo;
 import am.main.session.AppSession;
-import am.shared.enums.Phase;
 import amt.common.DeploymentManger;
 import amt.common.constants.Error;
 import amt.common.constants.Params;
 import amt.common.constants.Rest;
+import amt.common.enums.ITSource;
 import amt.common.enums.Scripts;
 import amt.common.generic.DataGenerator;
 import amt.common.generic.Repository;
@@ -33,9 +33,9 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import static am.shared.enums.Interface.ARQUILLIAN;
-import static am.shared.enums.Source.INTEGRATION_TEST;
+import static am.main.data.enums.Interface.ARQUILLIAN;
 import static amt.common.constants.Error.COURSE.COURSE_LIST_VAL;
+import static amt.common.enums.ITPhase.IT;
 
 /**
  * Created by ahmed.motair on 12/11/2017.
@@ -48,7 +48,7 @@ public class CourseList {
 
     private static final String CLASS = "CourseList";
 
-    private AppSession appSession = new AppSession(INTEGRATION_TEST, ARQUILLIAN, Phase.INTEGRATION_TEST);
+    private AppSession appSession = new AppSession(ITSource.INTEGRATION_TEST, ARQUILLIAN, IT);
 
     @Deployment
     public static WebArchive createDeployment() {

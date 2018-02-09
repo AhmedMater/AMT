@@ -4,7 +4,6 @@ import am.infrastructure.data.hibernate.model.user.UserIPDeActive;
 import am.infrastructure.data.hibernate.model.user.UserIPFailure;
 import am.infrastructure.data.hibernate.model.user.UserLoginLog;
 import am.infrastructure.data.hibernate.model.user.Users;
-import am.shared.common.SharedParam;
 import amt.common.enums.Scripts;
 import org.junit.Assert;
 
@@ -23,7 +22,7 @@ import java.util.Map;
 public class Repository {
     private static Map<Scripts, String> scripts = new HashMap<>();
 
-    @PersistenceContext(unitName = SharedParam.PERSISTENCE_UNIT)
+    @PersistenceContext(unitName = "AM")
     private EntityManager em;
 
     @Transactional

@@ -10,7 +10,6 @@
         <module name="AM-Logger" />
         <module name="AM-Notification" />
         <module name="AM-Resources" />
-        <module name="AM-Shared-Resources" />
         <module name="AMT-Services" />
         <module name="Data-Generator" />
         <module name="Integration-Test" />

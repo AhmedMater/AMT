@@ -23,7 +23,7 @@ public class DeploymentManger {
     private static final String APPS_PATH = "F:\\Giza-Projects\\AMT\\AMT-Code\\target\\";
 
     private static final String AMT_SERVICES_PATH = "AMT-Services.war";
-    private static final String AMT_LOGGER_PATH = "AMT-Logger.war";
+    private static final String AMT_LOGGER_PATH = "AMT-LoggerData.war";
     private static final String BASE_URL = "http://localhost/AMT-Services/api";
 
     private static Class[] classes = {

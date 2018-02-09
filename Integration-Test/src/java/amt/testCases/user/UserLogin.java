@@ -2,6 +2,7 @@ package amt.testCases.user;
 
 import am.application.SecurityService;
 import am.infrastructure.data.dto.user.LoginData;
+import am.infrastructure.am.impl.ECC;
 import am.infrastructure.data.hibernate.model.user.UserIPDeActive;
 import am.infrastructure.data.hibernate.model.user.UserIPFailure;
 import am.infrastructure.data.hibernate.model.user.UserLoginLog;
@@ -11,13 +12,11 @@ import am.main.api.ConfigManager;
 import am.main.api.validation.FormValidation;
 import am.main.common.RegExp;
 import am.main.session.AppSession;
-import am.shared.enums.App_CC;
-import am.shared.enums.EC;
-import am.shared.enums.Phase;
 import amt.common.DeploymentManger;
 import amt.common.constants.Error;
 import amt.common.constants.Rest;
 import amt.common.constants.Rest.USER;
+import amt.common.enums.ITSource;
 import amt.common.enums.Scripts;
 import amt.common.generic.DataGenerator;
 import amt.common.generic.Repository;
@@ -37,10 +36,11 @@ import java.text.MessageFormat;
 import java.util.Date;
 import java.util.List;
 
-import static am.shared.enums.Interface.ARQUILLIAN;
-import static am.shared.enums.Source.INTEGRATION_TEST;
+import static am.infrastructure.am.impl.AMTError.E_USR_1;
+import static am.main.data.enums.Interface.ARQUILLIAN;
 import static amt.common.constants.Error.TEST_CASE;
 import static amt.common.constants.Error.USER.*;
+import static amt.common.enums.ITPhase.IT;
 
 /**
  * Created by ahmed.motair on 11/22/2017.
@@ -58,7 +58,7 @@ public class UserLogin {
 
     private static final String CLASS = "UserLogin";
 
-    private AppSession appSession = new AppSession(INTEGRATION_TEST, ARQUILLIAN, Phase.INTEGRATION_TEST);
+    private AppSession appSession = new AppSession(ITSource.INTEGRATION_TEST, ARQUILLIAN, IT);
 
     @Deployment
     public static WebArchive createDeployment() {
@@ -154,7 +154,7 @@ public class UserLogin {
 
             Assert.assertEquals("Username isn't correct", invalidData.getUsername(), loginLog.getUser().getUsername());
             Assert.assertFalse("Success isn't correct", loginLog.getSuccess());
-            Assert.assertEquals("Error Code isn't correct", EC.AMT_0014.toString(), loginLog.getErrorCode());
+            Assert.assertEquals("Error Code isn't correct", E_USR_1.getFullCode(), loginLog.getErrorCode());
             Assert.assertEquals("Error Message isn't correct", WRONG_PASSWORD, loginLog.getErrorMsg());
             Assert.assertNotNull("IP isn't null", loginLog.getIp());
             Util.isEqualDates(new Date(), loginLog.getLoginDate());
@@ -182,7 +182,7 @@ public class UserLogin {
 
             LoginData invalidData = new LoginData(USERNAME, "12advf34");
 
-            Integer MAX_TRAILS = configManager.getConfigValue(App_CC.MAX_LOGIN_TRAILS, Integer.class);
+            Integer MAX_TRAILS = configManager.getConfigValue(ECC.MAX_LOGIN_TRAILS, Integer.class);
             int numOfTrails = MAX_TRAILS-1;
 
             for (int i = 0; i <numOfTrails; i++)
@@ -194,7 +194,7 @@ public class UserLogin {
 
             Assert.assertEquals("Username isn't correct", invalidData.getUsername(), loginLog.getUser().getUsername());
             Assert.assertFalse("Success isn't correct", loginLog.getSuccess());
-            Assert.assertEquals("Error Code isn't correct", EC.AMT_0014.toString(), loginLog.getErrorCode());
+            Assert.assertEquals("Error Code isn't correct", E_USR_1.getFullCode(), loginLog.getErrorCode());
             Assert.assertEquals("Error Message isn't correct", WRONG_PASSWORD, loginLog.getErrorMsg());
             Assert.assertNotNull("IP isn't null", loginLog.getIp());
             Util.isEqualDates(new Date(), loginLog.getLoginDate());
@@ -222,8 +222,8 @@ public class UserLogin {
 
             LoginData invalidData = new LoginData(USERNAME, "12advf34");
 
-            Integer MAX_TRAILS = configManager.getConfigValue(App_CC.MAX_LOGIN_TRAILS, Integer.class);
-            Integer LOGIN_DEACTIVATION_DURATION = configManager.getConfigValue(App_CC.LOGIN_ACTIVATE_MINUTES, Integer.class);
+            Integer MAX_TRAILS = configManager.getConfigValue(ECC.MAX_LOGIN_TRAILS, Integer.class);
+            Integer LOGIN_DEACTIVATION_DURATION = configManager.getConfigValue(ECC.LOGIN_ACTIVATION_MIN, Integer.class);
 
             for (int i = 0; i <MAX_TRAILS-1; i++)
                 Util.postStringError(USER.RESOURCE, USER.LOGIN, invalidData, WRONG_PASSWORD);
@@ -238,7 +238,7 @@ public class UserLogin {
 
             Assert.assertEquals("Username isn't correct", invalidData.getUsername(), loginLog.getUser().getUsername());
             Assert.assertFalse("Success isn't correct", loginLog.getSuccess());
-            Assert.assertEquals("Error Code isn't correct", EC.AMT_0015.toString(), loginLog.getErrorCode());
+            Assert.assertEquals("Error Code isn't correct", E_USR_1.getFullCode(), loginLog.getErrorCode());
             Assert.assertEquals("Error Message isn't correct", expectedErrorMsg, loginLog.getErrorMsg());
             Assert.assertNotNull("IP isn't null", loginLog.getIp());
             Util.isEqualDates(new Date(), loginLog.getLoginDate());
@@ -266,8 +266,8 @@ public class UserLogin {
 
             LoginData invalidData = new LoginData(USERNAME, "12advf34");
 
-            Integer MAX_TRAILS = configManager.getConfigValue(App_CC.MAX_LOGIN_TRAILS, Integer.class);
-            Integer LOGIN_DEACTIVATION_DURATION = configManager.getConfigValue(App_CC.LOGIN_ACTIVATE_MINUTES, Integer.class);
+            Integer MAX_TRAILS = configManager.getConfigValue(ECC.MAX_LOGIN_TRAILS, Integer.class);
+            Integer LOGIN_DEACTIVATION_DURATION = configManager.getConfigValue(ECC.LOGIN_ACTIVATION_MIN, Integer.class);
 
             int numOfTrails = MAX_TRAILS+1;
 
@@ -288,7 +288,7 @@ public class UserLogin {
 
             Assert.assertEquals("Username isn't correct", invalidData.getUsername(), loginLog.getUser().getUsername());
             Assert.assertFalse("Success isn't correct", loginLog.getSuccess());
-            Assert.assertEquals("Error Code isn't correct", EC.AMT_0015.toString(), loginLog.getErrorCode());
+            Assert.assertEquals("Error Code isn't correct", E_USR_1.getFullCode(), loginLog.getErrorCode());
             Assert.assertEquals("Error Message isn't correct", expectedErrorMsg, loginLog.getErrorMsg());
             Assert.assertNotNull("IP isn't null", loginLog.getIp());
             Util.isEqualDates(new Date(), loginLog.getLoginDate());
@@ -318,9 +318,9 @@ public class UserLogin {
 
             Integer LOGIN_DEACTIVATION_DURATION = 3;
 
-            Integer MAX_TRAILS = configManager.getConfigValue(App_CC.MAX_LOGIN_TRAILS, Integer.class);
-            Integer OLD_LOGIN_DEACTIVATION_DURATION = configManager.getConfigValue(App_CC.LOGIN_ACTIVATE_MINUTES, Integer.class);
-            configManager.updateConfigValue(App_CC.LOGIN_ACTIVATE_MINUTES, LOGIN_DEACTIVATION_DURATION.toString());
+            Integer MAX_TRAILS = configManager.getConfigValue(ECC.MAX_LOGIN_TRAILS, Integer.class);
+            Integer OLD_LOGIN_DEACTIVATION_DURATION = configManager.getConfigValue(ECC.LOGIN_ACTIVATION_MIN, Integer.class);
+            configManager.updateConfigValue(ECC.LOGIN_ACTIVATION_MIN, LOGIN_DEACTIVATION_DURATION.toString());
 
             int numOfTrails = MAX_TRAILS+1;
 
@@ -344,13 +344,13 @@ public class UserLogin {
 
             Assert.assertEquals("Username isn't correct", invalidData.getUsername(), loginLog.getUser().getUsername());
             Assert.assertFalse("Success isn't correct", loginLog.getSuccess());
-            Assert.assertEquals("Error Code isn't correct", EC.AMT_0016.toString(), loginLog.getErrorCode());
+            Assert.assertEquals("Error Code isn't correct", E_USR_1.getFullCode(), loginLog.getErrorCode());
             Assert.assertEquals("Error Message isn't correct",
                     MessageFormat.format(WRONG_PASSWORD_LT_LOGIN_DEACTIVATION_DURATION, LOGIN_DEACTIVATION_DURATION-1), loginLog.getErrorMsg());
             Assert.assertNotNull("IP isn't null", loginLog.getIp());
             Util.isEqualDates(new Date(), loginLog.getLoginDate());
 
-            configManager.updateConfigValue(App_CC.LOGIN_ACTIVATE_MINUTES, OLD_LOGIN_DEACTIVATION_DURATION.toString());
+            configManager.updateConfigValue(ECC.LOGIN_ACTIVATION_MIN, OLD_LOGIN_DEACTIVATION_DURATION.toString());
         }catch (Exception ex){
             Assert.fail(MessageFormat.format(TEST_CASE, TEST_CASE_NAME, ex.getMessage()));
         }
@@ -370,9 +370,9 @@ public class UserLogin {
 
             Integer LOGIN_DEACTIVATION_DURATION = 1;
 
-            Integer MAX_TRAILS = configManager.getConfigValue(App_CC.MAX_LOGIN_TRAILS, Integer.class);
-            Integer OLD_LOGIN_DEACTIVATION_DURATION = configManager.getConfigValue(App_CC.LOGIN_ACTIVATE_MINUTES, Integer.class);
-            configManager.updateConfigValue(App_CC.LOGIN_ACTIVATE_MINUTES, LOGIN_DEACTIVATION_DURATION.toString());
+            Integer MAX_TRAILS = configManager.getConfigValue(ECC.MAX_LOGIN_TRAILS, Integer.class);
+            Integer OLD_LOGIN_DEACTIVATION_DURATION = configManager.getConfigValue(ECC.LOGIN_ACTIVATION_MIN, Integer.class);
+            configManager.updateConfigValue(ECC.LOGIN_ACTIVATION_MIN, LOGIN_DEACTIVATION_DURATION.toString());
 
             int numOfTrails = MAX_TRAILS+1;
 
@@ -406,7 +406,7 @@ public class UserLogin {
             Assert.assertTrue("Active isn't correct", userIPDeActive.getActive());
             Util.isEqualDates(new Date(), userIPDeActive.getLastTrailDate());
 
-            configManager.updateConfigValue(App_CC.LOGIN_ACTIVATE_MINUTES, OLD_LOGIN_DEACTIVATION_DURATION.toString());
+            configManager.updateConfigValue(ECC.LOGIN_ACTIVATION_MIN, OLD_LOGIN_DEACTIVATION_DURATION.toString());
         }catch (Exception ex){
             Assert.fail(MessageFormat.format(TEST_CASE, TEST_CASE_NAME, ex.getMessage()));
         }

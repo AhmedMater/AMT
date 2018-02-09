@@ -6,7 +6,6 @@
       <module fileurl="file://$PROJECT_DIR$/AM-Resources/AM-Logger/AM-Logger.iml" filepath="$PROJECT_DIR$/AM-Resources/AM-Logger/AM-Logger.iml" group="AM" />
       <module fileurl="file://$PROJECT_DIR$/AM-Resources/AM-Notification/AM-Notification.iml" filepath="$PROJECT_DIR$/AM-Resources/AM-Notification/AM-Notification.iml" group="AM" />
       <module fileurl="file://$PROJECT_DIR$/AM-Resources/AM-Resources/AM-Resources.iml" filepath="$PROJECT_DIR$/AM-Resources/AM-Resources/AM-Resources.iml" group="AM" />
-      <module fileurl="file://$PROJECT_DIR$/AM-Resources/AM-Shared-Resources/AM-Shared-Resources.iml" filepath="$PROJECT_DIR$/AM-Resources/AM-Shared-Resources/AM-Shared-Resources.iml" group="AM" />
       <module fileurl="file://$PROJECT_DIR$/AMT-Services/AMT-Services.iml" filepath="$PROJECT_DIR$/AMT-Services/AMT-Services.iml" />
       <module fileurl="file://$PROJECT_DIR$/Data-Generator/Data-Generator.iml" filepath="$PROJECT_DIR$/Data-Generator/Data-Generator.iml" />
       <module fileurl="file://$PROJECT_DIR$/Integration-Test/Integration-Test.iml" filepath="$PROJECT_DIR$/Integration-Test/Integration-Test.iml" />

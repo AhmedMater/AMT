@@ -8,7 +8,6 @@ import am.main.api.SecurityManager;
 import am.main.api.validation.FormValidation;
 import am.main.common.RegExp;
 import am.main.session.AppSession;
-import am.shared.enums.Phase;
 import amt.common.DeploymentManger;
 import amt.common.constants.Error;
 import amt.common.constants.Params;
@@ -31,11 +30,12 @@ import javax.ws.rs.core.Response;
 import java.text.MessageFormat;
 import java.util.Date;
 
-import static am.shared.enums.Interface.ARQUILLIAN;
-import static am.shared.enums.Source.INTEGRATION_TEST;
+import static am.main.data.enums.Interface.ARQUILLIAN;
 import static amt.common.constants.Error.TEST_CASE;
 import static amt.common.constants.Error.USER.REGISTER_VALIDATION_ERROR;
 import static amt.common.constants.Rest.USER;
+import static amt.common.enums.ITPhase.IT;
+import static amt.common.enums.ITSource.INTEGRATION_TEST;
 
 /**
  * Created by ahmed.motair on 11/18/2017.
@@ -51,7 +51,7 @@ public class UserRegister {
 
     private static final String CLASS = "UserRegister";
 
-    private AppSession appSession = new AppSession(INTEGRATION_TEST, ARQUILLIAN, Phase.INTEGRATION_TEST);
+    private AppSession appSession = new AppSession(INTEGRATION_TEST, ARQUILLIAN, IT);
 
 
     @Deployment
