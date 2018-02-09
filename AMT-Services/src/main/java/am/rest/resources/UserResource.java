@@ -19,7 +19,6 @@ import am.main.data.dto.SortingInfo;
 import am.main.session.AppSession;
 import am.repository.UserRepository;
 import am.rest.annotations.Authorized;
-import am.shared.enums.Forms;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
@@ -30,9 +29,12 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import static am.infrastructure.data.enums.impl.AMTError.*;
-import static am.infrastructure.data.enums.impl.AMTInfo.*;
-import static am.infrastructure.data.enums.impl.AMTPhase.*;
+import static am.infrastructure.am.AMTForms.LOGIN;
+import static am.infrastructure.am.AMTForms.REGISTER;
+import static am.infrastructure.am.AMTForms.USER_LIST_FILTERS;
+import static am.infrastructure.am.impl.AMTError.*;
+import static am.infrastructure.am.impl.AMTInfo.*;
+import static am.infrastructure.am.impl.AMTPhase.*;
 import static am.infrastructure.generic.ConfigParam.AUTH_USER;
 import static am.infrastructure.generic.ConfigParam.SOURCE;
 import static am.infrastructure.generic.ConfigUtils.businessException;
@@ -65,7 +67,7 @@ public class UserResource {
                 CLASS, METHOD, httpServletRequest.getRemoteAddr(), messageHandler);
         try{
             logger.info(session, I_USR_1);
-            new FormValidation<UserRegisterData>(session, logger, userRegisterData, E_VAL_0, Forms.REGISTER);
+            new FormValidation<UserRegisterData>(session, logger, userRegisterData, E_VAL_0, REGISTER);
 
             userService.register(session, userRegisterData, Roles.STUDENT);
             logger.info(session, I_USR_2, userRegisterData.fullName());
@@ -102,7 +104,7 @@ public class UserResource {
                 CLASS, METHOD, httpServletRequest.getRemoteAddr(), messageHandler);
         try{
             logger.info(session, I_USR_5, loginData.getUsername());
-            new FormValidation<LoginData>(session, logger, loginData, E_VAL_0, Forms.LOGIN);
+            new FormValidation<LoginData>(session, logger, loginData, E_VAL_0, LOGIN);
 
             String loginUserIP = httpServletRequest.getRemoteAddr();
             AuthenticatedUser user = userService.login(session, loginData, loginUserIP);
@@ -166,8 +168,8 @@ public class UserResource {
         try {
             logger.info(session, I_USR_9);
 
-            new FormValidation<UserListFilter>(session, logger, userListFilters, E_VAL_0, Forms.USER_LIST_FILTERS);
-            new FormValidation<SortingInfo>(session, logger, userListFilters.getSorting(), E_VAL_0, Forms.USER_LIST_FILTERS);
+            new FormValidation<UserListFilter>(session, logger, userListFilters, E_VAL_0, USER_LIST_FILTERS);
+            new FormValidation<SortingInfo>(session, logger, userListFilters.getSorting(), E_VAL_0, USER_LIST_FILTERS);
 
             Users loggedInUser = (Users) crc.getProperty(AUTH_USER);
 

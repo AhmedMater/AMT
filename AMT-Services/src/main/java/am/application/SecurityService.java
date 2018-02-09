@@ -19,7 +19,7 @@ import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
 import java.util.*;
 
-import static am.infrastructure.data.enums.impl.AMTError.*;
+import static am.infrastructure.am.impl.AMTError.*;
 import static javax.ws.rs.core.Response.Status.UNAUTHORIZED;
 
 /**

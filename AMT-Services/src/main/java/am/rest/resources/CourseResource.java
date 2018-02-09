@@ -17,7 +17,6 @@ import am.main.data.dto.SortingInfo;
 import am.main.session.AppSession;
 import am.repository.CourseRepository;
 import am.rest.annotations.Authorized;
-import am.shared.enums.Forms;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
@@ -28,9 +27,10 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import static am.infrastructure.data.enums.impl.AMTError.*;
-import static am.infrastructure.data.enums.impl.AMTInfo.*;
-import static am.infrastructure.data.enums.impl.AMTPhase.*;
+import static am.infrastructure.am.AMTForms.COURSE_LIST_FILTERS;
+import static am.infrastructure.am.impl.AMTError.*;
+import static am.infrastructure.am.impl.AMTInfo.*;
+import static am.infrastructure.am.impl.AMTPhase.*;
 import static am.infrastructure.generic.ConfigParam.AUTH_USER;
 import static am.infrastructure.generic.ConfigParam.SOURCE;
 import static am.infrastructure.generic.ConfigUtils.businessException;
@@ -90,8 +90,8 @@ public class CourseResource {
         try {
             logger.info(session, I_COR_5);
             // Validating the Form Data
-            new FormValidation<CourseListFilter>(session, logger, courseListFilters, E_VAL_0, Forms.COURSE_LIST_FILTERS);
-            new FormValidation<SortingInfo>(session, logger, courseListFilters.getSorting(), E_VAL_0, Forms.COURSE_LIST_FILTERS);
+            new FormValidation<CourseListFilter>(session, logger, courseListFilters, E_VAL_0, COURSE_LIST_FILTERS);
+            new FormValidation<SortingInfo>(session, logger, courseListFilters.getSorting(), E_VAL_0, COURSE_LIST_FILTERS);
 
             Users loggedInUser = (Users) crc.getProperty(AUTH_USER);
 

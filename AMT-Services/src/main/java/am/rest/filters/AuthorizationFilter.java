@@ -22,8 +22,8 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;
 import java.io.IOException;
 
-import static am.infrastructure.data.enums.impl.AMTError.E_USR_20;
-import static am.infrastructure.data.enums.impl.AMTPhase.AUTHORIZATION;
+import static am.infrastructure.am.impl.AMTError.E_USR_20;
+import static am.infrastructure.am.impl.AMTPhase.AUTHORIZATION;
 import static am.infrastructure.generic.ConfigParam.SOURCE;
 
 /**

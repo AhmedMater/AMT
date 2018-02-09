@@ -3,7 +3,7 @@ package am.application;
 import am.infrastructure.data.dto.user.LoginData;
 import am.infrastructure.data.dto.user.UserRegisterData;
 import am.infrastructure.data.enums.Roles;
-import am.infrastructure.data.enums.impl.ECC;
+import am.infrastructure.am.impl.ECC;
 import am.infrastructure.data.hibernate.model.lookup.Role;
 import am.infrastructure.data.hibernate.model.user.UserIPDeActive;
 import am.infrastructure.data.hibernate.model.user.UserIPFailure;
@@ -27,9 +27,9 @@ import javax.transaction.Transactional;
 import java.util.Date;
 import java.util.List;
 
-import static am.infrastructure.data.enums.impl.AMTError.*;
-import static am.infrastructure.data.enums.impl.AMTInfo.I_USR_3;
-import static am.infrastructure.data.enums.impl.AMTInfo.I_USR_4;
+import static am.infrastructure.am.impl.AMTError.*;
+import static am.infrastructure.am.impl.AMTInfo.I_USR_3;
+import static am.infrastructure.am.impl.AMTInfo.I_USR_4;
 
 /**
  * Created by ahmed.motair on 9/23/2017.

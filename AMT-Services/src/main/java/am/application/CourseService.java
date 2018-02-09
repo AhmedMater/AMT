@@ -16,25 +16,21 @@ import am.main.api.JMSManager;
 import am.main.api.SecurityManager;
 import am.main.api.db.DBManager;
 import am.main.api.validation.FormValidation;
+import am.main.data.dto.LoginData;
+import am.main.data.dto.notification.AMDestination;
+import am.main.data.dto.notification.AMNotificationData;
 import am.main.exception.BusinessException;
 import am.main.session.AppSession;
 import am.repository.CourseRepository;
-import am.shared.dto.AMDestination;
-import am.shared.dto.AMNotification;
-import am.shared.enums.Forms;
-import am.shared.enums.notification.AMEventNotifications;
-import am.shared.enums.notification.AMEvents;
-import am.shared.enums.notification.Attributes;
 
 import javax.inject.Inject;
 import java.util.*;
 
+import static am.infrastructure.am.AMTForms.NEW_COURSE;
+import static am.infrastructure.am.impl.AMTError.E_COR_1;
 import static am.infrastructure.data.enums.ContentStatus.FUTURE;
-import static am.infrastructure.data.enums.impl.AMTError.E_COR_1;
-import static am.main.data.enums.impl.AMQ.NOTIFICATION_INPUT;
+import static am.main.data.enums.impl.AMQ.INPUT_NOTIFICATION;
 import static am.main.data.enums.impl.IEC.E_VAL_0;
-import static am.shared.enums.notification.AMEventNotifications.*;
-import static am.shared.enums.notification.Attributes.*;
 
 /**
  * Created by ahmed.motair on 11/6/2017.
@@ -54,15 +50,15 @@ public class CourseService {
         logger.startDebug(session, courseData);
 
         // Validating the Form Data
-        new FormValidation<CourseData>(session, logger, courseData, E_VAL_0, Forms.NEW_COURSE);
+        new FormValidation<CourseData>(session, logger, courseData, E_VAL_0, NEW_COURSE);
 
         List<CoursePRData> coursePRDataList = courseData.getPreRequisites();
         for (CoursePRData coursePRData :coursePRDataList)
-            new FormValidation<CoursePRData>(session, logger, coursePRData, E_VAL_0, Forms.NEW_COURSE);
+            new FormValidation<CoursePRData>(session, logger, coursePRData, E_VAL_0, NEW_COURSE);
 
         List<CourseRefData> courseRefDataList = courseData.getReferences();
         for (CourseRefData courseRefData :courseRefDataList)
-            new FormValidation<CourseRefData>(session, logger, courseRefData, E_VAL_0, Forms.NEW_COURSE);
+            new FormValidation<CourseRefData>(session, logger, courseRefData, E_VAL_0, NEW_COURSE);
 
         logger.endDebug(session);
     }
@@ -92,36 +88,28 @@ public class CourseService {
 
     public void generateNewCourseNotification(AppSession appSession, Course course) throws Exception{
 
-        Map<Attributes, String> parameters = new HashMap<>();
-        parameters.put(COURSE_ID, course.getCourseID());
-        parameters.put(COURSE_NAME, course.getCourseName());
-        parameters.put(COURSE_LEVEL, course.getCourseLevel().getDescription());
-        parameters.put(COURSE_TYPE, course.getCourseType().getDescription());
-        parameters.put(COURSE_ESTIMATED_DURATION, course.getEstimatedDuration().toString() + " Hr");
+        Map<String, String> parameters = new HashMap<>();
+        parameters.put("COURSE_ID", course.getCourseID());
+        parameters.put("COURSE_NAME", course.getCourseName());
+        parameters.put("COURSE_LEVEL", course.getCourseLevel().getDescription());
+        parameters.put("COURSE_TYPE", course.getCourseType().getDescription());
+        parameters.put("COURSE_ESTIMATED_DURATION", course.getEstimatedDuration().toString() + " Hr");
 
-        Map<AMEventNotifications, List<AMDestination>> emails = new HashMap<>();
+        List<AMDestination> destinations = new ArrayList<>();
 
-        List<AMDestination> interestedStudents = new ArrayList<>();
-        interestedStudents.add(new AMDestination("ahmedmotair@gmail.com", "01273024235", "1234"));
-        interestedStudents.add(new AMDestination("amrmotair@gmail.com", "01273024235", "1234"));
+        destinations.add(new AMDestination(Arrays.asList("IS", "ITR"), "ahmedmotair@gmail.com", "01273024235", "Ahmed Mater", "231"));
+        destinations.add(new AMDestination(Arrays.asList("ITT", "ITR"), "amrmotair@gmail.com", "01273024235", "Amr Mater", "1234"));
+        destinations.add(new AMDestination(Arrays.asList("IS"), "manal.mahmoud.gouda@gmail.com", "01001997640", "Manal Mahmoud", "41"));
+        destinations.add(new AMDestination(Arrays.asList("ITR"), "night.wolf2015@gmail.com", "01174254232", "Manal Mahmoud", "934"));
 
-        List<AMDestination> interestedTechRev = new ArrayList<>();
-        interestedTechRev.add(new AMDestination("manal.mahmoud.gouda@gmail.com", "01001997640", "2234"));
-
-        List<AMDestination> interestedTranslators = new ArrayList<>();
-        interestedTranslators.add(new AMDestination("night.wolf2015@yahoo.com", "01174254232", "934"));
-
-        emails.put(IS, interestedStudents);
-        emails.put(ITR, interestedTechRev);
-        emails.put(ITT, interestedTranslators);
-
-        AMNotification notification = new AMNotification();
-        notification.setEvent(AMEvents.NEW_COURSE);
+        AMNotificationData notification = new AMNotificationData();
+        notification.setLoginData(new LoginData());
+        notification.setCategory("COR");
         notification.setCategoryRelatedID(course.getCourseID());
         notification.setParameters(parameters);
-        notification.setDestinations(emails);
+        notification.setDestinations(destinations);
 
-        jmsManager.sendMessage(NOTIFICATION_INPUT, notification);
+        jmsManager.sendObjMessage(INPUT_NOTIFICATION, notification);
     }
 
     public NewCourseLookup getNewCourseLookup(AppSession appSession) throws Exception{

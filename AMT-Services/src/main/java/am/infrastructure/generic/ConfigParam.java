@@ -1,8 +1,8 @@
 package am.infrastructure.generic;
 
-import am.infrastructure.data.enums.impl.AMTSource;
+import am.infrastructure.am.impl.AMTSource;
 
-import static am.infrastructure.data.enums.impl.AMTSource.AMT_SERVICES;
+import static am.infrastructure.am.impl.AMTSource.AMT_SERVICES;
 
 /**
  * Created by ahmed.motair on 9/7/2017.
