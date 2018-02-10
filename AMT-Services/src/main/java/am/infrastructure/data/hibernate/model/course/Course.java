@@ -17,7 +17,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-import static am.main.data.enums.impl.IEC.E_DB_7;
+import static am.main.data.enums.impl.AME.E_DB_7;
 
 
 /**

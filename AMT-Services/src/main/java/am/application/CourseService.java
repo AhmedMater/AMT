@@ -27,10 +27,10 @@ import javax.inject.Inject;
 import java.util.*;
 
 import static am.infrastructure.am.AMTForms.NEW_COURSE;
-import static am.infrastructure.am.impl.AMTError.E_COR_1;
+import static am.infrastructure.am.impl.ASE.E_COR_1;
+import static am.infrastructure.am.impl.ASQ.NOTIFICATION;
 import static am.infrastructure.data.enums.ContentStatus.FUTURE;
-import static am.main.data.enums.impl.AMQ.INPUT_NOTIFICATION;
-import static am.main.data.enums.impl.IEC.E_VAL_0;
+import static am.main.data.enums.impl.AME.E_VAL_0;
 
 /**
  * Created by ahmed.motair on 11/6/2017.
@@ -87,6 +87,9 @@ public class CourseService {
     }
 
     public void generateNewCourseNotification(AppSession appSession, Course course) throws Exception{
+        String FN_NAME = "generateNewCourseNotification";
+        AppSession session = appSession.updateSession(CLASS, FN_NAME);
+        logger.startDebug(session, course);
 
         Map<String, String> parameters = new HashMap<>();
         parameters.put("COURSE_ID", course.getCourseID());
@@ -109,7 +112,7 @@ public class CourseService {
         notification.setParameters(parameters);
         notification.setDestinations(destinations);
 
-        jmsManager.sendObjMessage(INPUT_NOTIFICATION, notification);
+        jmsManager.sendObjMessage(session, NOTIFICATION, notification);
     }
 
     public NewCourseLookup getNewCourseLookup(AppSession appSession) throws Exception{

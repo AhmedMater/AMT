@@ -7,7 +7,7 @@ import javax.ejb.Singleton;
 import javax.ejb.Startup;
 import javax.naming.InitialContext;
 
-import static am.infrastructure.am.impl.AMTSource.AMT_SERVICES;
+import static am.infrastructure.am.impl.ASS.AMT_SERVICES;
 
 /**
  * Created by ahmed.motair on 1/22/2018.

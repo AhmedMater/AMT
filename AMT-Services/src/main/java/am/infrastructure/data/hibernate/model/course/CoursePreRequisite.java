@@ -9,7 +9,7 @@ import am.main.session.AppSession;
 import javax.persistence.*;
 import java.io.Serializable;
 
-import static am.main.data.enums.impl.IEC.E_DB_7;
+import static am.main.data.enums.impl.AME.E_DB_7;
 
 /**
  * Created by ahmed.motair on 11/7/2017.

@@ -22,7 +22,7 @@ import java.util.Map;
 import static am.infrastructure.generic.ConfigParam.MAX_PAGE_SIZE;
 import static am.main.data.enums.Operators.EQ;
 import static am.main.data.enums.Operators.LIKE;
-import static am.main.data.enums.impl.IEC.E_DB_16;
+import static am.main.data.enums.impl.AME.E_DB_16;
 
 /**
  * Created by ahmed.motair on 9/23/2017.

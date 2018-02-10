@@ -19,7 +19,7 @@ import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
 import java.util.*;
 
-import static am.infrastructure.am.impl.AMTError.*;
+import static am.infrastructure.am.impl.ASE.*;
 import static javax.ws.rs.core.Response.Status.UNAUTHORIZED;
 
 /**
@@ -153,7 +153,7 @@ public class SecurityService {
                         throw new BusinessException(session, UNAUTHORIZED, E_USR_17, userOfToken.getFullName());
 
                     String password = userOfToken.getPassword();
-                    String ComputedHash = securityManager.generateAccessToken(username, password, ticks);
+                    String ComputedHash = securityManager.generateAccessToken(session, username, password, ticks);
 
                     if(!token.equals(ComputedHash))
                         throw new BusinessException(session, UNAUTHORIZED, E_USR_18);

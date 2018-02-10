@@ -1,8 +1,8 @@
 package am.infrastructure.generic;
 
-import am.infrastructure.am.impl.AMTSource;
+import am.infrastructure.am.impl.ASS;
 
-import static am.infrastructure.am.impl.AMTSource.AMT_SERVICES;
+import static am.infrastructure.am.impl.ASS.AMT_SERVICES;
 
 /**
  * Created by ahmed.motair on 9/7/2017.
@@ -17,5 +17,5 @@ public class ConfigParam {
 
     public static final Integer MAX_PAGE_SIZE = 10;
 
-    public static final AMTSource SOURCE = AMT_SERVICES;
+    public static final ASS SOURCE = AMT_SERVICES;
 }

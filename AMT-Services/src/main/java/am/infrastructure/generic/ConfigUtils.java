@@ -6,7 +6,7 @@ import am.main.exception.BusinessException;
 import am.main.session.AppSession;
 import am.main.spi.AMCode;
 
-import static am.main.data.enums.impl.IEC.E_SYS_0;
+import static am.main.data.enums.impl.AME.E_SYS_0;
 
 /**
  * Created by ahmed.motair on 9/7/2017.

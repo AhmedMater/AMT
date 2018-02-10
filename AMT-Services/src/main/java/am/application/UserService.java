@@ -1,9 +1,9 @@
 package am.application;
 
+import am.infrastructure.am.impl.ASC;
 import am.infrastructure.data.dto.user.LoginData;
 import am.infrastructure.data.dto.user.UserRegisterData;
 import am.infrastructure.data.enums.Roles;
-import am.infrastructure.am.impl.ECC;
 import am.infrastructure.data.hibernate.model.lookup.Role;
 import am.infrastructure.data.hibernate.model.user.UserIPDeActive;
 import am.infrastructure.data.hibernate.model.user.UserIPFailure;
@@ -27,9 +27,9 @@ import javax.transaction.Transactional;
 import java.util.Date;
 import java.util.List;
 
-import static am.infrastructure.am.impl.AMTError.*;
-import static am.infrastructure.am.impl.AMTInfo.I_USR_3;
-import static am.infrastructure.am.impl.AMTInfo.I_USR_4;
+import static am.infrastructure.am.impl.ASE.*;
+import static am.infrastructure.am.impl.ASI.I_USR_3;
+import static am.infrastructure.am.impl.ASI.I_USR_4;
 
 /**
  * Created by ahmed.motair on 9/23/2017.
@@ -65,7 +65,7 @@ public class UserService {
         user.setFirstName(userData.getFirstName());
         user.setLastName(userData.getLastName());
         user.setUsername(userData.getUsername());
-        user.setPassword(securityManager.dm5Hash(userData.getPassword()));
+        user.setPassword(securityManager.dm5Hash(session, userData.getPassword()));
         user.setEmail(userData.getEmail());
         user.setRole(new Role(role));
         user.setCreationDate(new Date());
@@ -96,11 +96,11 @@ public class UserService {
         AuthenticatedUser authenticatedUser = null;
         BusinessException ex = null;
 
-        String hashedPassword = securityManager.dm5Hash(password);
+        String hashedPassword = securityManager.dm5Hash(session, password);
         UserIPDeActive userIPDeActive = userRepository.getUserIPDeActive(session, username, hashedPassword, loginUserIP);
 
-        Integer MAX_LOGIN_TRAILS = configManager.getConfigValue(ECC.MAX_LOGIN_TRAILS, Integer.class);
-        Integer LOGIN_DEACTIVATION_DURATION = configManager.getConfigValue(ECC.LOGIN_ACTIVATION_MIN, Integer.class);
+        Integer MAX_LOGIN_TRAILS = configManager.getConfigValue(session, ASC.MAX_LOGIN_TRAILS, Integer.class);
+        Integer LOGIN_DEACTIVATION_DURATION = configManager.getConfigValue(session, ASC.LOGIN_ACTIVATION_MIN, Integer.class);
 
         if(user.getPassword().equals(hashedPassword)){
             //Case: Username and Password are correct and the User is active for this IP
@@ -175,7 +175,7 @@ public class UserService {
         AppSession session = appSession.updateSession(CLASS, FN_NAME);
         logger.startDebug(session, user, (hashedPassword != null ? "Hashed Password":"Null"));
 
-        String token = securityManager.generateAccessToken(user.getUsername(), hashedPassword, new Date().getTime());
+        String token = securityManager.generateAccessToken(session, user.getUsername(), hashedPassword, new Date().getTime());
         AuthenticatedUser authenticatedUser = new AuthenticatedUser(user, token);
 
         UserLoginLog userLoginLog = new UserLoginLog(user, ip);

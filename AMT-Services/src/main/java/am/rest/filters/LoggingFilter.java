@@ -17,9 +17,9 @@ import javax.ws.rs.container.PreMatching;
 import javax.ws.rs.core.Context;
 import java.io.IOException;
 
-import static am.infrastructure.am.impl.AMTInfo.I_USR_11;
-import static am.infrastructure.am.impl.AMTInfo.I_USR_12;
-import static am.infrastructure.am.impl.AMTPhase.URL_LOGGING;
+import static am.infrastructure.am.impl.ASI.I_USR_11;
+import static am.infrastructure.am.impl.ASI.I_USR_12;
+import static am.infrastructure.am.impl.ASP.URL_LOGGING;
 import static am.infrastructure.generic.ConfigParam.SOURCE;
 
 /**
