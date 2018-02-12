@@ -1,0 +1,69 @@
+<AM-Logger>
+	<AM-Logger-Config>
+		<Logger-Property name="MainLogPath" value="C:/_Payara-Logs/AMT-Log"/>
+		<Logger-Property name="MaxFileSize" value="50 MB"/>
+		<Logger-Property name="UseAMLogger" value="true"/>
+		<Logger-Property name="UsePerformanceLogger" value="true"/>
+		<Logger-Property name="LogLevelForAll" value="debug"/>
+	</AM-Logger-Config>
+	
+	<AM-Applications>
+		<AM-Application name="AM-Resources" type="JAR">
+			<LoggerGroup name="AM">
+				<LoggerData name="AM-Initializing"/>
+				<LoggerData name="Security-Manager"/>
+				<LoggerData name="Message-Handler"/>
+				<LoggerData name="XML-Handler"/>
+				<LoggerData name="JMS-Manager"/>
+				<LoggerData name="DB-Manager"/>
+				<LoggerData name="Query-Builder"/>
+				<LoggerData name="Config-Manager"/>
+			</LoggerGroup>
+		</AM-Application>
+		
+		<AM-Application name="AMT-Services" type="WAR">
+			<LoggerGroup name="Security">
+				<LoggerData name="Authorization"/>
+				<LoggerData name="URL-Logging"/>
+			</LoggerGroup>
+
+			<LoggerGroup name="Course">
+				<LoggerData name="User-Registration"/>
+				<LoggerData name="User-Login"/>
+				<LoggerData name="User-List"/>
+				<LoggerData name="User-Detail"/>
+				<LoggerData name="User-Update"/>
+			</LoggerGroup>
+			
+			<LoggerGroup name="User">
+				<LoggerData name="User-Registration"/>
+				<LoggerData name="User-Login"/>
+				<LoggerData name="User-List"/>
+				<LoggerData name="User-Detail"/>
+				<LoggerData name="User-Update"/>
+			</LoggerGroup>
+			
+			<LoggerGroup name="Article">
+				<LoggerData name="Article-New"/>
+				<LoggerData name="Article-Detail"/>
+				<LoggerData name="Article-Update"/>
+				<LoggerData name="Article-List"/>
+				<LoggerData name="Article-Review"/>
+				<LoggerData name="Article-Translation"/>
+			</LoggerGroup>
+		</AM-Application>
+
+		<AM-Application name="AM-Notification" type="WAR">			
+			<LoggerGroup name="AMN">
+				<LoggerData name="Receive-Notification"/>
+				<LoggerData name="Process-Notification"/>
+				<LoggerData name="Validate-Notification"/>
+				<LoggerData name="Email-Notification"/>
+				<LoggerData name="SMS-Notification"/>
+				<LoggerData name="Web-Notification"/>
+				<LoggerData name="Notification-Manager"/>
+			</LoggerGroup>
+		</AM-Application>
+	</AM-Applications>
+    
+</AM-Logger>

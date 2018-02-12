@@ -1,0 +1,12 @@
+<AM-JMS-Config-Manager>
+    <JMS-Config>
+        <JMS-Property name="JMSDelayTrail" value="5 Min"/>
+        <JMS-Property name="JMSMaxTrails" value="10"/>
+    </JMS-Config>
+
+    <JMS-Queues>
+        <AM-Queue name="AM_Q_Notification_Input" factory="AM_QCF_Notification_Input"/>
+        <AM-Queue name="AM_Q_Notification_Valid" factory="AM_QCF_Notification_Valid"/>
+        <AM-Queue name="AM_Q_Notification_Process" factory="AM_QCF_Notification_Process"/>
+    </JMS-Queues>
+</AM-JMS-Config-Manager>

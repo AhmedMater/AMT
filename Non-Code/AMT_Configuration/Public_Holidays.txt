@@ -1,0 +1,8 @@
+# Dates has to be in this Format: yyyy-MM-dd (With Zero Leadings)
+
+2017-01-04 # Eid
+2017-01-10
+2017-07-03 # Eid El Fetr
+2017-10-12 # 6th Of October
+2017-05-01 # Works Eid
+2017-05-15 # My Birthday
