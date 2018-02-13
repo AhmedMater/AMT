@@ -58,7 +58,7 @@ public class DataGenerator {
         Assert.assertEquals("First name failed", data.getFirstName(), actual.getFirstName());
         Assert.assertEquals("Last name failed", data.getLastName(), actual.getLastName());
         Assert.assertEquals("Username failed", data.getUsername(), actual.getUsername());
-        Assert.assertEquals("Password failed", securityManager.dm5Hash(data.getPassword()), actual.getPassword());
+        Assert.assertEquals("Password failed", securityManager.dm5Hash(session, data.getPassword()), actual.getPassword());
         Assert.assertEquals("Email failed", data.getEmail(), actual.getEmail());
         Assert.assertEquals("Role failed", Roles.STUDENT.role(), actual.getRole().getRole());
 

@@ -754,7 +754,7 @@ public class UserRegister {
             Assert.assertEquals("First name failed", userData.getFirstName(), actual.getFirstName());
             Assert.assertEquals("Last name failed", userData.getLastName(), actual.getLastName());
             Assert.assertEquals("Username failed", userData.getUsername(), actual.getUsername());
-            Assert.assertEquals("Password failed", securityManager.dm5Hash(userData.getPassword()), actual.getPassword());
+            Assert.assertEquals("Password failed", securityManager.dm5Hash(session, userData.getPassword()), actual.getPassword());
             Assert.assertEquals("Email failed", userData.getEmail(), actual.getEmail());
             Assert.assertEquals("Role failed", Roles.ADMIN.role(), actual.getRole().getRole());
 

@@ -1,8 +1,8 @@
 package amt.testCases.user;
 
 import am.application.SecurityService;
+import am.infrastructure.am.impl.ASC;
 import am.infrastructure.data.dto.user.LoginData;
-import am.infrastructure.am.impl.ECC;
 import am.infrastructure.data.hibernate.model.user.UserIPDeActive;
 import am.infrastructure.data.hibernate.model.user.UserIPFailure;
 import am.infrastructure.data.hibernate.model.user.UserLoginLog;
@@ -36,7 +36,7 @@ import java.text.MessageFormat;
 import java.util.Date;
 import java.util.List;
 
-import static am.infrastructure.am.impl.AMTError.E_USR_1;
+import static am.infrastructure.am.impl.ASE.E_USR_1;
 import static am.main.data.enums.Interface.ARQUILLIAN;
 import static amt.common.constants.Error.TEST_CASE;
 import static amt.common.constants.Error.USER.*;
@@ -182,7 +182,7 @@ public class UserLogin {
 
             LoginData invalidData = new LoginData(USERNAME, "12advf34");
 
-            Integer MAX_TRAILS = configManager.getConfigValue(ECC.MAX_LOGIN_TRAILS, Integer.class);
+            Integer MAX_TRAILS = configManager.getConfigValue(session, ASC.MAX_LOGIN_TRAILS, Integer.class);
             int numOfTrails = MAX_TRAILS-1;
 
             for (int i = 0; i <numOfTrails; i++)
@@ -222,8 +222,8 @@ public class UserLogin {
 
             LoginData invalidData = new LoginData(USERNAME, "12advf34");
 
-            Integer MAX_TRAILS = configManager.getConfigValue(ECC.MAX_LOGIN_TRAILS, Integer.class);
-            Integer LOGIN_DEACTIVATION_DURATION = configManager.getConfigValue(ECC.LOGIN_ACTIVATION_MIN, Integer.class);
+            Integer MAX_TRAILS = configManager.getConfigValue(session, ASC.MAX_LOGIN_TRAILS, Integer.class);
+            Integer LOGIN_DEACTIVATION_DURATION = configManager.getConfigValue(session, ASC.LOGIN_ACTIVATION_MIN, Integer.class);
 
             for (int i = 0; i <MAX_TRAILS-1; i++)
                 Util.postStringError(USER.RESOURCE, USER.LOGIN, invalidData, WRONG_PASSWORD);
@@ -266,8 +266,8 @@ public class UserLogin {
 
             LoginData invalidData = new LoginData(USERNAME, "12advf34");
 
-            Integer MAX_TRAILS = configManager.getConfigValue(ECC.MAX_LOGIN_TRAILS, Integer.class);
-            Integer LOGIN_DEACTIVATION_DURATION = configManager.getConfigValue(ECC.LOGIN_ACTIVATION_MIN, Integer.class);
+            Integer MAX_TRAILS = configManager.getConfigValue(session, ASC.MAX_LOGIN_TRAILS, Integer.class);
+            Integer LOGIN_DEACTIVATION_DURATION = configManager.getConfigValue(session, ASC.LOGIN_ACTIVATION_MIN, Integer.class);
 
             int numOfTrails = MAX_TRAILS+1;
 
@@ -318,9 +318,9 @@ public class UserLogin {
 
             Integer LOGIN_DEACTIVATION_DURATION = 3;
 
-            Integer MAX_TRAILS = configManager.getConfigValue(ECC.MAX_LOGIN_TRAILS, Integer.class);
-            Integer OLD_LOGIN_DEACTIVATION_DURATION = configManager.getConfigValue(ECC.LOGIN_ACTIVATION_MIN, Integer.class);
-            configManager.updateConfigValue(ECC.LOGIN_ACTIVATION_MIN, LOGIN_DEACTIVATION_DURATION.toString());
+            Integer MAX_TRAILS = configManager.getConfigValue(session, ASC.MAX_LOGIN_TRAILS, Integer.class);
+            Integer OLD_LOGIN_DEACTIVATION_DURATION = configManager.getConfigValue(session, ASC.LOGIN_ACTIVATION_MIN, Integer.class);
+            configManager.updateConfigValue(session, ASC.LOGIN_ACTIVATION_MIN, LOGIN_DEACTIVATION_DURATION.toString());
 
             int numOfTrails = MAX_TRAILS+1;
 
@@ -350,7 +350,7 @@ public class UserLogin {
             Assert.assertNotNull("IP isn't null", loginLog.getIp());
             Util.isEqualDates(new Date(), loginLog.getLoginDate());
 
-            configManager.updateConfigValue(ECC.LOGIN_ACTIVATION_MIN, OLD_LOGIN_DEACTIVATION_DURATION.toString());
+            configManager.updateConfigValue(session, ASC.LOGIN_ACTIVATION_MIN, OLD_LOGIN_DEACTIVATION_DURATION.toString());
         }catch (Exception ex){
             Assert.fail(MessageFormat.format(TEST_CASE, TEST_CASE_NAME, ex.getMessage()));
         }
@@ -370,9 +370,9 @@ public class UserLogin {
 
             Integer LOGIN_DEACTIVATION_DURATION = 1;
 
-            Integer MAX_TRAILS = configManager.getConfigValue(ECC.MAX_LOGIN_TRAILS, Integer.class);
-            Integer OLD_LOGIN_DEACTIVATION_DURATION = configManager.getConfigValue(ECC.LOGIN_ACTIVATION_MIN, Integer.class);
-            configManager.updateConfigValue(ECC.LOGIN_ACTIVATION_MIN, LOGIN_DEACTIVATION_DURATION.toString());
+            Integer MAX_TRAILS = configManager.getConfigValue(session, ASC.MAX_LOGIN_TRAILS, Integer.class);
+            Integer OLD_LOGIN_DEACTIVATION_DURATION = configManager.getConfigValue(session, ASC.LOGIN_ACTIVATION_MIN, Integer.class);
+            configManager.updateConfigValue(session, ASC.LOGIN_ACTIVATION_MIN, LOGIN_DEACTIVATION_DURATION.toString());
 
             int numOfTrails = MAX_TRAILS+1;
 
@@ -406,7 +406,7 @@ public class UserLogin {
             Assert.assertTrue("Active isn't correct", userIPDeActive.getActive());
             Util.isEqualDates(new Date(), userIPDeActive.getLastTrailDate());
 
-            configManager.updateConfigValue(ECC.LOGIN_ACTIVATION_MIN, OLD_LOGIN_DEACTIVATION_DURATION.toString());
+            configManager.updateConfigValue(session, ASC.LOGIN_ACTIVATION_MIN, OLD_LOGIN_DEACTIVATION_DURATION.toString());
         }catch (Exception ex){
             Assert.fail(MessageFormat.format(TEST_CASE, TEST_CASE_NAME, ex.getMessage()));
         }

@@ -19,6 +19,8 @@ import am.main.data.dto.SortingInfo;
 import am.main.session.AppSession;
 import am.repository.UserRepository;
 import am.rest.annotations.Authorized;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
@@ -28,6 +30,8 @@ import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
+import java.util.Date;
 
 import static am.infrastructure.am.AMTForms.LOGIN;
 import static am.infrastructure.am.AMTForms.REGISTER;
@@ -58,6 +62,8 @@ public class UserResource {
 
     @Inject private UserService userService;
     @Inject private UserRepository userRepository;
+
+    private Logger INITIAL_LOGGER = LogManager.getLogger("Initial");
 
     @Path("/register")
     @POST
@@ -103,6 +109,7 @@ public class UserResource {
         AppSession session = new AppSession(SOURCE, REST, USER_LOGIN, httpSession.getId(),
                 CLASS, METHOD, httpServletRequest.getRemoteAddr(), messageHandler);
         try{
+            long startTime = new Date().getTime();
             logger.info(session, I_USR_5, loginData.getUsername());
             new FormValidation<LoginData>(session, logger, loginData, E_VAL_0, LOGIN);
 
@@ -110,6 +117,11 @@ public class UserResource {
             AuthenticatedUser user = userService.login(session, loginData, loginUserIP);
 
             logger.info(session, I_USR_6, user.getFullName());
+
+            long endTime = new Date().getTime();
+            long diff = endTime - startTime;
+
+            logger.info(session, I_USR_2, "Message : took " + diff + " mSec = " + (diff/1000) + " Sec");
             return Response.ok().entity(user).build();
         }catch (Exception ex){
             throw businessException(logger, session, ex, E_USR_8, loginData.getUsername());
