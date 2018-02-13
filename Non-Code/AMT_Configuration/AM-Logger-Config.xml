@@ -1,6 +1,6 @@
 <AM-Logger>
 	<AM-Logger-Config>
-		<Logger-Property name="MainLogPath" value="C:/_Payara-Logs/AMT-Log"/>
+		<Logger-Property name="MainLogPath" value="C:/_Payara-Logs"/>
 		<Logger-Property name="MaxFileSize" value="50 MB"/>
 		<Logger-Property name="UseAMLogger" value="true"/>
 		<Logger-Property name="UsePerformanceLogger" value="true"/>
@@ -10,11 +10,9 @@
 	<AM-Applications>
 		<AM-Application name="AM-Resources" type="JAR">
 			<LoggerGroup name="AM">
-				<LoggerData name="AM-Initializing"/>
 				<LoggerData name="Security-Manager"/>
 				<LoggerData name="Message-Handler"/>
 				<LoggerData name="XML-Handler"/>
-				<LoggerData name="JMS-Manager"/>
 				<LoggerData name="DB-Manager"/>
 				<LoggerData name="Query-Builder"/>
 				<LoggerData name="Config-Manager"/>
@@ -28,11 +26,13 @@
 			</LoggerGroup>
 
 			<LoggerGroup name="Course">
-				<LoggerData name="User-Registration"/>
-				<LoggerData name="User-Login"/>
-				<LoggerData name="User-List"/>
-				<LoggerData name="User-Detail"/>
-				<LoggerData name="User-Update"/>
+				<LoggerData name="Course-New"/>
+				<LoggerData name="Course-Detail"/>
+				<LoggerData name="Course-Update"/>
+				<LoggerData name="Course-List"/>
+				<LoggerData name="Course-Quiz"/>
+				<LoggerData name="Course-Review"/>
+				<LoggerData name="Course-Translation"/>
 			</LoggerGroup>
 			
 			<LoggerGroup name="User">
@@ -64,6 +64,13 @@
 				<LoggerData name="Notification-Manager"/>
 			</LoggerGroup>
 		</AM-Application>
+		
+		<AM-Application name="AM-Logger" type="WAR">
+			<LoggerGroup name="AML">
+				<LoggerData name="Business"/>
+				<LoggerData name="File"/>
+				<LoggerData name="Function"/>
+			</LoggerGroup>
+		</AM-Application>
 	</AM-Applications>
-    
 </AM-Logger>
